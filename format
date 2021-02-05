@@ -1,0 +1,15 @@
+#!/bin/bash
+
+format_directory() {
+    declare -r directory="$1"
+    find "$directory" -type f -exec clang-format -i {} \;
+}
+
+main() {
+    declare -ar targets=("sample/" "src/" "include/pfs")
+    for target in "${targets[@]}"; do
+        format_directory "$target"
+    done
+}
+
+main "$@"
