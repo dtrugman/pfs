@@ -1,0 +1,51 @@
+#!/bin/bash
+
+format() {
+    declare -r file="$1"
+    clang-format -i "$file"
+}
+
+validate() {
+    declare -r file="$1"
+    if clang-format -output-replacements-xml "$file" | grep -wq "replacement"; then
+        echo "File requires formatting: $file"
+        return 1
+    fi
+
+    return 0
+}
+
+usage() {
+    echo "Usage: $0 <mode>"
+    echo ""
+    echo "  mode    format or validate (DEFAULT: format)"
+    echo ""
+}
+
+main() {
+    declare -r mode="${1:-format}"
+    case "$mode" in
+        format)
+            declare -r func=format
+            ;;
+        validate)
+            declare -r func=validate
+            ;;
+        *)
+            usage
+            return 2
+    esac
+
+    rv=0
+
+    declare -ar files="$(git diff --name-only --cached HEAD)"
+    for file in $files; do
+        if [[ "$file" =~ ".cpp" ]] || [[ "$file" =~ ".hpp" ]]; then
+            "$func" "$file" || rv=1
+        fi
+    done
+
+    return $rv
+}
+
+main "$@"

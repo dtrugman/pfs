@@ -1,0 +1,130 @@
+/*
+ *  Copyright 2020-present Daniel Trugman
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include <system_error>
+
+#include "pfs/parsers.hpp"
+#include "pfs/procfs.hpp"
+#include "pfs/utils.hpp"
+
+namespace pfs {
+
+using namespace impl;
+
+const std::string procfs::DEFAULT_ROOT("/proc/");
+
+procfs::procfs(const std::string& root) : _root(build_root(root))
+{
+    validate_root(root);
+}
+
+std::string procfs::build_root(std::string root)
+{
+    utils::ensure_dir_terminator(root);
+    return root;
+}
+
+void procfs::validate_root(const std::string& root)
+{
+    struct ::stat st;
+    int rv = ::stat(root.c_str(), &st);
+    if (rv != 0)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't stat root");
+    }
+
+    if (!S_ISDIR(st.st_mode))
+    {
+        throw std::runtime_error("Specified procfs root is not a directory");
+    }
+}
+
+std::set<zone> procfs::get_buddyinfo() const
+{
+    static const std::string BUDDYINFO_FILE("buddyinfo");
+    auto path = _root + BUDDYINFO_FILE;
+
+    using ret_type = std::set<zone>;
+    return parsers::parse_lines<ret_type>(path, parsers::parse_buddyinfo_line);
+}
+
+std::string procfs::get_cmdline() const
+{
+    static const std::string CMDLINE_FILE("cmdline");
+    auto path = _root + CMDLINE_FILE;
+
+    return utils::readline(path);
+}
+
+std::unordered_map<std::string, bool> procfs::get_filesystems() const
+{
+    static const std::string FILESYSTEMS_FILE("filesystems");
+    auto path = _root + FILESYSTEMS_FILE;
+
+    using ret_type = std::unordered_map<std::string, bool>;
+    return parsers::parse_lines<ret_type>(path,
+                                          parsers::parse_filesystems_line);
+}
+
+std::unordered_map<std::string, size_t> procfs::get_meminfo() const
+{
+    static const std::string MEMINFO_FILE("meminfo");
+    auto path = _root + MEMINFO_FILE;
+
+    using ret_type = std::unordered_map<std::string, size_t>;
+    return parsers::parse_lines<ret_type>(path, parsers::parse_meminfo_line);
+}
+
+load_average procfs::get_loadavg() const
+{
+    static const std::string LOADAVG_FILE("loadavg");
+    auto path = _root + LOADAVG_FILE;
+
+    auto line = utils::readline(path);
+    return parsers::parse_loadavg_line(line);
+}
+
+std::set<module> procfs::get_modules() const
+{
+    static const std::string MODULES_FILE("modules");
+    auto path = _root + MODULES_FILE;
+
+    using ret_type = std::set<module>;
+    return parsers::parse_lines<ret_type>(path, parsers::parse_modules_line);
+}
+
+std::string procfs::get_version() const
+{
+    static const std::string VERSION_FILE("version");
+    auto path = _root + VERSION_FILE;
+
+    return utils::readline(path);
+}
+
+std::string procfs::get_version_signature() const
+{
+    static const std::string VERSION_SIGNATURE_FILE("version_signature");
+    auto path = _root + VERSION_SIGNATURE_FILE;
+
+    return utils::readline(path);
+}
+
+} // namespace pfs
