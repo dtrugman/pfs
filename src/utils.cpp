@@ -20,6 +20,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <fstream>
 #include <system_error>
 
@@ -29,6 +30,105 @@
 namespace pfs {
 namespace impl {
 namespace utils {
+
+std::set<std::string> enumerate_files(const std::string& dir, bool include_dots)
+{
+    static const char DOTFILE_PREFIX = '.';
+
+    DIR* dp = opendir(dir.c_str());
+    if (!dp)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't open dir");
+    }
+    defer close_dp([dp] { closedir(dp); });
+
+    std::set<std::string> files;
+
+    struct dirent* entry;
+    while ((entry = readdir(dp)))
+    {
+        // It's safe to access index 0.
+        // It's either a valid char or a null-terminator.
+        if (entry->d_name[0] == DOTFILE_PREFIX && !include_dots)
+        {
+            continue;
+        }
+
+        files.emplace(entry->d_name);
+    }
+
+    return files;
+}
+
+std::set<int> enumerate_numeric_files(const std::string& dir)
+{
+    std::set<int> num_files;
+
+    auto files = enumerate_files(dir);
+    for (const auto& file : files)
+    {
+        try
+        {
+            int num = std::stoi(file);
+            num_files.insert(num);
+        }
+        catch (const std::logic_error&)
+        {
+            // Do nothing, not a numeric file name
+        }
+    }
+
+    return num_files;
+}
+
+std::string readlink(const std::string& link, int dirfd)
+{
+    std::string buffer;
+
+    // Accomodate larget possible path + null terminator
+    buffer.resize(PATH_MAX + 1);
+
+    auto bytes = ::readlinkat(dirfd, link.c_str(), &buffer[0], buffer.size());
+    if (bytes == -1)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't read link");
+    }
+    buffer.resize(bytes); // Let our string know how much bytes it really holds
+    return buffer;
+}
+
+std::string readfile(const std::string& file, size_t max_bytes,
+                     bool trim_newline)
+{
+    int fd = open(file.c_str(), O_RDONLY);
+    if (fd < 0)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't open file");
+    }
+    defer close_fd([fd] { close(fd); });
+
+    std::string buffer;
+    buffer.resize(max_bytes);
+
+    ssize_t bytes_read = read(fd, &buffer[0], max_bytes);
+    if (bytes_read < 0)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't read file");
+    }
+    buffer.resize(bytes_read);
+
+    static const char NEWLINE('\n');
+    while (trim_newline && buffer.back() == NEWLINE)
+    {
+        buffer.pop_back();
+    }
+
+    return buffer;
+}
 
 std::string readline(const std::string& file)
 {
@@ -75,6 +175,46 @@ std::vector<std::string> split(const std::string& buffer, char delim,
     }
 
     return out;
+}
+
+std::pair<std::string, std::string> split_once(const std::string& buffer,
+                                               char delim)
+{
+    size_t index = buffer.find_first_of(delim);
+    if (index == std::string::npos)
+    {
+        return std::make_pair(buffer, "");
+    }
+    else
+    {
+        return std::make_pair(buffer.substr(0, index),
+                              buffer.substr(index + 1));
+    }
+}
+
+void ltrim(std::string& str)
+{
+    static const auto COMPARE = [](unsigned char c) {
+        return !std::isspace(c);
+    };
+
+    str.erase(str.begin(), std::find_if(str.begin(), str.end(), COMPARE));
+}
+
+void rtrim(std::string& str)
+{
+    static const auto COMPARE = [](unsigned char c) {
+        return !std::isspace(c);
+    };
+
+    str.erase(std::find_if(str.rbegin(), str.rend(), COMPARE).base(),
+              str.end());
+}
+
+void trim(std::string& str)
+{
+    ltrim(str);
+    rtrim(str);
 }
 
 void ensure_dir_terminator(std::string& dir_path)

@@ -57,6 +57,22 @@ void procfs::validate_root(const std::string& root)
     }
 }
 
+task procfs::get_task(int task_id) const
+{
+    return task(_root, task_id);
+}
+
+std::set<task> procfs::get_processes() const
+{
+    std::set<task> tasks;
+    for (auto task_id : utils::enumerate_numeric_files(_root))
+    {
+        tasks.emplace(get_task(task_id));
+    }
+
+    return tasks;
+}
+
 std::set<zone> procfs::get_buddyinfo() const
 {
     static const std::string BUDDYINFO_FILE("buddyinfo");

@@ -17,6 +17,7 @@
 #include <arpa/inet.h>
 #include <sys/stat.h>
 
+#include <iomanip>
 #include <sstream>
 
 #include "log.hpp"
@@ -49,6 +50,272 @@ std::string join(const T& container)
 // =========================================================================
 // Custom procfs type printing utilities
 // =========================================================================
+
+std::ostream& operator<<(std::ostream& out, const pfs::task_state state)
+{
+    switch (state)
+    {
+        case pfs::task_state::running:
+            out << "Running";
+            break;
+
+        case pfs::task_state::sleeping:
+            out << "Sleeping";
+            break;
+
+        case pfs::task_state::disk_sleep:
+            out << "Disk-Sleep";
+            break;
+
+        case pfs::task_state::stopped:
+            out << "Stopped";
+            break;
+
+        case pfs::task_state::tracing_stop:
+            out << "Tracing-Stop";
+            break;
+
+        case pfs::task_state::zombie:
+            out << "Zombie";
+            break;
+
+        case pfs::task_state::dead:
+            out << "Dead";
+            break;
+
+        case pfs::task_state::wakekill:
+            out << "Wake-Kill";
+            break;
+
+        case pfs::task_state::waking:
+            out << "Waking";
+            break;
+
+        case pfs::task_state::parked:
+            out << "Parked";
+            break;
+
+        case pfs::task_state::idle:
+            out << "Idle";
+            break;
+
+        default:
+            out << "Unknown";
+            break;
+    }
+
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::status::uid_set& set)
+{
+    out << set.real << ',';
+    out << set.effective << ',';
+    out << set.saved_set << ',';
+    out << set.filesystem;
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::status::seccomp seccomp)
+{
+    switch (seccomp)
+    {
+        case pfs::status::seccomp::disabled:
+            out << "Disabled";
+            break;
+
+        case pfs::status::seccomp::strict:
+            out << "Strict";
+            break;
+
+        case pfs::status::seccomp::filter:
+            out << "Filter";
+            break;
+
+        default:
+            out << "Unknown";
+            break;
+    }
+
+    return out;
+}
+
+std::string to_octal_mask(uint64_t mask)
+{
+    std::ostringstream out;
+    out << std::oct << std::setfill('0') << std::setw(4) << mask;
+    return out.str();
+}
+
+std::string to_hex_mask(uint64_t mask)
+{
+    std::ostringstream out;
+    out << std::hex << std::setfill('0') << std::setw(16) << mask;
+    return out.str();
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::status& st)
+{
+    out << "name[" << st.name << "] ";
+    out << "umask[" << to_octal_mask(st.umask) << "] ";
+    out << "state[" << st.state << "] ";
+    out << "tgid[" << st.tgid << "] ";
+    out << "ngid[" << st.ngid << "] ";
+    out << "pid[" << st.pid << "] ";
+    out << "ppid[" << st.ppid << "] ";
+    out << "tracer_pid[" << st.tracer_pid << "] ";
+    out << "uid[" << st.uid << "] ";
+    out << "gid[" << st.gid << "] ";
+    out << "fdsize[" << st.fd_size << "] ";
+    out << "groups[" << join(st.groups) << "] ";
+    out << "ns_tgid[" << st.tgid << "] ";
+    out << "ns_pid[" << st.pid << "] ";
+    out << "ns_pgid[" << st.ns_pgid << "] ";
+    out << "ns_sid[" << st.ns_sid << "] ";
+    out << "vm_peak[" << st.vm_peak << "] ";
+    out << "vm_size[" << st.vm_size << "] ";
+    out << "vm_lck[" << st.vm_lck << "] ";
+    out << "vm_pin[" << st.vm_pin << "] ";
+    out << "vm_hwm[" << st.vm_hwm << "] ";
+    out << "vm_rss[" << st.vm_rss << "] ";
+    out << "rss_anon[" << st.rss_anon << "] ";
+    out << "rss_file[" << st.rss_file << "] ";
+    out << "rss_shmem[" << st.rss_shmem << "] ";
+    out << "vm_data[" << st.vm_data << "] ";
+    out << "vm_stk[" << st.vm_stk << "] ";
+    out << "vm_exe[" << st.vm_exe << "] ";
+    out << "vm_lib[" << st.vm_lib << "] ";
+    out << "vm_pte[" << st.vm_pte << "] ";
+    out << "vm_swap[" << st.vm_swap << "] ";
+    out << "huge_tlb_pages[" << st.huge_tlb_pages << "] ";
+    out << "core_dumping[" << std::boolalpha << st.core_dumping
+        << std::noboolalpha << "] ";
+    out << "threads[" << st.threads << "] ";
+    out << "sig_q[" << st.sig_q.first << "/" << st.sig_q.second << "] ";
+    out << "sig_pnd[" << to_hex_mask(st.sig_pnd.raw) << "] ";
+    out << "shd_pnd[" << to_hex_mask(st.shd_pnd.raw) << "] ";
+    out << "sig_blk[" << to_hex_mask(st.sig_blk.raw) << "] ";
+    out << "sig_ign[" << to_hex_mask(st.sig_ign.raw) << "] ";
+    out << "sig_cgt[" << to_hex_mask(st.sig_cgt.raw) << "] ";
+    out << "cap_inh[" << to_hex_mask(st.cap_inh.raw) << "] ";
+    out << "cap_prm[" << to_hex_mask(st.cap_prm.raw) << "] ";
+    out << "cap_eff[" << to_hex_mask(st.cap_eff.raw) << "] ";
+    out << "cap_bnd[" << to_hex_mask(st.cap_bnd.raw) << "] ";
+    out << "cap_amb[" << to_hex_mask(st.cap_amb.raw) << "] ";
+    out << "no_new_privs[" << std::boolalpha << st.no_new_privs
+        << std::noboolalpha << "] ";
+    out << "seccomp[" << st.seccomp_mode << "] ";
+    out << "voluntary_ctxt_switches[" << st.voluntary_ctxt_switches << "] ";
+    out << "nonvoluntary_ctxt_switches[" << st.nonvoluntary_ctxt_switches
+        << "] ";
+
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::stat& st)
+{
+    out << "pid[" << st.pid << "] ";
+    out << "comm[" << st.comm << "] ";
+    out << "state[" << st.state << "] ";
+    out << "ppid[" << st.ppid << "] ";
+    out << "pgrp[" << st.pgrp << "] ";
+    out << "session[" << st.session << "] ";
+    out << "tty_nr[" << st.tty_nr << "] ";
+    out << "tgpid[" << st.tgpid << "] ";
+    out << "flags[" << st.flags << "] ";
+    out << "minflt[" << st.minflt << "] ";
+    out << "cminflt[" << st.cminflt << "] ";
+    out << "majflt[" << st.majflt << "] ";
+    out << "cmajflt[" << st.cmajflt << "] ";
+    out << "utime[" << st.utime << "] ";
+    out << "stime[" << st.stime << "] ";
+    out << "cutime[" << st.cutime << "] ";
+    out << "cstime[" << st.cstime << "] ";
+    out << "priority[" << st.priority << "] ";
+    out << "nice[" << st.nice << "] ";
+    out << "num_threads[" << st.num_threads << "] ";
+    out << "itrealvalue[" << st.itrealvalue << "] ";
+    out << "starttime[" << st.starttime << "] ";
+    out << "vsize[" << st.vsize << "] ";
+    out << "rss[" << st.rss << "] ";
+    out << "rsslim[" << st.rsslim << "] ";
+    out << "startcode[" << st.startcode << "] ";
+    out << "endcode[" << st.endcode << "] ";
+    out << "startstack[" << st.startstack << "] ";
+    out << "kstkesp[" << st.kstkesp << "] ";
+    out << "kstkeip[" << st.kstkeip << "] ";
+    out << "signal[" << st.signal << "] ";
+    out << "blocked[" << st.blocked << "] ";
+    out << "sigignore[" << st.sigignore << "] ";
+    out << "sigcatch[" << st.sigcatch << "] ";
+    out << "wchan[" << st.wchan << "] ";
+    out << "nswap[" << st.nswap << "] ";
+    out << "cnswap[" << st.cnswap << "] ";
+    out << "exit_signal[" << st.exit_signal << "] ";
+    out << "processor[" << st.processor << "] ";
+    out << "rt_priority[" << st.rt_priority << "] ";
+    out << "policy[" << st.policy << "] ";
+    out << "delayacct_blkio_ticks[" << st.delayacct_blkio_ticks << "] ";
+    out << "guest_time[" << st.guest_time << "] ";
+    out << "cguest_time[" << st.cguest_time << "] ";
+    out << "start_data[" << st.start_data << "] ";
+    out << "end_data[" << st.end_data << "] ";
+    out << "start_brk[" << st.start_brk << "] ";
+    out << "arg_start[" << st.arg_start << "] ";
+    out << "arg_end[" << st.arg_end << "]";
+    out << "env_start[" << st.env_start << "] ";
+    out << "env_end[" << st.env_end << "]";
+    out << "exit_code[" << st.exit_code << "]";
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::mem_stats& mem)
+{
+    out << "total[" << mem.total << "] ";
+    out << "resident[" << mem.resident << "] ";
+    out << "shared[" << mem.shared << "] ";
+    out << "text[" << mem.text << "] ";
+    out << "data[" << mem.data << "]";
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::mem_perm& perm)
+{
+    out << (perm.can_read ? 'r' : '-');
+    out << (perm.can_write ? 'w' : '-');
+    out << (perm.can_execute ? 'x' : '-');
+    out << (perm.is_shared ? 's' : 'p');
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::mem_region& region)
+{
+    out << std::hex;
+    out << "addr[0x" << region.start_address << "]-[0x" << region.end_address
+        << "] ";
+    out << "perm[" << region.perm << "]";
+    out << "offset[0x" << region.offset << "] ";
+    out << "device[" << region.device << "] ";
+    out << std::dec;
+    out << "inode[" << region.inode << "] ";
+    out << "pathname[" << region.pathname << "]";
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::mount& mount)
+{
+    out << "id[" << mount.id << "] ";
+    out << "parent_id[" << mount.parent_id << "] ";
+    out << "device[" << mount.device << "] ";
+    out << "root[" << mount.root << "] ";
+    out << "point[" << mount.point << "] ";
+    out << "options[" << join(mount.options) << "] ";
+    out << "optional[" << join(mount.optional) << "] ";
+    out << "fs[" << mount.filesystem_type << "] ";
+    out << "source[" << mount.source << "] ";
+    out << "super_options[" << join(mount.super_options) << "] ";
+    return out;
+}
 
 std::ostream& operator<<(std::ostream& out, const pfs::module::state state)
 {
@@ -105,6 +372,60 @@ std::ostream& operator<<(std::ostream& out, const pfs::zone& zone)
     return out;
 }
 
+void print_task(const pfs::task& task)
+{
+    try
+    {
+        LOG("=========================================================");
+        LOG("Task ID[" << task.id() << "]");
+        LOG("=========================================================");
+
+        auto status = task.get_status();
+        print(status);
+
+        auto stat = task.get_stat();
+        print(stat);
+
+        auto mem_stat = task.get_statm();
+        print(mem_stat);
+
+        auto comm = task.get_comm();
+        print(comm);
+
+        if (!task.is_kernel_thread(stat))
+        {
+            auto exe = task.get_exe();
+            print(exe);
+        }
+
+        auto cmdline = task.get_cmdline();
+        print(cmdline);
+
+        auto cwd = task.get_cwd();
+        print(cwd);
+
+        auto environ = task.get_environ();
+        print(environ);
+
+        auto maps = task.get_maps();
+        print(maps);
+
+        auto fds = task.get_fds();
+        print(fds);
+
+        auto mountinfo = task.get_mountinfo();
+        print(mountinfo);
+
+        auto ns = task.get_ns();
+        print(ns);
+    }
+    catch (const std::runtime_error& ex)
+    {
+        LOG("Error when printing task[" << task.id() << "]:");
+        LOG(TAB << ex.what());
+    }
+}
+
 void print_system(const pfs::procfs& pfs)
 {
     try
@@ -155,12 +476,15 @@ void usage(char* argv0)
     LOG("Usage: " << argv0 << " [args]...");
     LOG("");
     LOG("   system         Enumerate system-wide information");
+    LOG("   tasks          Enumerate all running processes and threads");
+    LOG("   [task-id]...   Enumerate the specified tasks");
     LOG("");
 }
 
 void safe_main(int argc, char** argv)
 {
     static const std::string CMD_ENUM_SYSTEM("system");
+    static const std::string CMD_ENUM_TASKS("tasks");
 
     if (argc < 2)
     {
@@ -173,7 +497,24 @@ void safe_main(int argc, char** argv)
     if (CMD_ENUM_SYSTEM.compare(argv[1]) == 0)
     {
         print_system(pfs);
-        return;
+    }
+    else if (CMD_ENUM_TASKS.compare(argv[1]) == 0)
+    {
+        for (const auto& process : pfs.get_processes())
+        {
+            for (const auto& thread : process.get_tasks())
+            {
+                print_task(thread);
+            }
+        }
+    }
+    else
+    {
+        for (int i = 1; i < argc; ++i)
+        {
+            int id = std::stoi(argv[i]);
+            print_task(pfs.get_task(id));
+        }
     }
 }
 

@@ -18,10 +18,293 @@
 #define PFS_TYPES_HPP
 
 #include <array>
+#include <set>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace pfs {
+
+// Note: We only support values that exist post 2.6.32.
+enum class task_state
+{
+    running,
+    sleeping,
+    disk_sleep,
+    stopped,
+    tracing_stop,
+    zombie,
+    dead,
+    wakekill,
+    waking,
+    parked,
+    idle
+};
+
+struct stat
+{
+    int pid = 0;
+    std::string comm;
+    task_state state             = task_state::idle;
+    int ppid                     = 0;
+    int pgrp                     = 0;
+    int session                  = 0;
+    int tty_nr                   = 0;
+    int tgpid                    = 0;
+    unsigned flags               = 0;
+    unsigned long minflt         = 0;
+    unsigned long cminflt        = 0;
+    unsigned long majflt         = 0;
+    unsigned long cmajflt        = 0;
+    unsigned long utime          = 0;
+    unsigned long stime          = 0;
+    long cutime                  = 0;
+    long cstime                  = 0;
+    long priority                = 0;
+    long nice                    = 0;
+    long num_threads             = 0;
+    long itrealvalue             = 0;
+    unsigned long long starttime = 0;
+    unsigned long vsize          = 0; // In bytes
+    long rss                     = 0; // In pages
+    unsigned long rsslim         = 0;
+    unsigned long startcode      = 0; // Affected by ptrace access mode
+    unsigned long endcode        = 0; // Affected by ptrace access mode
+    unsigned long startstack     = 0; // Affected by ptrace access mode
+    unsigned long kstkesp        = 0; // Affected by ptrace access mode
+    unsigned long kstkeip        = 0; // Affected by ptrace access mode
+    unsigned long signal         = 0;
+    unsigned long blocked        = 0;
+    unsigned long sigignore      = 0;
+    unsigned long sigcatch       = 0;
+    unsigned long wchan          = 0; // Affected by ptrace access mode
+    unsigned long nswap          = 0;
+    unsigned long cnswap         = 0;
+    int exit_signal              = 0;             // Since 2.1.22
+    int processor                = 0;             // Since 2.2.8
+    unsigned rt_priority         = 0;             // Since 2.5.19
+    unsigned policy              = 0;             // Since 2.5.19
+    unsigned long long delayacct_blkio_ticks = 0; // Since 2.6.18
+    unsigned long guest_time                 = 0; // Since 2.6.24
+    long cguest_time                         = 0; // Since 2.6.24
+    unsigned long start_data = 0; // Since 3.3, Affected by ptrace access mode
+    unsigned long end_data   = 0; // Since 3.3, Affected by ptrace access mode
+    unsigned long start_brk  = 0; // Since 3.3, Affected by ptrace access mode
+    unsigned long arg_start  = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long arg_end    = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long env_start  = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long env_end    = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long exit_code  = 0; // Since 3.5, Affected by ptrace access mode
+};
+
+enum class capability
+{
+    chown            = 0,
+    dac_override     = 1,
+    dac_read_search  = 2,
+    fowner           = 3,
+    fsetid           = 4,
+    kill             = 5,
+    setgid           = 6,
+    setuid           = 7,
+    setpcap          = 8,
+    linux_immutable  = 9,
+    net_bind_service = 10,
+    net_broadcast    = 11,
+    net_admin        = 12,
+    net_raw          = 13,
+    ipc_lock         = 14,
+    ipc_owner        = 15,
+    sys_module       = 16,
+    sys_rawio        = 17,
+    sys_chroot       = 18,
+    sys_ptrace       = 19,
+    sys_pacct        = 20,
+    sys_admin        = 21,
+    sys_boot         = 22,
+    sys_nice         = 23,
+    sys_resource     = 24,
+    sys_time         = 25,
+    sys_tty_config   = 26,
+    mknod            = 27,
+    lease            = 28,
+    audit_write      = 29,
+    audit_control    = 30,
+    setfcap          = 31,
+    mac_override     = 32,
+    mac_admin        = 33,
+    syslog           = 34,
+    wake_alarm       = 35,
+    block_suspend    = 36
+};
+
+struct capabilities_mask
+{
+    using raw_type = uint64_t;
+
+    capabilities_mask(raw_type raw = 0);
+
+    bool is_set(capability b);
+
+    raw_type raw;
+};
+
+// Signal numbers on x86/ARM and most other architectures
+enum class signal
+{
+    sighup    = 1,
+    sigint    = 2,
+    sigquit   = 3,
+    sigill    = 4,
+    sigtrap   = 5,
+    sigabrt   = 6,
+    sigiot    = sigabrt,
+    sigbus    = 7,
+    sigfpe    = 8,
+    sigkill   = 9,
+    sigusr1   = 10,
+    sigsegv   = 11,
+    sigusr2   = 12,
+    sigpipe   = 13,
+    sigalrm   = 14,
+    sigterm   = 15,
+    sigstkflt = 16,
+    sigchld   = 17,
+    sigcont   = 18,
+    sigstop   = 19,
+    sigtstp   = 20,
+    sigttin   = 21,
+    sigttou   = 22,
+    sigurg    = 23,
+    sigxcpu   = 24,
+    sigxfsz   = 25,
+    sigvtalrm = 26,
+    sigprof   = 27,
+    sigwinch  = 28,
+    sigio     = 29,
+    sigpoll   = sigio,
+    sigpwr    = 30,
+    sigsys    = 31,
+    sigunused = sigsys,
+};
+
+struct signal_mask
+{
+    using raw_type = uint64_t;
+
+    signal_mask(raw_type raw = 0);
+
+    bool is_set(signal b);
+
+    raw_type raw;
+};
+
+struct status
+{
+    enum class seccomp
+    {
+        disabled = 0,
+        strict   = 1,
+        filter   = 2
+    };
+
+    struct uid_set
+    {
+        uid_t real;
+        uid_t effective;
+        uid_t saved_set;
+        uid_t filesystem;
+    };
+
+    std::string name;
+    mode_t umask;
+    task_state state;
+    int tgid;
+    int ngid;
+    int pid;
+    int ppid;
+    int tracer_pid;
+    uid_set uid;
+    uid_set gid;
+    size_t fd_size;
+    std::set<uid_t> groups;
+    int ns_tgid;
+    int ns_pid;
+    int ns_pgid;
+    int ns_sid;
+    size_t vm_peak                  = 0; // In kB
+    size_t vm_size                  = 0; // In kB
+    size_t vm_lck                   = 0; // In kB
+    size_t vm_pin                   = 0; // In kB
+    size_t vm_hwm                   = 0; // In kB
+    size_t vm_rss                   = 0; // In kB
+    size_t rss_anon                 = 0; // In kB
+    size_t rss_file                 = 0; // In kB
+    size_t rss_shmem                = 0; // In kB
+    size_t vm_data                  = 0; // In kB
+    size_t vm_stk                   = 0; // In kB
+    size_t vm_exe                   = 0; // In kB
+    size_t vm_lib                   = 0; // In kB
+    size_t vm_pte                   = 0; // In kB
+    size_t vm_swap                  = 0; // In kB
+    size_t huge_tlb_pages           = 0; // In kB
+    bool core_dumping               = false;
+    size_t threads                  = 1;
+    std::pair<size_t, size_t> sig_q = {0, 0};
+    signal_mask sig_pnd             = 0;
+    signal_mask shd_pnd             = 0;
+    signal_mask sig_blk             = 0;
+    signal_mask sig_ign             = 0;
+    signal_mask sig_cgt             = 0;
+    capabilities_mask cap_inh       = 0;
+    capabilities_mask cap_prm       = 0;
+    capabilities_mask cap_eff       = 0;
+    capabilities_mask cap_bnd       = 0;
+    capabilities_mask cap_amb       = 0;
+    bool no_new_privs               = false;
+    seccomp seccomp_mode;
+    // Speculation_Store_Bypass will be added upon request.
+    // Cpus_allowed[_list] will be added upon request.
+    // Mems_allowed[_list] will be added upon request.
+    size_t voluntary_ctxt_switches    = 0;
+    size_t nonvoluntary_ctxt_switches = 0;
+};
+
+struct mem_stats
+{
+    // Note: All values are in pages!
+
+    size_t total;
+    size_t resident;
+    size_t shared;
+    size_t text;
+    size_t data;
+};
+
+struct mem_perm
+{
+    bool can_read    = false;
+    bool can_write   = false;
+    bool can_execute = false;
+    bool is_shared   = false;
+    bool is_private  = false; // Is copy on write
+};
+
+struct mem_region
+{
+    size_t start_address = 0;
+    size_t end_address   = 0;
+    mem_perm perm;
+    size_t offset = 0;
+    dev_t device  = 0;
+    ino_t inode   = 0;
+    std::string pathname;
+
+    bool operator<(const mem_region& rhs) const
+    {
+        return start_address < rhs.start_address;
+    }
+};
 
 struct module
 {

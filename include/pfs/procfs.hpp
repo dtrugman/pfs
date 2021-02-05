@@ -17,10 +17,13 @@
 #ifndef PFS_PROCFS_HPP
 #define PFS_PROCFS_HPP
 
+#include <unistd.h>
+
 #include <set>
 #include <string>
 #include <unordered_map>
 
+#include "task.hpp"
 #include "types.hpp"
 
 namespace pfs {
@@ -32,6 +35,10 @@ public:
 
 public:
     procfs(const std::string& root = DEFAULT_ROOT);
+
+public: // Task API
+    task get_task(int task_id = getpid()) const;
+    std::set<task> get_processes() const;
 
 public: // System API
     std::set<zone> get_buddyinfo() const;

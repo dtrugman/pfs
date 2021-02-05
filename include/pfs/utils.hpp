@@ -82,6 +82,29 @@ stot(const std::string& str, T& out, base b = base::decimal)
     out = static_cast<T>(temp);
 }
 
+// Get a set of all the files under the specified directory.
+// File can be any unix file type, i.e. regular file, directory, link, etc.
+std::set<std::string> enumerate_files(const std::string& dir,
+                                      bool include_dots = false);
+
+// Get a set of all the files under the specified directory whose name is a
+// number. File can be any unix file type, i.e. regular file, directory, link,
+// etc.
+std::set<int> enumerate_numeric_files(const std::string& dir);
+
+// Return the path to which the specified link points.
+// If the linkname is relative, then it is interpreted relative to the directory
+// referred to by the file descriptor dirfd.
+std::string readlink(const std::string& link, int dirfd = AT_FDCWD);
+
+// Return a buffer containing the content of the specified file.
+// If the file is longer than 'max_size', only the first 'max_size' bytes are
+// read.
+// If requested to trim newline terminators, removes all of the from the
+// end of the string.
+std::string readfile(const std::string& file, size_t max_size,
+                     bool trim_newline = true);
+
 // Return a string containing the first line of the specified file.
 // The returned string doesn't contain the line terminator.
 std::string readline(const std::string& file);
@@ -93,6 +116,20 @@ std::string readline(const std::string& file);
 // 'keep_empty' boolean flag.
 std::vector<std::string> split(const std::string& buffer, char delim = ' ',
                                bool keep_empty = false);
+
+// Split a buffer into two: Before and after the first occurence of the
+// delimiter. The delimiter itself is dropped.
+std::pair<std::string, std::string> split_once(const std::string& buffer,
+                                               char delim = ' ');
+
+// Remove all whitespace chars from the beginning of the string
+void ltrim(std::string& str);
+
+// Remove all whitespace chars from the end of the string
+void rtrim(std::string& str);
+
+// Remove all whitespace chars from both beginning and end of the string
+void trim(std::string& str);
 
 // Ensure directory path is terminated using a directory separator '/'
 void ensure_dir_terminator(std::string& dir_path);
