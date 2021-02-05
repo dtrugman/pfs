@@ -1,0 +1,129 @@
+/*
+ *  Copyright 2020-present Daniel Trugman
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+#include "pfs/parsers.hpp"
+#include "pfs/utils.hpp"
+
+namespace pfs {
+namespace impl {
+namespace parsers {
+
+namespace {
+
+unix_domain_socket::type parse_type(const std::string& type_str)
+{
+    int type_int;
+    utils::stot(type_str, type_int, utils::base::hex);
+
+    auto type = static_cast<unix_domain_socket::type>(type_int);
+    if (type < unix_domain_socket::type::stream ||
+        type > unix_domain_socket::type::seqpacket)
+    {
+        throw parser_error("Corrupted unix domain socket type - Illegal value",
+                           type_str);
+    }
+
+    return type;
+}
+
+unix_domain_socket::state parse_state(const std::string& state_str)
+{
+    int state_int;
+    utils::stot(state_str, state_int);
+
+    auto state = static_cast<unix_domain_socket::state>(state_int);
+    if (state < unix_domain_socket::state::free ||
+        state >= unix_domain_socket::state::disconnecting)
+    {
+        throw parser_error("Corrupted unix domain socket state - Illegal value",
+                           state_str);
+    }
+
+    return state;
+}
+
+} // anonymous namespace
+
+unix_domain_socket parse_unix_domain_socket_line(const std::string& line)
+{
+    // Some examples:
+    // clang-format off
+    // ffff8db2fd23a400: 00000003 00000000 00000000 0001 03 16757
+    // ffff8db2f3d35c00: 00000003 00000000 00000000 0001 03 17525 /var/run/dbus/system_bus_socket
+    // ffff8db2fd23a000: 00000003 00000000 00000000 0001 03 17031 /run/systemd/journal/stdout
+    // ffff8db2f696e000: 00000003 00000000 00000000 0001 03 15699 /run/systemd/journal/stdout
+    // ffff8db2f3e09400: 00000002 00000000 00000000 0002 01 21401
+    // clang-format on
+
+    enum token
+    {
+        SKBUFF    = 0,
+        REF_COUNT = 1,
+        PROTOCOL  = 2,
+        FLAGS     = 3,
+        TYPE      = 4,
+        STATE     = 5,
+        INODE     = 6,
+        MIN_COUNT = INODE,
+        PATH      = 7,
+        COUNT
+    };
+
+    auto tokens = utils::split(line);
+    if (tokens.size() < MIN_COUNT || tokens.size() > COUNT)
+    {
+        throw parser_error(
+            "Corrupted unix domain socket line - Unexpected token count", line);
+    }
+
+    try
+    {
+        unix_domain_socket uds;
+
+        utils::stot(tokens[SKBUFF], uds.skbuff, utils::base::hex);
+
+        utils::stot(tokens[REF_COUNT], uds.ref_count, utils::base::hex);
+
+        utils::stot(tokens[PROTOCOL], uds.protocol, utils::base::hex);
+
+        utils::stot(tokens[FLAGS], uds.flags, utils::base::hex);
+
+        uds.socket_type = parse_type(tokens[TYPE]);
+
+        uds.socket_state = parse_state(tokens[STATE]);
+
+        utils::stot(tokens[INODE], uds.inode);
+
+        if (tokens.size() > PATH)
+        {
+            uds.path = tokens[PATH];
+        }
+
+        return uds;
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        throw parser_error("Corrupted socket - Invalid argument", line);
+    }
+    catch (const std::out_of_range& ex)
+    {
+        throw parser_error("Corrupted socket - Out of range", line);
+    }
+}
+
+} // namespace parsers
+} // namespace impl
+} // namespace pfs

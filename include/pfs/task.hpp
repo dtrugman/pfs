@@ -20,6 +20,7 @@
 #include <set>
 #include <string>
 
+#include "net.hpp"
 #include "types.hpp"
 
 namespace pfs {
@@ -58,6 +59,8 @@ public: // Getters
     std::set<mem_region> get_maps() const;
 
     std::set<mount> get_mountinfo() const;
+
+    net get_net() const;
 
     std::unordered_map<std::string, ino_t> get_ns() const;
 

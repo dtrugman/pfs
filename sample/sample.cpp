@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-#include <arpa/inet.h>
 #include <sys/stat.h>
 
 #include <iomanip>
@@ -50,6 +49,186 @@ std::string join(const T& container)
 // =========================================================================
 // Custom procfs type printing utilities
 // =========================================================================
+
+std::ostream& operator<<(std::ostream& out, const pfs::socket::timer timer)
+{
+    switch (timer)
+    {
+        case pfs::socket::timer::none:
+            out << "None";
+            break;
+
+        case pfs::socket::timer::retransmit:
+            out << "Retransmit";
+            break;
+
+        case pfs::socket::timer::another:
+            out << "Another";
+            break;
+
+        case pfs::socket::timer::time_wait:
+            out << "Time-Wait";
+            break;
+
+        case pfs::socket::timer::zero_window:
+            out << "Zero-Window";
+            break;
+
+        default:
+            out << "Unknown";
+            break;
+    }
+
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::socket::state state)
+{
+    switch (state)
+    {
+        case pfs::socket::state::established:
+            out << "Established";
+            break;
+
+        case pfs::socket::state::syn_sent:
+            out << "Syn-Sent";
+            break;
+
+        case pfs::socket::state::syn_recv:
+            out << "Syn-Recv";
+            break;
+
+        case pfs::socket::state::fin_wait1:
+            out << "Fin-Wait1";
+            break;
+
+        case pfs::socket::state::fin_wait2:
+            out << "Fin-Wait2";
+            break;
+
+        case pfs::socket::state::time_wait:
+            out << "Time-Wait";
+            break;
+
+        case pfs::socket::state::close:
+            out << "Close";
+            break;
+
+        case pfs::socket::state::close_wait:
+            out << "Close-Wait";
+            break;
+
+        case pfs::socket::state::last_ack:
+            out << "Last-Ack";
+            break;
+
+        case pfs::socket::state::listen:
+            out << "Listen";
+            break;
+
+        case pfs::socket::state::closing:
+            out << "Closing";
+            break;
+
+        default:
+            out << "Unknown";
+            break;
+    }
+
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::socket& socket)
+{
+    out << "slot[" << socket.slot << "] ";
+    out << "local[" << socket.local_ip.to_string() << ":" << socket.local_port
+        << "] ";
+    out << "remote[" << socket.remote_ip.to_string() << ":"
+        << socket.remote_port << "] ";
+    out << "state[" << socket.current_state << "] ";
+    out << "tx_queue[" << socket.tx_queue << "] ";
+    out << "rx_queue[" << socket.rx_queue << "] ";
+    out << "timer[" << socket.timer_active << "] ";
+    out << "timer_expire[" << socket.timer_expire_jiffies << "] ";
+    out << "retransmits[" << socket.retransmits << "] ";
+    out << "uid[" << socket.uid << "] ";
+    out << "timeouts[" << socket.timeouts << "] ";
+    out << "inode[" << socket.inode << "] ";
+    out << "ref_count[" << socket.ref_count << "] ";
+    out << "skbuff[0x" << std::hex << socket.skbuff << std::dec << "] ";
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out,
+                         const pfs::unix_domain_socket::type type)
+{
+    switch (type)
+    {
+        case pfs::unix_domain_socket::type::stream:
+            out << "Stream";
+            break;
+
+        case pfs::unix_domain_socket::type::datagram:
+            out << "Datagram";
+            break;
+
+        case pfs::unix_domain_socket::type::seqpacket:
+            out << "SeqPacket";
+            break;
+
+        default:
+            out << "Unknown";
+            break;
+    }
+
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out,
+                         const pfs::unix_domain_socket::state state)
+{
+    switch (state)
+    {
+        case pfs::unix_domain_socket::state::free:
+            out << "Free";
+            break;
+
+        case pfs::unix_domain_socket::state::unconnected:
+            out << "Unconnected";
+            break;
+
+        case pfs::unix_domain_socket::state::connecting:
+            out << "Connecting";
+            break;
+
+        case pfs::unix_domain_socket::state::connected:
+            out << "Connected";
+            break;
+
+        case pfs::unix_domain_socket::state::disconnecting:
+            out << "Disconnecting";
+            break;
+
+        default:
+            out << "Unknown";
+            break;
+    }
+
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const pfs::unix_domain_socket& uds)
+{
+    out << "skbuff[0x" << std::hex << uds.skbuff << std::dec << "] ";
+    out << "ref_count[" << uds.ref_count << "] ";
+    out << "protocol[" << uds.protocol << "] ";
+    out << "flags[" << uds.flags << "] ";
+    out << "type[" << uds.socket_type << "] ";
+    out << "state[" << uds.socket_state << "] ";
+    out << "inode[" << uds.inode << "] ";
+    out << "path[" << uds.path << "] ";
+    return out;
+}
 
 std::ostream& operator<<(std::ostream& out, const pfs::task_state state)
 {
@@ -426,6 +605,54 @@ void print_task(const pfs::task& task)
     }
 }
 
+void print_net(const pfs::net& net)
+{
+    try
+    {
+        LOG("=========================================================");
+        LOG("Net");
+        LOG("=========================================================");
+
+        auto icmp = net.get_icmp();
+        print(icmp);
+
+        auto icmp6 = net.get_icmp6();
+        print(icmp6);
+
+        auto raw = net.get_raw();
+        print(raw);
+
+        auto raw6 = net.get_raw6();
+        print(raw6);
+
+        auto tcp = net.get_tcp();
+        print(tcp);
+
+        auto tcp6 = net.get_tcp6();
+        print(tcp6);
+
+        auto udp = net.get_udp();
+        print(udp);
+
+        auto udp6 = net.get_udp6();
+        print(udp6);
+
+        auto udplite = net.get_udplite();
+        print(udplite);
+
+        auto udplite6 = net.get_udplite6();
+        print(udplite6);
+
+        auto unix = net.get_unix();
+        print(unix);
+    }
+    catch (const std::runtime_error& ex)
+    {
+        LOG("Error when printing net info:");
+        LOG(TAB << ex.what());
+    }
+}
+
 void print_system(const pfs::procfs& pfs)
 {
     try
@@ -476,6 +703,7 @@ void usage(char* argv0)
     LOG("Usage: " << argv0 << " [args]...");
     LOG("");
     LOG("   system         Enumerate system-wide information");
+    LOG("   net            Enumerate network information");
     LOG("   tasks          Enumerate all running processes and threads");
     LOG("   [task-id]...   Enumerate the specified tasks");
     LOG("");
@@ -485,6 +713,7 @@ void safe_main(int argc, char** argv)
 {
     static const std::string CMD_ENUM_SYSTEM("system");
     static const std::string CMD_ENUM_TASKS("tasks");
+    static const std::string CMD_ENUM_NET("net");
 
     if (argc < 2)
     {
@@ -497,6 +726,10 @@ void safe_main(int argc, char** argv)
     if (CMD_ENUM_SYSTEM.compare(argv[1]) == 0)
     {
         print_system(pfs);
+    }
+    else if (CMD_ENUM_NET.compare(argv[1]) == 0)
+    {
+        print_net(pfs.get_net());
     }
     else if (CMD_ENUM_TASKS.compare(argv[1]) == 0)
     {

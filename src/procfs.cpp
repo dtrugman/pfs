@@ -73,6 +73,11 @@ std::set<task> procfs::get_processes() const
     return tasks;
 }
 
+net procfs::get_net(int task_id) const
+{
+    return get_task(task_id).get_net();
+}
+
 std::set<zone> procfs::get_buddyinfo() const
 {
     static const std::string BUDDYINFO_FILE("buddyinfo");

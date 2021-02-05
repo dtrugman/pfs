@@ -368,6 +368,117 @@ struct zone
     };
 };
 
+using ipv4 = uint32_t;
+using ipv6 = std::array<uint32_t, 4>;
+struct ip
+{
+    explicit ip();
+    explicit ip(ipv4 addr);
+    explicit ip(ipv6 addr);
+
+    bool is_v4() const;
+    bool is_v6() const;
+    std::string to_string() const;
+
+    bool operator==(const ip& rhs) const
+    {
+        return (domain == rhs.domain) && (storage == rhs.storage);
+    }
+
+    int domain;
+    ipv6 storage;
+};
+
+// Hint: See 'get_tcp4_sock @ tcp_ipv4.c'
+struct socket
+{
+    enum class timer
+    {
+        none       = 0, // No timer is pending
+        retransmit = 1, // Retransmit-timer is pending
+        another = 2, // Another timer (e.g. delayed ack or keepalive) is pending
+        time_wait = 3,   // This is a socket in TIME_WAIT state. Not all fields
+                         // will contain data (or even exist)
+        zero_window = 4, // zero window probe timer is pending
+        last
+    };
+
+    enum class state
+    {
+        established = 1,
+        syn_sent    = 2,
+        syn_recv    = 3,
+        fin_wait1   = 4,
+        fin_wait2   = 5,
+        time_wait   = 6,
+        close       = 7,
+        close_wait  = 8,
+        last_ack    = 9,
+        listen      = 10,
+        closing     = 11,
+        last
+    };
+
+    size_t slot;
+    ip local_ip;
+    uint16_t local_port;
+    ip remote_ip;
+    uint16_t remote_port;
+    state current_state;
+    size_t tx_queue;
+    size_t rx_queue;
+    timer timer_active;
+    size_t timer_expire_jiffies;
+    size_t retransmits;
+    uid_t uid;
+    size_t timeouts;
+    ino_t inode;
+    int ref_count;
+    size_t skbuff;
+
+    // NOTE: Additional fields will be added upon request
+
+    bool operator<(const socket& rhs) const
+    {
+        return (skbuff < rhs.skbuff) || (inode < rhs.inode);
+    }
+};
+
+// Hint: See 'unix_seq_show @ af_unix.c'
+struct unix_domain_socket
+{
+    enum class type
+    {
+        stream    = 1,
+        datagram  = 2,
+        seqpacket = 5
+    };
+
+    // See the Kerne's 'socket_state' enum for more information
+    enum class state
+    {
+        free = 0,     // Not allocated
+        unconnected,  // Unconnected to any socket
+        connecting,   // In process of connecting
+        connected,    // Connected to socket
+        disconnecting // In process of disconnecting
+    };
+
+    size_t skbuff;
+    int ref_count;
+    int protocol;
+    int flags;
+    type socket_type;
+    state socket_state;
+    ino_t inode;
+    std::string path;
+
+    bool operator<(const unix_domain_socket& rhs) const
+    {
+        return (skbuff < rhs.skbuff) || (inode < rhs.inode);
+    }
+};
+
 } // namespace pfs
 
 #endif // PFS_TYPES_HPP

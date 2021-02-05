@@ -353,6 +353,11 @@ std::unordered_map<int, std::string> task::get_fds() const
     return fds;
 }
 
+net task::get_net() const
+{
+    return net(_procfs_root);
+}
+
 std::unordered_map<std::string, ino_t> task::get_ns() const
 {
     static const std::string NS_DIR("ns/");

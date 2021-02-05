@@ -14,6 +14,9 @@
  *  limitations under the License.
  */
 
+#include <arpa/inet.h>
+#include <sys/socket.h>
+
 #include "pfs/types.hpp"
 
 namespace pfs {
@@ -38,6 +41,33 @@ signal_mask::signal_mask(raw_type raw) : raw(raw) {}
 bool signal_mask::is_set(signal sig)
 {
     return raw & static_cast<decltype(raw)>(sig);
+}
+
+// =============================================================
+// IP
+// =============================================================
+
+ip::ip() : domain(AF_UNSPEC), storage({0, 0, 0, 0}) {}
+
+ip::ip(ipv4 addr) : domain(AF_INET), storage({addr, 0, 0, 0}) {}
+
+ip::ip(ipv6 addr) : domain(AF_INET6), storage(addr) {}
+
+bool ip::is_v4() const
+{
+    return domain == AF_INET;
+}
+
+bool ip::is_v6() const
+{
+    return domain == AF_INET6;
+}
+
+std::string ip::to_string() const
+{
+    char buff[INET_ADDRSTRLEN];
+    inet_ntop(domain, &storage, buff, INET_ADDRSTRLEN);
+    return std::string(buff);
 }
 
 } // namespace pfs

@@ -15,18 +15,33 @@ TEST_CASE("Parse lines", "[parsers]")
 {
     std::vector<std::string> content;
     std::set<std::string> expected;
+    size_t skipped = 0;
 
     std::string file;
 
     pfs::impl::defer unlink_temp_file([&file] { unlink(file.c_str()); });
 
-    SECTION("Sample 1")
+    SECTION("No skipped lines")
     {
         content  = {"a", "b", "c"};
         expected = {"a", "b", "c"};
     }
 
+    SECTION("Skip lines")
+    {
+        content  = {"a", "b", "c"};
+        expected = {"b", "c"};
+        skipped  = 1;
+    }
+
+    SECTION("Skip all lines")
+    {
+        content  = {"a", "b", "c"};
+        expected = {};
+        skipped  = 5;
+    }
+
     file     = create_temp_file(content);
-    auto out = parse_lines<decltype(expected)>(file, parse_test_line);
+    auto out = parse_lines<decltype(expected)>(file, parse_test_line, skipped);
     REQUIRE(out == expected);
 }

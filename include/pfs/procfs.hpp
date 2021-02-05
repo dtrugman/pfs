@@ -40,6 +40,9 @@ public: // Task API
     task get_task(int task_id = getpid()) const;
     std::set<task> get_processes() const;
 
+public: // Network API
+    net get_net(int task_id = getpid()) const;
+
 public: // System API
     std::set<zone> get_buddyinfo() const;
 

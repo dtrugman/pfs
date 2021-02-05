@@ -34,7 +34,8 @@ namespace parsers {
 template <typename Container>
 Container parse_lines(
     const std::string& path,
-    std::function<typename Container::value_type(const std::string&)> parser)
+    std::function<typename Container::value_type(const std::string&)> parser,
+    size_t lines_to_skip = 0)
 {
     std::ifstream in(path);
     if (!in)
@@ -45,8 +46,13 @@ Container parse_lines(
     Container output;
 
     std::string line;
-    while (std::getline(in, line))
+    for (size_t i = 0; std::getline(in, line); ++i)
     {
+        if (i < lines_to_skip)
+        {
+            continue;
+        }
+
         if (line.empty())
         {
             continue;
@@ -66,6 +72,8 @@ load_average parse_loadavg_line(const std::string& line);
 module parse_modules_line(const std::string& line);
 mem_region parse_maps_line(const std::string& line);
 mount parse_mountinfo_line(const std::string& line);
+socket parse_socket_line(const std::string& line);
+unix_domain_socket parse_unix_domain_socket_line(const std::string& line);
 
 dev_t parse_device(const std::string& device_str);
 task_state parse_task_state(char state_char);
