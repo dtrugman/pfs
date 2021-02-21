@@ -4,6 +4,8 @@ Very easy to use, procfs parsing library in C++.
 
 ## Build
 
+![Build & Test](https://github.com/dtrugman/pfs/actions/workflows/cmake.yml/badge.svg)
+
 Run `cmake . && make`
 
 Currently supported CMake configuration flags:
