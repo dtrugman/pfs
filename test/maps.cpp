@@ -85,6 +85,46 @@ TEST_CASE("Parse maps", "[task][maps]")
         pathname = "/lib/x86_64-linux-gnu/ld-2.27.so";
     }
 
+    SECTION("Deleted")
+    {
+        start = 0x7fcbe4bc0000;
+        end   = 0x7f0b476c6000;
+
+        can_read    = true;
+        can_write   = false;
+        can_execute = true;
+        is_private  = true;
+
+        offset = 0x00000000;
+
+        dev_major = 0xfd;
+        dev_minor = 0x00;
+
+        inode = 2097624;
+
+        pathname = "/lib/x86_64-linux-gnu/libm-2.27.so (deleted)";
+    }
+
+    SECTION("Pathname with spaces")
+    {
+        start = 0x7f3fcf467000;
+        end   = 0x7f3fcf666000;
+
+        can_read    = false;
+        can_write   = false;
+        can_execute = false;
+        is_private  = true;
+
+        offset = 0x0019d000;
+
+        dev_major = 0xfd;
+        dev_minor = 0x00;
+
+        inode = 3801114;
+
+        pathname = "/tmp/lib m 2.25.so";
+    }
+
     std::ostringstream out;
     out << std::hex << start << "-" << end << std::dec << " ";
     out << (can_read ? 'r' : '-');

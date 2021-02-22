@@ -164,7 +164,7 @@ mem_region parse_maps_line(const std::string& line)
     };
 
     auto tokens = utils::split(line);
-    if (tokens.size() < MIN_COUNT || tokens.size() > COUNT)
+    if (tokens.size() < MIN_COUNT)
     {
         throw parser_error("Corrupted maps line - Unexpected tokens count",
                            line);
@@ -183,9 +183,14 @@ mem_region parse_maps_line(const std::string& line)
 
     region.inode = parse_mem_region_inode(tokens[INODE]);
 
-    if (tokens.size() > PATHNAME)
+    for (size_t i = PATHNAME; i < tokens.size(); ++i)
     {
-        region.pathname = tokens[PATHNAME];
+        if (!region.pathname.empty())
+        {
+            region.pathname += " ";
+        }
+
+        region.pathname += tokens[i];
     }
 
     return region;
