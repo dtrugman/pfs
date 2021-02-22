@@ -198,7 +198,7 @@ void parse_ns_sid(const std::string& value, status& out)
     to_number(value, out.ns_sid);
 }
 
-void to_memory_size(const std::string& value, size_t out)
+void to_memory_size(const std::string& value, size_t& out)
 {
     enum token
     {
