@@ -14,6 +14,14 @@ Currently supported CMake configuration flags:
 
 You can pass any number of those to the `cmake` command: `cmake -D<CONFIG_FLAG>=<VALUE> .`
 
+### Build using clang
+
+If you prefer using clang, just configure the compiler while running cmake:
+
+`CXX=<clang++> CC=<clang> cmake .`
+
+After that, just use `make` as always.
+
 ## Integrate
 
 - Compile as a shared or static library.

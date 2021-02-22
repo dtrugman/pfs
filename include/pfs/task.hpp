@@ -30,8 +30,9 @@ class task final
 public:
     task(const task&) = default;
     task(task&&)      = default;
-    task& operator=(const task&) = default;
-    task& operator=(task&&) = default;
+
+    task& operator=(const task&) = delete;
+    task& operator=(task&&) = delete;
 
     bool operator<(const task& rhs) const;
 

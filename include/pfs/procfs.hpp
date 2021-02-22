@@ -36,6 +36,12 @@ public:
 public:
     procfs(const std::string& root = DEFAULT_ROOT);
 
+    procfs(const procfs&) = default;
+    procfs(procfs&&)      = default;
+
+    procfs& operator=(const procfs&) = delete;
+    procfs& operator=(procfs&&) = delete;
+
 public: // Task API
     task get_task(int task_id = getpid()) const;
     std::set<task> get_processes() const;

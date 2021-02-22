@@ -36,8 +36,9 @@ class net final
 public:
     net(const net&) = default;
     net(net&&)      = default;
-    net& operator=(const net&) = default;
-    net& operator=(net&&) = default;
+
+    net& operator=(const net&) = delete;
+    net& operator=(net&&) = delete;
 
 public:
     std::set<socket> get_icmp() const;
