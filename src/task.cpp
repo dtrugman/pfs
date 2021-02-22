@@ -321,6 +321,14 @@ std::set<mem_region> task::get_maps() const
     return parsers::parse_lines<ret_type>(path, parsers::parse_maps_line);
 }
 
+mem task::get_mem() const
+{
+    static const std::string MEM_FILE("mem");
+    auto path = _task_root + MEM_FILE;
+
+    return mem(path);
+}
+
 std::set<mount> task::get_mountinfo() const
 {
     static const std::string MOUNTINFO_FILE("mountinfo");

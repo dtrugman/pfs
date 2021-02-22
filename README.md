@@ -51,25 +51,42 @@ That's it, you are good to go.
 
 The directory `sample` contains a full blown application that calls all(!) the supported APIs and prints all the information gathered. When compiling the library, the sample applications is compiled as well.
 
-Anyway, here are some minimal examples:
+Anyway, here are some cool examples:
 
-*Example 1:* Get all the loaded kernel modules
+**Example 1:** Iterater over all the loaded unsigned or out-of-tree kernel modules
 ```
 auto pfs = pfs::procfs();
 auto modules = pfs.get_modules();
+for (const auto& module : modules)
+{
+    if (module.is_out_of_tree || module.is_unsigned)
+    {
+        ... do your work ...
+    }
+}
 ```
 
-*Example 2:* Iterate over the memory maps for task 1234 (This can be both a process or a thread)
+**Example 2:** Find all the memory maps for task 1234 (This can be both a process or a thread) that start with an ELFs header
 ```
 auto task = pfs::procfs().get_task(1234);
+auto mem = task.get_mem();
 for (auto& map : task.get_maps())
 {
-    ... do your work ...
+    if (!map.perm.can_read)
+    {
+        continue;
+    }
+
+    static const std::vector<uint8_t> ELF_HEADER = { 0x7F, 0x45, 0x4C, 0x46 };
+    if (mem.read(map.start_address, ELF_HEADER.size()) == ELF_HEADER)
+    {
+        ... do your work ...
+    }
 }
 ```
 _(You can either create `pfs` every time or once and keep it, the overhead is really small)_
 
-*Example 3:* Iterate over all the IPv4 TCP socket currently in listening state (in my current network namespace):
+**Example 3:** Iterate over all the IPv4 TCP sockets currently in listening state (in my current network namespace):
 ```
 // Same as pfs::procfs().get_task().get_net().get_tcp()
 for (auto& socket : pfs::procfs().get_net().get_tcp())
@@ -82,7 +99,7 @@ for (auto& socket : pfs::procfs().get_net().get_tcp())
 ```
 _(API behaves similar to the `procfs`, where `/proc/net` is a soft link to `/proc/self/net`)_
 
-*Example 4:* Get all the IPv6 UDP sockets in the root network namespace belonging to a specific user ID:
+**Example 4:** Get all the IPv6 UDP sockets in the root network namespace belonging to a specific user ID:
 ```
 for (auto& socket : pfs::procfs().get_task(1).get_net().get_udp6())
 {
@@ -93,7 +110,7 @@ for (auto& socket : pfs::procfs().get_task(1).get_net().get_udp6())
 }
 ```
 
-*Example 5:* Check if the process catches SIGSTOP signals
+**Example 5:** Check if the process catches SIGSTOP signals
 ```
 auto status = pfs::procfs().get_task(1234).get_status();
 bool handles_sigstop = status.sig_cgt.is_set(pfs::signal::sigstop);

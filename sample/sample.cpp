@@ -58,6 +58,16 @@ void print_task(const pfs::task& task)
         auto maps = task.get_maps();
         print(maps);
 
+        if (!maps.empty())
+        {
+            static const size_t BYTES = 8;
+            auto mem                  = task.get_mem();
+            auto first_map            = *maps.begin();
+            auto header_bytes = mem.read(first_map.start_address, BYTES);
+            auto header       = hexlify(header_bytes);
+            print(header);
+        }
+
         auto fds = task.get_fds();
         print(fds);
 

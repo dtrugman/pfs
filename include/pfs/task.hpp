@@ -20,6 +20,7 @@
 #include <set>
 #include <string>
 
+#include "mem.hpp"
 #include "net.hpp"
 #include "types.hpp"
 
@@ -58,6 +59,8 @@ public: // Getters
     std::unordered_map<int, std::string> get_fds() const;
 
     std::set<mem_region> get_maps() const;
+
+    mem get_mem() const;
 
     std::set<mount> get_mountinfo() const;
 

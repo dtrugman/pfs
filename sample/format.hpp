@@ -37,6 +37,28 @@ std::string join(const T& container)
     return out_str;
 }
 
+bool is_printable(uint8_t byte)
+{
+    static const uint8_t PRINTABLE_MIN = 0x21;
+    static const uint8_t PRINTABLE_MAX = 0x7e;
+
+    return PRINTABLE_MIN <= byte && byte <= PRINTABLE_MAX;
+}
+
+std::string hexlify(const std::vector<uint8_t>& buffer)
+{
+    std::ostringstream out;
+    out << std::hex;
+
+    for (const auto& v : buffer)
+    {
+        char c = is_printable(v) ? static_cast<char>(v) : '.';
+        out << c;
+    }
+
+    return out.str();
+}
+
 std::ostream& operator<<(std::ostream& out, const pfs::socket::timer timer)
 {
     switch (timer)
