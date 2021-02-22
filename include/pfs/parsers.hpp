@@ -82,7 +82,8 @@ template <typename Output>
 class file_parser
 {
 public:
-    Output parse(const std::string& path)
+    Output parse(const std::string& path,
+                 const std::set<std::string>& keys = {})
     {
         std::ifstream in(path);
         if (!in)
@@ -105,10 +106,17 @@ public:
                 throw parser_error("Corrupted line - Missing key", line);
             }
 
+            utils::rtrim(key);
+
             // Value MIGHT be an empty value, for example:
             // Process without any groups
 
-            utils::rtrim(key);
+            // If caller specified a set of keys, get only those
+            if (!keys.empty() && keys.find(key) == keys.end())
+            {
+                continue;
+            }
+
             auto iter = _parsers.find(key);
             if (iter != _parsers.end())
             {
@@ -129,7 +137,7 @@ protected:
     file_parser(const value_parsers& parsers) : _parsers(parsers) {}
 
 private:
-    const value_parsers _parsers;
+    const value_parsers& _parsers;
 };
 
 class status_parser : public file_parser<status>

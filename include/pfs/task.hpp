@@ -70,7 +70,7 @@ public: // Getters
 
     mem_stats get_statm() const;
 
-    status get_status() const;
+    status get_status(const std::set<std::string>& keys = {}) const;
 
     std::set<task> get_tasks() const;
 

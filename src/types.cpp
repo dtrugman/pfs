@@ -32,6 +32,11 @@ bool capabilities_mask::is_set(capability cap)
     return raw & static_cast<decltype(raw)>(cap);
 }
 
+bool capabilities_mask::operator==(const capabilities_mask& rhs) const
+{
+    return raw == rhs.raw;
+}
+
 // =============================================================
 // Signal mask
 // =============================================================
@@ -41,6 +46,11 @@ signal_mask::signal_mask(raw_type raw) : raw(raw) {}
 bool signal_mask::is_set(signal sig)
 {
     return raw & static_cast<decltype(raw)>(sig);
+}
+
+bool signal_mask::operator==(const signal_mask& rhs) const
+{
+    return raw == rhs.raw;
 }
 
 // =============================================================

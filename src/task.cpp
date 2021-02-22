@@ -304,12 +304,12 @@ mem_stats task::get_statm() const
     }
 }
 
-status task::get_status() const
+status task::get_status(const std::set<std::string>& keys) const
 {
     static const std::string STATUS_FILE("status");
     auto path = _task_root + STATUS_FILE;
 
-    return parsers::status_parser().parse(path);
+    return parsers::status_parser().parse(path, keys);
 }
 
 std::set<mem_region> task::get_maps() const

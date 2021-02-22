@@ -25,6 +25,9 @@
 
 namespace pfs {
 
+static const uid_t INVALID_UID = (uid_t)-1;
+static const pid_t INVALID_PID = (pid_t)-1;
+
 // Note: We only support values that exist post 2.6.32.
 enum class task_state
 {
@@ -43,14 +46,14 @@ enum class task_state
 
 struct stat
 {
-    int pid = 0;
+    pid_t pid = INVALID_PID;
     std::string comm;
     task_state state             = task_state::idle;
-    int ppid                     = 0;
-    int pgrp                     = 0;
+    pid_t ppid                   = INVALID_PID;
+    pid_t pgrp                   = INVALID_PID;
     int session                  = 0;
     int tty_nr                   = 0;
-    int tgpid                    = 0;
+    pid_t tgpid                  = INVALID_PID;
     unsigned flags               = 0;
     unsigned long minflt         = 0;
     unsigned long cminflt        = 0;
@@ -142,9 +145,11 @@ struct capabilities_mask
 {
     using raw_type = uint64_t;
 
-    capabilities_mask(raw_type raw = 0);
+    explicit capabilities_mask(raw_type raw = 0);
 
     bool is_set(capability b);
+
+    bool operator==(const capabilities_mask& rhs) const;
 
     raw_type raw;
 };
@@ -192,9 +197,11 @@ struct signal_mask
 {
     using raw_type = uint64_t;
 
-    signal_mask(raw_type raw = 0);
+    explicit signal_mask(raw_type raw = 0);
 
     bool is_set(signal b);
+
+    bool operator==(const signal_mask& rhs) const;
 
     raw_type raw;
 };
@@ -210,28 +217,34 @@ struct status
 
     struct uid_set
     {
-        uid_t real;
-        uid_t effective;
-        uid_t saved_set;
-        uid_t filesystem;
+        uid_t real       = INVALID_UID;
+        uid_t effective  = INVALID_UID;
+        uid_t saved_set  = INVALID_UID;
+        uid_t filesystem = INVALID_UID;
+
+        bool operator==(const uid_set& rhs) const
+        {
+            return real == rhs.real && effective == rhs.effective &&
+                   saved_set == rhs.saved_set && filesystem == rhs.filesystem;
+        }
     };
 
     std::string name;
-    mode_t umask;
-    task_state state;
-    int tgid;
-    int ngid;
-    int pid;
-    int ppid;
-    int tracer_pid;
+    mode_t umask     = 0;
+    task_state state = task_state::running;
+    pid_t tgid       = INVALID_PID;
+    pid_t ngid       = INVALID_PID;
+    pid_t pid        = INVALID_PID;
+    pid_t ppid       = INVALID_PID;
+    pid_t tracer_pid = INVALID_PID;
     uid_set uid;
     uid_set gid;
-    size_t fd_size;
+    size_t fd_size = 0;
     std::set<uid_t> groups;
-    int ns_tgid;
-    int ns_pid;
-    int ns_pgid;
-    int ns_sid;
+    int ns_tgid                     = INVALID_PID;
+    int ns_pid                      = INVALID_PID;
+    int ns_pgid                     = INVALID_PID;
+    int ns_sid                      = INVALID_PID;
     size_t vm_peak                  = 0; // In kB
     size_t vm_size                  = 0; // In kB
     size_t vm_lck                   = 0; // In kB
@@ -251,17 +264,17 @@ struct status
     bool core_dumping               = false;
     size_t threads                  = 1;
     std::pair<size_t, size_t> sig_q = {0, 0};
-    signal_mask sig_pnd             = 0;
-    signal_mask shd_pnd             = 0;
-    signal_mask sig_blk             = 0;
-    signal_mask sig_ign             = 0;
-    signal_mask sig_cgt             = 0;
-    capabilities_mask cap_inh       = 0;
-    capabilities_mask cap_prm       = 0;
-    capabilities_mask cap_eff       = 0;
-    capabilities_mask cap_bnd       = 0;
-    capabilities_mask cap_amb       = 0;
-    bool no_new_privs               = false;
+    signal_mask sig_pnd;
+    signal_mask shd_pnd;
+    signal_mask sig_blk;
+    signal_mask sig_ign;
+    signal_mask sig_cgt;
+    capabilities_mask cap_inh;
+    capabilities_mask cap_prm;
+    capabilities_mask cap_eff;
+    capabilities_mask cap_bnd;
+    capabilities_mask cap_amb;
+    bool no_new_privs = false;
     seccomp seccomp_mode;
     // Speculation_Store_Bypass will be added upon request.
     // Cpus_allowed[_list] will be added upon request.
