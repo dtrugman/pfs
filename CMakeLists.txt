@@ -2,6 +2,11 @@ cmake_minimum_required (VERSION 3.5)
 
 option(BUILD_SHARED_LIBS "Build shared library (.so) instead of static one (.a)" ON)
 
+if (NOT CMAKE_BUILD_TYPE)
+    set (CMAKE_BUILD_TYPE Debug)
+endif ()
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
 add_compile_options (-std=c++11 -Wall -Wextra -pedantic -Werror)
 
 include_directories (include)
@@ -16,6 +21,13 @@ aux_source_directory (${ROOT_SOURCE_DIR}/parsers PARSERS_SOURCES)
 set (SOURCES ${ROOT_SOURCES} ${PARSERS_SOURCES})
 
 add_library (pfs ${SOURCES})
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    message (STATUS "Enabling address sanitizer")
+    set (SANITIZE_FLAGS -fno-omit-frame-pointer -fsanitize=address -fsanitize=leak)
+    target_compile_options (pfs PUBLIC ${SANITIZE_FLAGS})
+    target_link_libraries (pfs PUBLIC -lasan ${SANITIZE_FLAGS})
+endif ()
 
 add_executable (sample sample/sample.cpp)
 target_link_libraries (sample PRIVATE pfs)
