@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 
+#include "fd.hpp"
 #include "mem.hpp"
 #include "net.hpp"
 #include "types.hpp"
@@ -57,7 +58,7 @@ public: // Getters
 
     std::string get_exe() const;
 
-    std::unordered_map<int, std::string> get_fds() const;
+    std::unordered_map<int, fd> get_fds() const;
 
     std::vector<mem_region> get_maps() const;
 

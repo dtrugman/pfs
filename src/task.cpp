@@ -342,26 +342,16 @@ std::vector<mount> task::get_mountinfo() const
     return output;
 }
 
-std::unordered_map<int, std::string> task::get_fds() const
+std::unordered_map<int, fd> task::get_fds() const
 {
     static const std::string FDS_DIR("fd/");
     auto path = _task_root + FDS_DIR;
 
-    int dirfd = open(path.c_str(), O_DIRECTORY);
-    if (dirfd == -1)
+    std::unordered_map<int, fd> fds;
+    for (const auto& num : utils::enumerate_numeric_files(path))
     {
-        throw std::system_error(errno, std::system_category(),
-                                "Couldn't open fds directory");
+        fds.emplace(num, fd(path, num));
     }
-    defer close_dirfd([dirfd] { close(dirfd); });
-
-    std::unordered_map<int, std::string> fds;
-
-    for (const auto& fd : utils::enumerate_numeric_files(path))
-    {
-        fds.emplace(fd, utils::readlink(std::to_string(fd), dirfd));
-    }
-
     return fds;
 }
 

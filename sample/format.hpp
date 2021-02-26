@@ -560,3 +560,9 @@ std::ostream& operator<<(std::ostream& out, const pfs::zone& zone)
     out << "chunks[" << join(zone.chunks) << "] ";
     return out;
 }
+
+std::ostream& operator<<(std::ostream& out, const pfs::fd& fd)
+{
+    out << "target[" << fd.get_target() << "] ";
+    return out;
+}

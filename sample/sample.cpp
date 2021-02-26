@@ -20,6 +20,66 @@
 #include "pfs/procfs.hpp"
 #include "pfs/version.hpp"
 
+template <typename T>
+void socket_inserter(const std::vector<T>& sockets,
+                     std::unordered_map<ino_t, std::string>& output)
+{
+    for (auto& socket : sockets)
+    {
+        std::ostringstream out;
+        out << socket;
+        output.emplace(socket.inode, out.str());
+    }
+}
+
+void print_fds(const pfs::task& task)
+{
+    // This method does much more than print the FDs.
+    // It is an example that show how one can stitch the information
+    // from the FDs against the information from the network API.
+    // We only stitch TCP and Unix socket information, but obviously
+    // you can do the same with any other parsed socket type.
+
+    std::unordered_map<ino_t, std::string> sockets;
+
+    auto net = task.get_net();
+    socket_inserter(net.get_icmp(), sockets);
+    socket_inserter(net.get_icmp6(), sockets);
+    socket_inserter(net.get_raw(), sockets);
+    socket_inserter(net.get_raw6(), sockets);
+    socket_inserter(net.get_tcp(), sockets);
+    socket_inserter(net.get_tcp6(), sockets);
+    socket_inserter(net.get_udp(), sockets);
+    socket_inserter(net.get_udp6(), sockets);
+    socket_inserter(net.get_udplite(), sockets);
+    socket_inserter(net.get_udplite6(), sockets);
+    socket_inserter(net.get_unix(), sockets);
+    socket_inserter(net.get_netlink(), sockets);
+
+    LOG("fds");
+    LOG("---");
+
+    for (auto& iter : task.get_fds())
+    {
+        auto num = iter.first;
+        auto& fd = iter.second;
+
+        auto st    = fd.get_target_stat();
+        auto inode = st.st_ino;
+
+        std::ostringstream out;
+        out << "target[" << fd.get_target() << "] ";
+
+        auto socket = sockets.find(inode);
+        if (socket != sockets.end())
+        {
+            out << socket->second;
+        }
+
+        LOG(num << ": " << out.str());
+    }
+}
+
 void print_task(const pfs::task& task)
 {
     try
@@ -68,14 +128,14 @@ void print_task(const pfs::task& task)
             print(header);
         }
 
-        auto fds = task.get_fds();
-        print(fds);
-
         auto mountinfo = task.get_mountinfo();
         print(mountinfo);
 
         auto ns = task.get_ns();
         print(ns);
+
+        auto fds = task.get_fds();
+        print(fds);
     }
     catch (const std::runtime_error& ex)
     {
@@ -181,10 +241,12 @@ void usage(char* argv0)
         << PFS_VER_MAJOR << "." << PFS_VER_MINOR << "." << PFS_VER_PATCH);
     LOG("Usage: " << argv0 << " [args]...");
     LOG("");
-    LOG("   system         Enumerate system-wide information");
-    LOG("   net            Enumerate network information");
-    LOG("   tasks          Enumerate all running processes and threads");
-    LOG("   [task-id]...   Enumerate the specified tasks");
+    LOG("   system            Enumerate system-wide information");
+    LOG("   net               Enumerate network information");
+    LOG("   tasks             Enumerate all running processes and threads");
+    LOG("   [task-id]...      Enumerate the specified tasks");
+    LOG("   fds [task-id]...  Enumerate all the fds for a specific task");
+    LOG("                     and stitch them against the network information");
     LOG("");
 }
 
@@ -193,6 +255,7 @@ void safe_main(int argc, char** argv)
     static const std::string CMD_ENUM_SYSTEM("system");
     static const std::string CMD_ENUM_TASKS("tasks");
     static const std::string CMD_ENUM_NET("net");
+    static const std::string CMD_ENUM_FDS("fds");
 
     if (argc < 2)
     {
@@ -209,6 +272,20 @@ void safe_main(int argc, char** argv)
     else if (CMD_ENUM_NET.compare(argv[1]) == 0)
     {
         print_net(pfs.get_net());
+    }
+    else if (CMD_ENUM_FDS.compare(argv[1]) == 0)
+    {
+        if (argc < 3)
+        {
+            usage(argv[0]);
+            return;
+        }
+
+        for (int i = 2; i < argc; ++i)
+        {
+            int id = std::stoi(argv[i]);
+            print_fds(pfs.get_task(id));
+        }
     }
     else if (CMD_ENUM_TASKS.compare(argv[1]) == 0)
     {
