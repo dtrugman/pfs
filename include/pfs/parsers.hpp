@@ -31,10 +31,13 @@ namespace pfs {
 namespace impl {
 namespace parsers {
 
-template <typename Container>
-Container parse_lines(
-    const std::string& path,
-    std::function<typename Container::value_type(const std::string&)> parser,
+template <typename Inserter>
+using inserted_type = typename Inserter::container_type::value_type;
+
+template <typename Inserter>
+void parse_lines(
+    const std::string& path, Inserter inserter,
+    std::function<inserted_type<Inserter>(const std::string&)> parser,
     size_t lines_to_skip = 0)
 {
     std::ifstream in(path);
@@ -42,8 +45,6 @@ Container parse_lines(
     {
         throw std::runtime_error("Couldn't open file");
     }
-
-    Container output;
 
     std::string line;
     for (size_t i = 0; std::getline(in, line); ++i)
@@ -58,10 +59,8 @@ Container parse_lines(
             continue;
         }
 
-        output.emplace(parser(line));
+        inserter = parser(line);
     }
-
-    return output;
 }
 
 std::pair<std::string, bool> parse_filesystems_line(const std::string& line);
@@ -70,6 +69,7 @@ std::pair<std::string, size_t> parse_meminfo_line(const std::string& line);
 zone parse_buddyinfo_line(const std::string& line);
 load_average parse_loadavg_line(const std::string& line);
 module parse_modules_line(const std::string& line);
+mem_region parse_maps_line(const std::string& line);
 mem_region parse_maps_line(const std::string& line);
 mount parse_mountinfo_line(const std::string& line);
 socket parse_socket_line(const std::string& line);

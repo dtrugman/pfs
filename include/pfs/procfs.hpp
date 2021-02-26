@@ -22,6 +22,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "task.hpp"
 #include "types.hpp"
@@ -50,7 +51,7 @@ public: // Network API
     net get_net(int task_id = getpid()) const;
 
 public: // System API
-    std::set<zone> get_buddyinfo() const;
+    std::vector<zone> get_buddyinfo() const;
 
     std::string get_cmdline() const;
 
@@ -60,7 +61,7 @@ public: // System API
 
     std::unordered_map<std::string, size_t> get_meminfo() const;
 
-    std::set<module> get_modules() const;
+    std::vector<module> get_modules() const;
 
     std::string get_version() const;
 

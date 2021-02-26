@@ -78,13 +78,15 @@ net procfs::get_net(int task_id) const
     return get_task(task_id).get_net();
 }
 
-std::set<zone> procfs::get_buddyinfo() const
+std::vector<zone> procfs::get_buddyinfo() const
 {
     static const std::string BUDDYINFO_FILE("buddyinfo");
     auto path = _root + BUDDYINFO_FILE;
 
-    using ret_type = std::set<zone>;
-    return parsers::parse_lines<ret_type>(path, parsers::parse_buddyinfo_line);
+    std::vector<zone> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_buddyinfo_line);
+    return output;
 }
 
 std::string procfs::get_cmdline() const
@@ -100,9 +102,10 @@ std::unordered_map<std::string, bool> procfs::get_filesystems() const
     static const std::string FILESYSTEMS_FILE("filesystems");
     auto path = _root + FILESYSTEMS_FILE;
 
-    using ret_type = std::unordered_map<std::string, bool>;
-    return parsers::parse_lines<ret_type>(path,
-                                          parsers::parse_filesystems_line);
+    std::unordered_map<std::string, bool> output;
+    parsers::parse_lines(path, std::inserter(output, output.begin()),
+                         parsers::parse_filesystems_line);
+    return output;
 }
 
 std::unordered_map<std::string, size_t> procfs::get_meminfo() const
@@ -110,8 +113,10 @@ std::unordered_map<std::string, size_t> procfs::get_meminfo() const
     static const std::string MEMINFO_FILE("meminfo");
     auto path = _root + MEMINFO_FILE;
 
-    using ret_type = std::unordered_map<std::string, size_t>;
-    return parsers::parse_lines<ret_type>(path, parsers::parse_meminfo_line);
+    std::unordered_map<std::string, size_t> output;
+    parsers::parse_lines(path, std::inserter(output, output.begin()),
+                         parsers::parse_meminfo_line);
+    return output;
 }
 
 load_average procfs::get_loadavg() const
@@ -123,13 +128,15 @@ load_average procfs::get_loadavg() const
     return parsers::parse_loadavg_line(line);
 }
 
-std::set<module> procfs::get_modules() const
+std::vector<module> procfs::get_modules() const
 {
     static const std::string MODULES_FILE("modules");
     auto path = _root + MODULES_FILE;
 
-    using ret_type = std::set<module>;
-    return parsers::parse_lines<ret_type>(path, parsers::parse_modules_line);
+    std::vector<module> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_modules_line);
+    return output;
 }
 
 std::string procfs::get_version() const

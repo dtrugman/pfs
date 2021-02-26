@@ -312,13 +312,15 @@ status task::get_status(const std::set<std::string>& keys) const
     return parsers::status_parser().parse(path, keys);
 }
 
-std::set<mem_region> task::get_maps() const
+std::vector<mem_region> task::get_maps() const
 {
     static const std::string MAPS_FILE("maps");
     auto path = _task_root + MAPS_FILE;
 
-    using ret_type = std::set<mem_region>;
-    return parsers::parse_lines<ret_type>(path, parsers::parse_maps_line);
+    std::vector<mem_region> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_maps_line);
+    return output;
 }
 
 mem task::get_mem() const
@@ -329,13 +331,15 @@ mem task::get_mem() const
     return mem(path);
 }
 
-std::set<mount> task::get_mountinfo() const
+std::vector<mount> task::get_mountinfo() const
 {
     static const std::string MOUNTINFO_FILE("mountinfo");
     auto path = _task_root + MOUNTINFO_FILE;
 
-    using ret_type = std::set<mount>;
-    return parsers::parse_lines<ret_type>(path, parsers::parse_mountinfo_line);
+    std::vector<mount> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_mountinfo_line);
+    return output;
 }
 
 std::unordered_map<int, std::string> task::get_fds() const
