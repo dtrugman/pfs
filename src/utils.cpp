@@ -122,7 +122,7 @@ std::string readfile(const std::string& file, size_t max_bytes,
     buffer.resize(bytes_read);
 
     static const char NEWLINE('\n');
-    while (trim_newline && buffer.back() == NEWLINE)
+    while (trim_newline && !buffer.empty() && buffer.back() == NEWLINE)
     {
         buffer.pop_back();
     }
