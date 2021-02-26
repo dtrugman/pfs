@@ -41,7 +41,7 @@ enum class task_state
     wakekill,
     waking,
     parked,
-    idle
+    idle,
 };
 
 struct stat
@@ -138,7 +138,7 @@ enum class capability
     mac_admin        = 33,
     syslog           = 34,
     wake_alarm       = 35,
-    block_suspend    = 36
+    block_suspend    = 36,
 };
 
 struct capabilities_mask
@@ -212,7 +212,7 @@ struct status
     {
         disabled = 0,
         strict   = 1,
-        filter   = 2
+        filter   = 2,
     };
 
     struct uid_set
@@ -326,7 +326,6 @@ struct module
         live      = 0,
         loading   = 1,
         unloading = 2,
-        last
     };
 
     std::string name;
@@ -413,7 +412,6 @@ struct socket
         time_wait = 3,   // This is a socket in TIME_WAIT state. Not all fields
                          // will contain data (or even exist)
         zero_window = 4, // zero window probe timer is pending
-        last
     };
 
     enum class state
@@ -429,7 +427,6 @@ struct socket
         last_ack    = 9,
         listen      = 10,
         closing     = 11,
-        last
     };
 
     size_t slot;
@@ -464,17 +461,17 @@ struct unix_domain_socket
     {
         stream    = 1,
         datagram  = 2,
-        seqpacket = 5
+        seqpacket = 5,
     };
 
     // See the Kerne's 'socket_state' enum for more information
     enum class state
     {
-        free = 0,     // Not allocated
-        unconnected,  // Unconnected to any socket
-        connecting,   // In process of connecting
-        connected,    // Connected to socket
-        disconnecting // In process of disconnecting
+        free          = 0, // Not allocated
+        unconnected   = 1, // Unconnected to any socket
+        connecting    = 2, // In process of connecting
+        connected     = 3, // Connected to socket
+        disconnecting = 4, // In process of disconnecting
     };
 
     size_t skbuff;

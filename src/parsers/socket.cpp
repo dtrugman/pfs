@@ -93,7 +93,7 @@ socket::state parse_state(const std::string& state_str)
     utils::stot(state_str, state_int, utils::base::hex);
 
     auto state = static_cast<socket::state>(state_int);
-    if (state < socket::state::established || state >= socket::state::last)
+    if (state < socket::state::established || state > socket::state::closing)
     {
         throw parser_error("Corrupted socket state - Illegal value", state_str);
     }
@@ -150,7 +150,7 @@ std::pair<socket::timer, size_t> parse_timer(const std::string& timer_str)
     utils::stot(tokens[ACTIVE], timer_int);
 
     auto timer = static_cast<socket::timer>(timer_int);
-    if (timer < socket::timer::none || timer >= socket::timer::last)
+    if (timer < socket::timer::none || timer > socket::timer::zero_window)
     {
         throw parser_error("Corrupted socket timer - Illegal value", timer_str);
     }
