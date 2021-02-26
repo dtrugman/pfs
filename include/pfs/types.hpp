@@ -414,7 +414,7 @@ struct net_socket
         zero_window = 4, // zero window probe timer is pending
     };
 
-    enum class state
+    enum class net_state
     {
         established = 1,
         syn_sent    = 2,
@@ -434,7 +434,7 @@ struct net_socket
     uint16_t local_port;
     ip remote_ip;
     uint16_t remote_port;
-    state current_state;
+    net_state socket_net_state;
     size_t tx_queue;
     size_t rx_queue;
     timer timer_active;

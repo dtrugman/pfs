@@ -20,7 +20,7 @@ TEST_CASE("Parse net socket", "[net][net_socket]")
         expected.local_port           = 0x0035;
         expected.remote_ip            = pfs::ip(0x00000000);
         expected.remote_port          = 0x0000;
-        expected.current_state        = pfs::net_socket::state::listen;
+        expected.socket_net_state     = pfs::net_socket::net_state::listen;
         expected.tx_queue             = 0x00000000;
         expected.rx_queue             = 0x00000000;
         expected.timer_active         = pfs::net_socket::timer::none;
@@ -47,7 +47,7 @@ TEST_CASE("Parse net socket", "[net][net_socket]")
         expected.remote_ip  = pfs::ip(
             pfs::ipv6({0x00000000, 0x00000000, 0x00000000, 0x00000000}));
         expected.remote_port          = 0x0000;
-        expected.current_state        = pfs::net_socket::state::listen;
+        expected.socket_net_state     = pfs::net_socket::net_state::listen;
         expected.tx_queue             = 0x00000000;
         expected.rx_queue             = 0x00000000;
         expected.timer_active         = pfs::net_socket::timer::none;
@@ -66,7 +66,7 @@ TEST_CASE("Parse net socket", "[net][net_socket]")
     REQUIRE(socket.local_port == expected.local_port);
     REQUIRE(socket.remote_ip == expected.remote_ip);
     REQUIRE(socket.remote_port == expected.remote_port);
-    REQUIRE(socket.current_state == expected.current_state);
+    REQUIRE(socket.socket_net_state == expected.socket_net_state);
     REQUIRE(socket.tx_queue == expected.tx_queue);
     REQUIRE(socket.rx_queue == expected.rx_queue);
     REQUIRE(socket.timer_active == expected.timer_active);

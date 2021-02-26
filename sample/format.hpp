@@ -91,51 +91,52 @@ std::ostream& operator<<(std::ostream& out, const pfs::net_socket::timer timer)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::net_socket::state state)
+std::ostream& operator<<(std::ostream& out,
+                         const pfs::net_socket::net_state state)
 {
     switch (state)
     {
-        case pfs::net_socket::state::established:
+        case pfs::net_socket::net_state::established:
             out << "Established";
             break;
 
-        case pfs::net_socket::state::syn_sent:
+        case pfs::net_socket::net_state::syn_sent:
             out << "Syn-Sent";
             break;
 
-        case pfs::net_socket::state::syn_recv:
+        case pfs::net_socket::net_state::syn_recv:
             out << "Syn-Recv";
             break;
 
-        case pfs::net_socket::state::fin_wait1:
+        case pfs::net_socket::net_state::fin_wait1:
             out << "Fin-Wait1";
             break;
 
-        case pfs::net_socket::state::fin_wait2:
+        case pfs::net_socket::net_state::fin_wait2:
             out << "Fin-Wait2";
             break;
 
-        case pfs::net_socket::state::time_wait:
+        case pfs::net_socket::net_state::time_wait:
             out << "Time-Wait";
             break;
 
-        case pfs::net_socket::state::close:
+        case pfs::net_socket::net_state::close:
             out << "Close";
             break;
 
-        case pfs::net_socket::state::close_wait:
+        case pfs::net_socket::net_state::close_wait:
             out << "Close-Wait";
             break;
 
-        case pfs::net_socket::state::last_ack:
+        case pfs::net_socket::net_state::last_ack:
             out << "Last-Ack";
             break;
 
-        case pfs::net_socket::state::listen:
+        case pfs::net_socket::net_state::listen:
             out << "Listen";
             break;
 
-        case pfs::net_socket::state::closing:
+        case pfs::net_socket::net_state::closing:
             out << "Closing";
             break;
 
@@ -154,7 +155,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::net_socket& socket)
         << "] ";
     out << "remote[" << socket.remote_ip.to_string() << ":"
         << socket.remote_port << "] ";
-    out << "state[" << socket.current_state << "] ";
+    out << "state[" << socket.socket_net_state << "] ";
     out << "tx_queue[" << socket.tx_queue << "] ";
     out << "rx_queue[" << socket.rx_queue << "] ";
     out << "timer[" << socket.timer_active << "] ";

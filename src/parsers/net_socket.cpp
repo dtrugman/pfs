@@ -88,14 +88,14 @@ std::pair<ip, uint16_t> parse_address(const std::string& address_str)
     return std::make_pair(addr, port);
 }
 
-net_socket::state parse_state(const std::string& state_str)
+net_socket::net_state parse_state(const std::string& state_str)
 {
     int state_int;
     utils::stot(state_str, state_int, utils::base::hex);
 
-    auto state = static_cast<net_socket::state>(state_int);
-    if (state < net_socket::state::established ||
-        state > net_socket::state::closing)
+    auto state = static_cast<net_socket::net_state>(state_int);
+    if (state < net_socket::net_state::established ||
+        state > net_socket::net_state::closing)
     {
         throw parser_error("Corrupted net socket state - Illegal value",
                            state_str);
@@ -220,7 +220,7 @@ net_socket parse_net_socket_line(const std::string& line)
         std::tie(sock.remote_ip, sock.remote_port) =
             parse_address(tokens[REMOTE_ADDRESS]);
 
-        sock.current_state = parse_state(tokens[STATE]);
+        sock.socket_net_state = parse_state(tokens[STATE]);
 
         std::tie(sock.tx_queue, sock.rx_queue) = parse_queues(tokens[QUEUES]);
 
