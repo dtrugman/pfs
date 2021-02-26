@@ -7,7 +7,7 @@ using namespace pfs::impl::parsers;
 
 TEST_CASE("Parse status", "[task][status]")
 {
-    pfs::status expected;
+    pfs::task_status expected;
 
     // clang-format off
     std::vector<std::string> content = {
@@ -127,14 +127,14 @@ TEST_CASE("Parse status", "[task][status]")
         REQUIRE(status.cap_bnd == pfs::capabilities_mask(0x0000003fffffffff));
         REQUIRE(status.cap_amb == pfs::capabilities_mask(0x0000000000000000));
         REQUIRE(status.no_new_privs == false);
-        REQUIRE(status.seccomp_mode == pfs::status::seccomp::disabled);
+        REQUIRE(status.seccomp_mode == pfs::task_status::seccomp::disabled);
         REQUIRE(status.voluntary_ctxt_switches == 4731);
         REQUIRE(status.nonvoluntary_ctxt_switches == 5004);
     }
 
     SECTION("Parse specific keys")
     {
-        pfs::status::uid_set empty_uids;
+        pfs::task_status::uid_set empty_uids;
         pfs::signal_mask empty_signal_mask;
         pfs::capabilities_mask empty_cap_mask;
 
@@ -187,7 +187,7 @@ TEST_CASE("Parse status", "[task][status]")
         REQUIRE(status.cap_bnd == empty_cap_mask);
         REQUIRE(status.cap_amb == empty_cap_mask);
         REQUIRE(status.no_new_privs == false);
-        REQUIRE(status.seccomp_mode == pfs::status::seccomp::disabled);
+        REQUIRE(status.seccomp_mode == pfs::task_status::seccomp::disabled);
         REQUIRE(status.voluntary_ctxt_switches == 0);
         REQUIRE(status.nonvoluntary_ctxt_switches == 0);
     }

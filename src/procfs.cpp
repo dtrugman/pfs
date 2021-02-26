@@ -43,8 +43,8 @@ std::string procfs::build_root(std::string root)
 
 void procfs::validate_root(const std::string& root)
 {
-    struct ::stat st;
-    int rv = ::stat(root.c_str(), &st);
+    struct stat st;
+    int rv = stat(root.c_str(), &st);
     if (rv != 0)
     {
         throw std::system_error(errno, std::system_category(),

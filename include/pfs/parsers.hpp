@@ -140,10 +140,10 @@ private:
     const value_parsers& _parsers;
 };
 
-class status_parser : public file_parser<status>
+class status_parser : public file_parser<task_status>
 {
 public:
-    status_parser() : file_parser<status>(parsers) {}
+    status_parser() : file_parser<task_status>(parsers) {}
 
 private:
     static const value_parsers parsers;

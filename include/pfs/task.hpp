@@ -39,7 +39,7 @@ public:
     bool operator<(const task& rhs) const;
 
 public: // Static utilities
-    static bool is_kernel_thread(const stat& st);
+    static bool is_kernel_thread(const task_stat& st);
 
 public: // Properties
     int id() const;
@@ -71,11 +71,11 @@ public: // Getters
 
     std::string get_root() const;
 
-    stat get_stat() const;
+    task_stat get_stat() const;
 
     mem_stats get_statm() const;
 
-    status get_status(const std::set<std::string>& keys = {}) const;
+    task_status get_status(const std::set<std::string>& keys = {}) const;
 
     std::set<task> get_tasks() const;
 

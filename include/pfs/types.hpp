@@ -44,7 +44,7 @@ enum class task_state
     idle,
 };
 
-struct stat
+struct task_stat
 {
     pid_t pid = INVALID_PID;
     std::string comm;
@@ -206,7 +206,7 @@ struct signal_mask
     raw_type raw;
 };
 
-struct status
+struct task_status
 {
     enum class seccomp
     {

@@ -294,7 +294,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::task_state state)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::status::uid_set& set)
+std::ostream& operator<<(std::ostream& out,
+                         const pfs::task_status::uid_set& set)
 {
     out << set.real << ',';
     out << set.effective << ',';
@@ -303,19 +304,20 @@ std::ostream& operator<<(std::ostream& out, const pfs::status::uid_set& set)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::status::seccomp seccomp)
+std::ostream& operator<<(std::ostream& out,
+                         const pfs::task_status::seccomp seccomp)
 {
     switch (seccomp)
     {
-        case pfs::status::seccomp::disabled:
+        case pfs::task_status::seccomp::disabled:
             out << "Disabled";
             break;
 
-        case pfs::status::seccomp::strict:
+        case pfs::task_status::seccomp::strict:
             out << "Strict";
             break;
 
-        case pfs::status::seccomp::filter:
+        case pfs::task_status::seccomp::filter:
             out << "Filter";
             break;
 
@@ -341,7 +343,7 @@ std::string to_hex_mask(uint64_t mask)
     return out.str();
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::status& st)
+std::ostream& operator<<(std::ostream& out, const pfs::task_status& st)
 {
     out << "name[" << st.name << "] ";
     out << "umask[" << to_octal_mask(st.umask) << "] ";
@@ -399,7 +401,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::status& st)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::stat& st)
+std::ostream& operator<<(std::ostream& out, const pfs::task_stat& st)
 {
     out << "pid[" << st.pid << "] ";
     out << "comm[" << st.comm << "] ";

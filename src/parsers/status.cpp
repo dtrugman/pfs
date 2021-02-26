@@ -41,17 +41,17 @@ void to_number(const std::string& value, T& out,
     }
 }
 
-void parse_name(const std::string& value, status& out)
+void parse_name(const std::string& value, task_status& out)
 {
     out.name = value;
 }
 
-void parse_umask(const std::string& value, status& out)
+void parse_umask(const std::string& value, task_status& out)
 {
     to_number(value, out.umask);
 }
 
-void parse_state(const std::string& value, status& out)
+void parse_state(const std::string& value, task_status& out)
 {
     // Format
     // clang-format off
@@ -69,32 +69,32 @@ void parse_state(const std::string& value, status& out)
     out.state = parse_task_state(value[0]);
 }
 
-void parse_tgid(const std::string& value, status& out)
+void parse_tgid(const std::string& value, task_status& out)
 {
     to_number(value, out.tgid);
 }
 
-void parse_ngid(const std::string& value, status& out)
+void parse_ngid(const std::string& value, task_status& out)
 {
     to_number(value, out.ngid);
 }
 
-void parse_pid(const std::string& value, status& out)
+void parse_pid(const std::string& value, task_status& out)
 {
     to_number(value, out.pid);
 }
 
-void parse_ppid(const std::string& value, status& out)
+void parse_ppid(const std::string& value, task_status& out)
 {
     to_number(value, out.ppid);
 }
 
-void parse_tracer_pid(const std::string& value, status& out)
+void parse_tracer_pid(const std::string& value, task_status& out)
 {
     to_number(value, out.tracer_pid);
 }
 
-void to_uid_set(const std::string& value, status::uid_set& out)
+void to_uid_set(const std::string& value, task_status::uid_set& out)
 {
     enum token
     {
@@ -116,7 +116,7 @@ void to_uid_set(const std::string& value, status::uid_set& out)
 
     try
     {
-        status::uid_set set;
+        task_status::uid_set set;
 
         utils::stot(tokens[REAL], set.real);
         utils::stot(tokens[EFFECTIVE], set.effective);
@@ -135,22 +135,22 @@ void to_uid_set(const std::string& value, status::uid_set& out)
     }
 }
 
-void parse_uid(const std::string& value, status& out)
+void parse_uid(const std::string& value, task_status& out)
 {
     to_uid_set(value, out.uid);
 }
 
-void parse_gid(const std::string& value, status& out)
+void parse_gid(const std::string& value, task_status& out)
 {
     to_uid_set(value, out.gid);
 }
 
-void parse_fdsize(const std::string& value, status& out)
+void parse_fdsize(const std::string& value, task_status& out)
 {
     to_number(value, out.fd_size);
 }
 
-void parse_groups(const std::string& value, status& out)
+void parse_groups(const std::string& value, task_status& out)
 {
     // This is a valid state, not all users are attached to groups
     if (value.empty())
@@ -178,22 +178,22 @@ void parse_groups(const std::string& value, status& out)
     }
 }
 
-void parse_ns_tgid(const std::string& value, status& out)
+void parse_ns_tgid(const std::string& value, task_status& out)
 {
     to_number(value, out.ns_tgid);
 }
 
-void parse_ns_pid(const std::string& value, status& out)
+void parse_ns_pid(const std::string& value, task_status& out)
 {
     to_number(value, out.ns_pid);
 }
 
-void parse_ns_pgid(const std::string& value, status& out)
+void parse_ns_pgid(const std::string& value, task_status& out)
 {
     to_number(value, out.ns_pgid);
 }
 
-void parse_ns_sid(const std::string& value, status& out)
+void parse_ns_sid(const std::string& value, task_status& out)
 {
     to_number(value, out.ns_sid);
 }
@@ -228,82 +228,82 @@ void to_memory_size(const std::string& value, size_t& out)
     }
 }
 
-void parse_vm_peak(const std::string& value, status& out)
+void parse_vm_peak(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_peak);
 }
 
-void parse_vm_size(const std::string& value, status& out)
+void parse_vm_size(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_size);
 }
 
-void parse_vm_lck(const std::string& value, status& out)
+void parse_vm_lck(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_lck);
 }
 
-void parse_vm_pin(const std::string& value, status& out)
+void parse_vm_pin(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_pin);
 }
 
-void parse_vm_hwm(const std::string& value, status& out)
+void parse_vm_hwm(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_hwm);
 }
 
-void parse_vm_rss(const std::string& value, status& out)
+void parse_vm_rss(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_rss);
 }
 
-void parse_rss_anon(const std::string& value, status& out)
+void parse_rss_anon(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.rss_anon);
 }
 
-void parse_rss_file(const std::string& value, status& out)
+void parse_rss_file(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.rss_file);
 }
 
-void parse_rss_shmem(const std::string& value, status& out)
+void parse_rss_shmem(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.rss_shmem);
 }
 
-void parse_vm_data(const std::string& value, status& out)
+void parse_vm_data(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_data);
 }
 
-void parse_vm_stk(const std::string& value, status& out)
+void parse_vm_stk(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_stk);
 }
 
-void parse_vm_exe(const std::string& value, status& out)
+void parse_vm_exe(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_exe);
 }
 
-void parse_vm_lib(const std::string& value, status& out)
+void parse_vm_lib(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_lib);
 }
 
-void parse_vm_pte(const std::string& value, status& out)
+void parse_vm_pte(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_pte);
 }
 
-void parse_vm_swap(const std::string& value, status& out)
+void parse_vm_swap(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.vm_swap);
 }
 
-void parse_huge_tlb_pages(const std::string& value, status& out)
+void parse_huge_tlb_pages(const std::string& value, task_status& out)
 {
     to_memory_size(value, out.huge_tlb_pages);
 }
@@ -330,17 +330,17 @@ void to_boolean(const std::string& value, bool& out)
     }
 }
 
-void parse_core_dumping(const std::string& value, status& out)
+void parse_core_dumping(const std::string& value, task_status& out)
 {
     to_boolean(value, out.core_dumping);
 }
 
-void parse_threads(const std::string& value, status& out)
+void parse_threads(const std::string& value, task_status& out)
 {
     to_number(value, out.threads);
 }
 
-void parse_sig_q(const std::string& value, status& out)
+void parse_sig_q(const std::string& value, task_status& out)
 {
     enum token
     {
@@ -383,27 +383,27 @@ void to_signal_mask(const std::string& value, signal_mask& mask)
     to_number(value, mask.raw, utils::base::hex);
 }
 
-void parse_sig_pnd(const std::string& value, status& out)
+void parse_sig_pnd(const std::string& value, task_status& out)
 {
     to_signal_mask(value, out.sig_pnd);
 }
 
-void parse_shd_pnd(const std::string& value, status& out)
+void parse_shd_pnd(const std::string& value, task_status& out)
 {
     to_signal_mask(value, out.shd_pnd);
 }
 
-void parse_sig_blk(const std::string& value, status& out)
+void parse_sig_blk(const std::string& value, task_status& out)
 {
     to_signal_mask(value, out.sig_blk);
 }
 
-void parse_sig_ign(const std::string& value, status& out)
+void parse_sig_ign(const std::string& value, task_status& out)
 {
     to_signal_mask(value, out.sig_ign);
 }
 
-void parse_sig_cgt(const std::string& value, status& out)
+void parse_sig_cgt(const std::string& value, task_status& out)
 {
     to_signal_mask(value, out.sig_cgt);
 }
@@ -413,43 +413,44 @@ void to_capabilities_mask(const std::string& value, capabilities_mask& mask)
     to_number(value, mask.raw, utils::base::hex);
 }
 
-void parse_cap_inh(const std::string& value, status& out)
+void parse_cap_inh(const std::string& value, task_status& out)
 {
     to_capabilities_mask(value, out.cap_inh);
 }
 
-void parse_cap_prm(const std::string& value, status& out)
+void parse_cap_prm(const std::string& value, task_status& out)
 {
     to_capabilities_mask(value, out.cap_prm);
 }
 
-void parse_cap_eff(const std::string& value, status& out)
+void parse_cap_eff(const std::string& value, task_status& out)
 {
     to_capabilities_mask(value, out.cap_eff);
 }
 
-void parse_cap_bnd(const std::string& value, status& out)
+void parse_cap_bnd(const std::string& value, task_status& out)
 {
     to_capabilities_mask(value, out.cap_bnd);
 }
 
-void parse_cap_amb(const std::string& value, status& out)
+void parse_cap_amb(const std::string& value, task_status& out)
 {
     to_capabilities_mask(value, out.cap_amb);
 }
 
-void parse_no_new_privs(const std::string& value, status& out)
+void parse_no_new_privs(const std::string& value, task_status& out)
 {
     to_boolean(value, out.no_new_privs);
 }
 
-void parse_seccomp(const std::string& value, status& out)
+void parse_seccomp(const std::string& value, task_status& out)
 {
     unsigned numeric;
     to_number(value, numeric);
 
-    status::seccomp mode = static_cast<status::seccomp>(numeric);
-    if (mode < status::seccomp::disabled || mode > status::seccomp::filter)
+    task_status::seccomp mode = static_cast<task_status::seccomp>(numeric);
+    if (mode < task_status::seccomp::disabled ||
+        mode > task_status::seccomp::filter)
     {
         throw parser_error("Corrupted seccomp - Unexpected value", value);
     }
@@ -457,12 +458,12 @@ void parse_seccomp(const std::string& value, status& out)
     out.seccomp_mode = mode;
 }
 
-void parse_voluntary_ctx_switches(const std::string& value, status& out)
+void parse_voluntary_ctx_switches(const std::string& value, task_status& out)
 {
     to_number(value, out.voluntary_ctxt_switches);
 }
 
-void parse_nonvoluntary_ctx_switches(const std::string& value, status& out)
+void parse_nonvoluntary_ctx_switches(const std::string& value, task_status& out)
 {
     to_number(value, out.nonvoluntary_ctxt_switches);
 }

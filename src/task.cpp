@@ -49,7 +49,7 @@ bool task::operator<(const task& rhs) const
     return _id < rhs._id;
 }
 
-bool task::is_kernel_thread(const stat& st)
+bool task::is_kernel_thread(const task_stat& st)
 {
     static const int ROOT_KERNEL_TASK_ID = 2;
 
@@ -129,7 +129,7 @@ task::get_environ(size_t max_size) const
     return environ;
 }
 
-stat task::get_stat() const
+task_stat task::get_stat() const
 {
     static const std::string STAT_FILE("stat");
     auto path = _task_root + STAT_FILE;
@@ -142,7 +142,7 @@ stat task::get_stat() const
     }
     defer close_fp([fp] { fclose(fp); });
 
-    stat st;
+    task_stat st;
 
     // Consume PID and space delim
     int matches = fscanf(fp, "%d ", &st.pid);
@@ -304,7 +304,7 @@ mem_stats task::get_statm() const
     }
 }
 
-status task::get_status(const std::set<std::string>& keys) const
+task_status task::get_status(const std::set<std::string>& keys) const
 {
     static const std::string STATUS_FILE("status");
     auto path = _task_root + STATUS_FILE;
