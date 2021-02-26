@@ -105,7 +105,7 @@ module parse_modules_line(const std::string& line)
             mod.dependencies = utils::split(tokens[DEPENDENCIES], ',');
         }
 
-        mod.current_state = parse_module_state(tokens[STATE]);
+        mod.module_state = parse_module_state(tokens[STATE]);
 
         utils::stot(tokens[OFFSET], mod.offset, utils::base::hex);
 

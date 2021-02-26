@@ -332,7 +332,7 @@ struct module
     size_t size;
     size_t instances;
     std::vector<std::string> dependencies;
-    state current_state;
+    state module_state;
     size_t offset;
     bool is_out_of_tree;
     bool is_unsigned;

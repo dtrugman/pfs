@@ -17,7 +17,7 @@ TEST_CASE("Parse modules", "[procfs][modules]")
         expected.size           = 40960;
         expected.instances      = 0;
         expected.dependencies   = {};
-        expected.current_state  = pfs::module::state::live;
+        expected.module_state   = pfs::module::state::live;
         expected.offset         = 0xffffffffc03eb000;
         expected.is_out_of_tree = false;
         expected.is_unsigned    = false;
@@ -31,7 +31,7 @@ TEST_CASE("Parse modules", "[procfs][modules]")
         expected.size           = 77824;
         expected.instances      = 2;
         expected.dependencies   = {};
-        expected.current_state  = pfs::module::state::live;
+        expected.module_state   = pfs::module::state::live;
         expected.offset         = 0xffffffffc0759000;
         expected.is_out_of_tree = true;
         expected.is_unsigned    = true;
@@ -45,7 +45,7 @@ TEST_CASE("Parse modules", "[procfs][modules]")
         expected.size           = 16384;
         expected.instances      = 1;
         expected.dependencies   = {"raid456"};
-        expected.current_state  = pfs::module::state::live;
+        expected.module_state   = pfs::module::state::live;
         expected.offset         = 0xffffffffc03b6000;
         expected.is_out_of_tree = false;
         expected.is_unsigned    = false;
@@ -62,7 +62,7 @@ TEST_CASE("Parse modules", "[procfs][modules]")
         expected.instances      = 4;
         expected.dependencies   = {"btrfs", "raid456", "async_raid6_recov",
                                  "async_pq"};
-        expected.current_state  = pfs::module::state::live;
+        expected.module_state   = pfs::module::state::live;
         expected.offset         = 0xffffffffc03f6000;
         expected.is_out_of_tree = false;
         expected.is_unsigned    = false;
@@ -74,7 +74,7 @@ TEST_CASE("Parse modules", "[procfs][modules]")
     REQUIRE(module.size == expected.size);
     REQUIRE(module.instances == expected.instances);
     REQUIRE(module.dependencies == expected.dependencies);
-    REQUIRE(module.current_state == expected.current_state);
+    REQUIRE(module.module_state == expected.module_state);
     REQUIRE(module.offset == expected.offset);
     REQUIRE(module.is_out_of_tree == expected.is_out_of_tree);
     REQUIRE(module.is_unsigned == expected.is_unsigned);

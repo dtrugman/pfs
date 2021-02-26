@@ -535,7 +535,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::module& module)
     out << "size[" << module.size << "] ";
     out << "instances[" << module.instances << "] ";
     out << "dependencies[" << join(module.dependencies) << "] ";
-    out << "state[" << module.current_state << "] ";
+    out << "state[" << module.module_state << "] ";
     out << "offset[" << module.offset << "] ";
     out << std::boolalpha;
     out << "out_of_tree[" << module.is_out_of_tree << "] ";
