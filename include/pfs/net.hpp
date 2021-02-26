@@ -41,25 +41,25 @@ public:
     net& operator=(net&&) = delete;
 
 public:
-    std::vector<socket> get_icmp() const;
-    std::vector<socket> get_icmp6() const;
-    std::vector<socket> get_raw() const;
-    std::vector<socket> get_raw6() const;
-    std::vector<socket> get_tcp() const;
-    std::vector<socket> get_tcp6() const;
-    std::vector<socket> get_udp() const;
-    std::vector<socket> get_udp6() const;
-    std::vector<socket> get_udplite() const;
-    std::vector<socket> get_udplite6() const;
+    std::vector<net_socket> get_icmp() const;
+    std::vector<net_socket> get_icmp6() const;
+    std::vector<net_socket> get_raw() const;
+    std::vector<net_socket> get_raw6() const;
+    std::vector<net_socket> get_tcp() const;
+    std::vector<net_socket> get_tcp6() const;
+    std::vector<net_socket> get_udp() const;
+    std::vector<net_socket> get_udp6() const;
+    std::vector<net_socket> get_udplite() const;
+    std::vector<net_socket> get_udplite6() const;
 
-    std::vector<unix_domain_socket> get_unix() const;
+    std::vector<unix_socket> get_unix() const;
 
 private:
     friend class task;
     net(const std::string& procfs_root);
 
 private:
-    std::vector<socket> get_sockets(const std::string& sockets_file) const;
+    std::vector<net_socket> get_net_sockets(const std::string& file) const;
 
     static std::string build_net_root(const std::string& procfs_root);
 

@@ -61,8 +61,9 @@ std::pair<ip, uint16_t> parse_address(const std::string& address_str)
     auto tokens = utils::split(address_str, DELIM);
     if (tokens.size() != COUNT)
     {
-        throw parser_error("Corrupted socket address - Unexpected token counts",
-                           address_str);
+        throw parser_error(
+            "Corrupted net socket address - Unexpected token counts",
+            address_str);
     }
 
     ip addr;
@@ -77,7 +78,7 @@ std::pair<ip, uint16_t> parse_address(const std::string& address_str)
     }
     else
     {
-        throw parser_error("Corrupted socket address - Bad length",
+        throw parser_error("Corrupted net socket address - Bad length",
                            address_str);
     }
 
@@ -87,15 +88,17 @@ std::pair<ip, uint16_t> parse_address(const std::string& address_str)
     return std::make_pair(addr, port);
 }
 
-socket::state parse_state(const std::string& state_str)
+net_socket::state parse_state(const std::string& state_str)
 {
     int state_int;
     utils::stot(state_str, state_int, utils::base::hex);
 
-    auto state = static_cast<socket::state>(state_int);
-    if (state < socket::state::established || state > socket::state::closing)
+    auto state = static_cast<net_socket::state>(state_int);
+    if (state < net_socket::state::established ||
+        state > net_socket::state::closing)
     {
-        throw parser_error("Corrupted socket state - Illegal value", state_str);
+        throw parser_error("Corrupted net socket state - Illegal value",
+                           state_str);
     }
 
     return state;
@@ -115,8 +118,9 @@ std::pair<size_t, size_t> parse_queues(const std::string& queues_str)
     auto tokens = utils::split(queues_str, DELIM);
     if (tokens.size() != COUNT)
     {
-        throw parser_error("Corrupted socket queues - Unexpected token counts",
-                           queues_str);
+        throw parser_error(
+            "Corrupted net socket queues - Unexpected token counts",
+            queues_str);
     }
 
     size_t tx_queue;
@@ -128,7 +132,7 @@ std::pair<size_t, size_t> parse_queues(const std::string& queues_str)
     return std::make_pair(tx_queue, rx_queue);
 }
 
-std::pair<socket::timer, size_t> parse_timer(const std::string& timer_str)
+std::pair<net_socket::timer, size_t> parse_timer(const std::string& timer_str)
 {
     enum token
     {
@@ -142,17 +146,19 @@ std::pair<socket::timer, size_t> parse_timer(const std::string& timer_str)
     auto tokens = utils::split(timer_str, DELIM);
     if (tokens.size() != COUNT)
     {
-        throw parser_error("Corrupted socket timer - Unexpected token counts",
-                           timer_str);
+        throw parser_error(
+            "Corrupted net socket timer - Unexpected token counts", timer_str);
     }
 
     int timer_int;
     utils::stot(tokens[ACTIVE], timer_int);
 
-    auto timer = static_cast<socket::timer>(timer_int);
-    if (timer < socket::timer::none || timer > socket::timer::zero_window)
+    auto timer = static_cast<net_socket::timer>(timer_int);
+    if (timer < net_socket::timer::none ||
+        timer > net_socket::timer::zero_window)
     {
-        throw parser_error("Corrupted socket timer - Illegal value", timer_str);
+        throw parser_error("Corrupted net socket timer - Illegal value",
+                           timer_str);
     }
 
     size_t expire_jiffies;
@@ -163,7 +169,7 @@ std::pair<socket::timer, size_t> parse_timer(const std::string& timer_str)
 
 } // anonymous namespace
 
-socket parse_socket_line(const std::string& line)
+net_socket parse_net_socket_line(const std::string& line)
 {
     // Some examples:
     // clang-format off
@@ -199,12 +205,13 @@ socket parse_socket_line(const std::string& line)
     auto tokens = utils::split(line);
     if (tokens.size() < MIN_COUNT)
     {
-        throw parser_error("Corrupted socket line - Not enough tokens", line);
+        throw parser_error("Corrupted net socket line - Not enough tokens",
+                           line);
     }
 
     try
     {
-        socket sock;
+        net_socket sock;
 
         utils::stot(tokens[SLOT], sock.slot, utils::base::hex);
 
@@ -236,11 +243,11 @@ socket parse_socket_line(const std::string& line)
     }
     catch (const std::invalid_argument& ex)
     {
-        throw parser_error("Corrupted socket - Invalid argument", line);
+        throw parser_error("Corrupted net socket - Invalid argument", line);
     }
     catch (const std::out_of_range& ex)
     {
-        throw parser_error("Corrupted socket - Out of range", line);
+        throw parser_error("Corrupted net socket - Out of range", line);
     }
 }
 

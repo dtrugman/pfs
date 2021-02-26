@@ -4,9 +4,9 @@
 
 using namespace pfs::impl::parsers;
 
-TEST_CASE("Parse unix domain socket", "[net][unix_domain_socket]")
+TEST_CASE("Parse unix socket", "[net][unix_socket]")
 {
-    pfs::unix_domain_socket expected;
+    pfs::unix_socket expected;
     std::string line;
 
     SECTION("Anonymous")
@@ -17,8 +17,8 @@ TEST_CASE("Parse unix domain socket", "[net][unix_domain_socket]")
         expected.ref_count    = 0x00000002;
         expected.protocol     = 0x00000000;
         expected.flags        = 0x00000000;
-        expected.socket_type  = pfs::unix_domain_socket::type::datagram;
-        expected.socket_state = pfs::unix_domain_socket::state::unconnected;
+        expected.socket_type  = pfs::unix_socket::type::datagram;
+        expected.socket_state = pfs::unix_socket::state::unconnected;
         expected.inode        = 21401;
     }
 
@@ -31,18 +31,18 @@ TEST_CASE("Parse unix domain socket", "[net][unix_domain_socket]")
         expected.ref_count    = 0x00000003;
         expected.protocol     = 0x00000000;
         expected.flags        = 0x00000000;
-        expected.socket_type  = pfs::unix_domain_socket::type::stream;
-        expected.socket_state = pfs::unix_domain_socket::state::connected;
+        expected.socket_type  = pfs::unix_socket::type::stream;
+        expected.socket_state = pfs::unix_socket::state::connected;
         expected.inode        = 17031;
         expected.path         = "/run/systemd/journal/stdout";
     }
 
-    auto uds = parse_unix_domain_socket_line(line);
-    REQUIRE(uds.skbuff == expected.skbuff);
-    REQUIRE(uds.ref_count == expected.ref_count);
-    REQUIRE(uds.flags == expected.flags);
-    REQUIRE(uds.socket_type == expected.socket_type);
-    REQUIRE(uds.socket_state == expected.socket_state);
-    REQUIRE(uds.inode == expected.inode);
-    REQUIRE(uds.path == expected.path);
+    auto socket = parse_unix_socket_line(line);
+    REQUIRE(socket.skbuff == expected.skbuff);
+    REQUIRE(socket.ref_count == expected.ref_count);
+    REQUIRE(socket.flags == expected.flags);
+    REQUIRE(socket.socket_type == expected.socket_type);
+    REQUIRE(socket.socket_state == expected.socket_state);
+    REQUIRE(socket.inode == expected.inode);
+    REQUIRE(socket.path == expected.path);
 }

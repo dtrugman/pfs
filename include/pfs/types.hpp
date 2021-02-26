@@ -402,7 +402,7 @@ struct ip
 };
 
 // Hint: See 'get_tcp4_sock @ tcp_ipv4.c'
-struct socket
+struct net_socket
 {
     enum class timer
     {
@@ -448,14 +448,14 @@ struct socket
 
     // NOTE: Additional fields will be added upon request
 
-    bool operator<(const socket& rhs) const
+    bool operator<(const net_socket& rhs) const
     {
         return (skbuff < rhs.skbuff) || (inode < rhs.inode);
     }
 };
 
 // Hint: See 'unix_seq_show @ af_unix.c'
-struct unix_domain_socket
+struct unix_socket
 {
     enum class type
     {
@@ -483,7 +483,7 @@ struct unix_domain_socket
     ino_t inode;
     std::string path;
 
-    bool operator<(const unix_domain_socket& rhs) const
+    bool operator<(const unix_socket& rhs) const
     {
         return (skbuff < rhs.skbuff) || (inode < rhs.inode);
     }

@@ -4,9 +4,9 @@
 
 using namespace pfs::impl::parsers;
 
-TEST_CASE("Parse socket", "[net][socket]")
+TEST_CASE("Parse net socket", "[net][net_socket]")
 {
-    pfs::socket expected;
+    pfs::net_socket expected;
     std::string line;
 
     SECTION("IPv4")
@@ -20,10 +20,10 @@ TEST_CASE("Parse socket", "[net][socket]")
         expected.local_port           = 0x0035;
         expected.remote_ip            = pfs::ip(0x00000000);
         expected.remote_port          = 0x0000;
-        expected.current_state        = pfs::socket::state::listen;
+        expected.current_state        = pfs::net_socket::state::listen;
         expected.tx_queue             = 0x00000000;
         expected.rx_queue             = 0x00000000;
-        expected.timer_active         = pfs::socket::timer::none;
+        expected.timer_active         = pfs::net_socket::timer::none;
         expected.timer_expire_jiffies = 0x00000000;
         expected.retransmits          = 0x00000000;
         expected.uid                  = 101;
@@ -47,10 +47,10 @@ TEST_CASE("Parse socket", "[net][socket]")
         expected.remote_ip  = pfs::ip(
             pfs::ipv6({0x00000000, 0x00000000, 0x00000000, 0x00000000}));
         expected.remote_port          = 0x0000;
-        expected.current_state        = pfs::socket::state::listen;
+        expected.current_state        = pfs::net_socket::state::listen;
         expected.tx_queue             = 0x00000000;
         expected.rx_queue             = 0x00000000;
-        expected.timer_active         = pfs::socket::timer::none;
+        expected.timer_active         = pfs::net_socket::timer::none;
         expected.timer_expire_jiffies = 0x00000000;
         expected.retransmits          = 0x00000000;
         expected.uid                  = 0;
@@ -60,7 +60,7 @@ TEST_CASE("Parse socket", "[net][socket]")
         expected.skbuff               = 0xffff9f55bdb91980;
     }
 
-    auto socket = parse_socket_line(line);
+    auto socket = parse_net_socket_line(line);
     REQUIRE(socket.slot == expected.slot);
     REQUIRE(socket.local_ip == expected.local_ip);
     REQUIRE(socket.local_port == expected.local_port);

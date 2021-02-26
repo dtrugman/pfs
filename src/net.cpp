@@ -31,88 +31,88 @@ std::string net::build_net_root(const std::string& procfs_root)
     return procfs_root + NET_DIR;
 }
 
-std::vector<socket> net::get_icmp() const
+std::vector<net_socket> net::get_icmp() const
 {
     static const std::string ICMP_FILE("icmp");
-    return get_sockets(ICMP_FILE);
+    return get_net_sockets(ICMP_FILE);
 }
 
-std::vector<socket> net::get_icmp6() const
+std::vector<net_socket> net::get_icmp6() const
 {
     static const std::string ICMP6_FILE("icmp6");
-    return get_sockets(ICMP6_FILE);
+    return get_net_sockets(ICMP6_FILE);
 }
 
-std::vector<socket> net::get_raw() const
+std::vector<net_socket> net::get_raw() const
 {
     static const std::string RAW_FILE("raw");
-    return get_sockets(RAW_FILE);
+    return get_net_sockets(RAW_FILE);
 }
 
-std::vector<socket> net::get_raw6() const
+std::vector<net_socket> net::get_raw6() const
 {
     static const std::string RAW6_FILE("raw6");
-    return get_sockets(RAW6_FILE);
+    return get_net_sockets(RAW6_FILE);
 }
 
-std::vector<socket> net::get_tcp() const
+std::vector<net_socket> net::get_tcp() const
 {
     static const std::string TCP_FILE("tcp");
-    return get_sockets(TCP_FILE);
+    return get_net_sockets(TCP_FILE);
 }
 
-std::vector<socket> net::get_tcp6() const
+std::vector<net_socket> net::get_tcp6() const
 {
     static const std::string TCP6_FILE("tcp6");
-    return get_sockets(TCP6_FILE);
+    return get_net_sockets(TCP6_FILE);
 }
 
-std::vector<socket> net::get_udp() const
+std::vector<net_socket> net::get_udp() const
 {
     static const std::string UDP_FILE("udp");
-    return get_sockets(UDP_FILE);
+    return get_net_sockets(UDP_FILE);
 }
 
-std::vector<socket> net::get_udp6() const
+std::vector<net_socket> net::get_udp6() const
 {
     static const std::string UDP6_FILE("udp6");
-    return get_sockets(UDP6_FILE);
+    return get_net_sockets(UDP6_FILE);
 }
 
-std::vector<socket> net::get_udplite() const
+std::vector<net_socket> net::get_udplite() const
 {
     static const std::string UDPLITE_FILE("udplite");
-    return get_sockets(UDPLITE_FILE);
+    return get_net_sockets(UDPLITE_FILE);
 }
 
-std::vector<socket> net::get_udplite6() const
+std::vector<net_socket> net::get_udplite6() const
 {
     static const std::string UDPLITE6_FILE("udplite6");
-    return get_sockets(UDPLITE6_FILE);
+    return get_net_sockets(UDPLITE6_FILE);
 }
 
-std::vector<unix_domain_socket> net::get_unix() const
+std::vector<unix_socket> net::get_unix() const
 {
     static const std::string UNIX_FILE("unix");
     auto path = _net_root + UNIX_FILE;
 
     static const size_t HEADER_LINES = 1;
 
-    std::vector<unix_domain_socket> output;
+    std::vector<unix_socket> output;
     parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_unix_domain_socket_line, HEADER_LINES);
+                         parsers::parse_unix_socket_line, HEADER_LINES);
     return output;
 }
 
-std::vector<socket> net::get_sockets(const std::string& file) const
+std::vector<net_socket> net::get_net_sockets(const std::string& file) const
 {
     auto path = _net_root + file;
 
     static const size_t HEADER_LINES = 1;
 
-    std::vector<socket> output;
+    std::vector<net_socket> output;
     parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_socket_line, HEADER_LINES);
+                         parsers::parse_net_socket_line, HEADER_LINES);
     return output;
 }
 

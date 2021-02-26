@@ -59,27 +59,27 @@ std::string hexlify(const std::vector<uint8_t>& buffer)
     return out.str();
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::socket::timer timer)
+std::ostream& operator<<(std::ostream& out, const pfs::net_socket::timer timer)
 {
     switch (timer)
     {
-        case pfs::socket::timer::none:
+        case pfs::net_socket::timer::none:
             out << "None";
             break;
 
-        case pfs::socket::timer::retransmit:
+        case pfs::net_socket::timer::retransmit:
             out << "Retransmit";
             break;
 
-        case pfs::socket::timer::another:
+        case pfs::net_socket::timer::another:
             out << "Another";
             break;
 
-        case pfs::socket::timer::time_wait:
+        case pfs::net_socket::timer::time_wait:
             out << "Time-Wait";
             break;
 
-        case pfs::socket::timer::zero_window:
+        case pfs::net_socket::timer::zero_window:
             out << "Zero-Window";
             break;
 
@@ -91,51 +91,51 @@ std::ostream& operator<<(std::ostream& out, const pfs::socket::timer timer)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::socket::state state)
+std::ostream& operator<<(std::ostream& out, const pfs::net_socket::state state)
 {
     switch (state)
     {
-        case pfs::socket::state::established:
+        case pfs::net_socket::state::established:
             out << "Established";
             break;
 
-        case pfs::socket::state::syn_sent:
+        case pfs::net_socket::state::syn_sent:
             out << "Syn-Sent";
             break;
 
-        case pfs::socket::state::syn_recv:
+        case pfs::net_socket::state::syn_recv:
             out << "Syn-Recv";
             break;
 
-        case pfs::socket::state::fin_wait1:
+        case pfs::net_socket::state::fin_wait1:
             out << "Fin-Wait1";
             break;
 
-        case pfs::socket::state::fin_wait2:
+        case pfs::net_socket::state::fin_wait2:
             out << "Fin-Wait2";
             break;
 
-        case pfs::socket::state::time_wait:
+        case pfs::net_socket::state::time_wait:
             out << "Time-Wait";
             break;
 
-        case pfs::socket::state::close:
+        case pfs::net_socket::state::close:
             out << "Close";
             break;
 
-        case pfs::socket::state::close_wait:
+        case pfs::net_socket::state::close_wait:
             out << "Close-Wait";
             break;
 
-        case pfs::socket::state::last_ack:
+        case pfs::net_socket::state::last_ack:
             out << "Last-Ack";
             break;
 
-        case pfs::socket::state::listen:
+        case pfs::net_socket::state::listen:
             out << "Listen";
             break;
 
-        case pfs::socket::state::closing:
+        case pfs::net_socket::state::closing:
             out << "Closing";
             break;
 
@@ -147,7 +147,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::socket::state state)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::socket& socket)
+std::ostream& operator<<(std::ostream& out, const pfs::net_socket& socket)
 {
     out << "slot[" << socket.slot << "] ";
     out << "local[" << socket.local_ip.to_string() << ":" << socket.local_port
@@ -168,20 +168,19 @@ std::ostream& operator<<(std::ostream& out, const pfs::socket& socket)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out,
-                         const pfs::unix_domain_socket::type type)
+std::ostream& operator<<(std::ostream& out, const pfs::unix_socket::type type)
 {
     switch (type)
     {
-        case pfs::unix_domain_socket::type::stream:
+        case pfs::unix_socket::type::stream:
             out << "Stream";
             break;
 
-        case pfs::unix_domain_socket::type::datagram:
+        case pfs::unix_socket::type::datagram:
             out << "Datagram";
             break;
 
-        case pfs::unix_domain_socket::type::seqpacket:
+        case pfs::unix_socket::type::seqpacket:
             out << "SeqPacket";
             break;
 
@@ -193,28 +192,27 @@ std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out,
-                         const pfs::unix_domain_socket::state state)
+std::ostream& operator<<(std::ostream& out, const pfs::unix_socket::state state)
 {
     switch (state)
     {
-        case pfs::unix_domain_socket::state::free:
+        case pfs::unix_socket::state::free:
             out << "Free";
             break;
 
-        case pfs::unix_domain_socket::state::unconnected:
+        case pfs::unix_socket::state::unconnected:
             out << "Unconnected";
             break;
 
-        case pfs::unix_domain_socket::state::connecting:
+        case pfs::unix_socket::state::connecting:
             out << "Connecting";
             break;
 
-        case pfs::unix_domain_socket::state::connected:
+        case pfs::unix_socket::state::connected:
             out << "Connected";
             break;
 
-        case pfs::unix_domain_socket::state::disconnecting:
+        case pfs::unix_socket::state::disconnecting:
             out << "Disconnecting";
             break;
 
@@ -226,16 +224,16 @@ std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::unix_domain_socket& uds)
+std::ostream& operator<<(std::ostream& out, const pfs::unix_socket& socket)
 {
-    out << "skbuff[0x" << std::hex << uds.skbuff << std::dec << "] ";
-    out << "ref_count[" << uds.ref_count << "] ";
-    out << "protocol[" << uds.protocol << "] ";
-    out << "flags[" << uds.flags << "] ";
-    out << "type[" << uds.socket_type << "] ";
-    out << "state[" << uds.socket_state << "] ";
-    out << "inode[" << uds.inode << "] ";
-    out << "path[" << uds.path << "] ";
+    out << "skbuff[0x" << std::hex << socket.skbuff << std::dec << "] ";
+    out << "ref_count[" << socket.ref_count << "] ";
+    out << "protocol[" << socket.protocol << "] ";
+    out << "flags[" << socket.flags << "] ";
+    out << "type[" << socket.socket_type << "] ";
+    out << "state[" << socket.socket_state << "] ";
+    out << "inode[" << socket.inode << "] ";
+    out << "path[" << socket.path << "] ";
     return out;
 }
 

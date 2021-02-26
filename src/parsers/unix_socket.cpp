@@ -23,32 +23,31 @@ namespace parsers {
 
 namespace {
 
-unix_domain_socket::type parse_type(const std::string& type_str)
+unix_socket::type parse_type(const std::string& type_str)
 {
     int type_int;
     utils::stot(type_str, type_int, utils::base::hex);
 
-    auto type = static_cast<unix_domain_socket::type>(type_int);
-    if (type < unix_domain_socket::type::stream ||
-        type > unix_domain_socket::type::seqpacket)
+    auto type = static_cast<unix_socket::type>(type_int);
+    if (type < unix_socket::type::stream || type > unix_socket::type::seqpacket)
     {
-        throw parser_error("Corrupted unix domain socket type - Illegal value",
+        throw parser_error("Corrupted unix socket type - Illegal value",
                            type_str);
     }
 
     return type;
 }
 
-unix_domain_socket::state parse_state(const std::string& state_str)
+unix_socket::state parse_state(const std::string& state_str)
 {
     int state_int;
     utils::stot(state_str, state_int);
 
-    auto state = static_cast<unix_domain_socket::state>(state_int);
-    if (state < unix_domain_socket::state::free ||
-        state >= unix_domain_socket::state::disconnecting)
+    auto state = static_cast<unix_socket::state>(state_int);
+    if (state < unix_socket::state::free ||
+        state >= unix_socket::state::disconnecting)
     {
-        throw parser_error("Corrupted unix domain socket state - Illegal value",
+        throw parser_error("Corrupted unix socket state - Illegal value",
                            state_str);
     }
 
@@ -57,7 +56,7 @@ unix_domain_socket::state parse_state(const std::string& state_str)
 
 } // anonymous namespace
 
-unix_domain_socket parse_unix_domain_socket_line(const std::string& line)
+unix_socket parse_unix_socket_line(const std::string& line)
 {
     // Some examples:
     // clang-format off
@@ -86,41 +85,41 @@ unix_domain_socket parse_unix_domain_socket_line(const std::string& line)
     if (tokens.size() < MIN_COUNT || tokens.size() > COUNT)
     {
         throw parser_error(
-            "Corrupted unix domain socket line - Unexpected token count", line);
+            "Corrupted unix socket line - Unexpected token count", line);
     }
 
     try
     {
-        unix_domain_socket uds;
+        unix_socket sock;
 
-        utils::stot(tokens[SKBUFF], uds.skbuff, utils::base::hex);
+        utils::stot(tokens[SKBUFF], sock.skbuff, utils::base::hex);
 
-        utils::stot(tokens[REF_COUNT], uds.ref_count, utils::base::hex);
+        utils::stot(tokens[REF_COUNT], sock.ref_count, utils::base::hex);
 
-        utils::stot(tokens[PROTOCOL], uds.protocol, utils::base::hex);
+        utils::stot(tokens[PROTOCOL], sock.protocol, utils::base::hex);
 
-        utils::stot(tokens[FLAGS], uds.flags, utils::base::hex);
+        utils::stot(tokens[FLAGS], sock.flags, utils::base::hex);
 
-        uds.socket_type = parse_type(tokens[TYPE]);
+        sock.socket_type = parse_type(tokens[TYPE]);
 
-        uds.socket_state = parse_state(tokens[STATE]);
+        sock.socket_state = parse_state(tokens[STATE]);
 
-        utils::stot(tokens[INODE], uds.inode);
+        utils::stot(tokens[INODE], sock.inode);
 
         if (tokens.size() > PATH)
         {
-            uds.path = tokens[PATH];
+            sock.path = tokens[PATH];
         }
 
-        return uds;
+        return sock;
     }
     catch (const std::invalid_argument& ex)
     {
-        throw parser_error("Corrupted socket - Invalid argument", line);
+        throw parser_error("Corrupted unix socket - Invalid argument", line);
     }
     catch (const std::out_of_range& ex)
     {
-        throw parser_error("Corrupted socket - Out of range", line);
+        throw parser_error("Corrupted unix socket - Out of range", line);
     }
 }
 
