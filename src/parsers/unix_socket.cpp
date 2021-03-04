@@ -76,7 +76,7 @@ unix_socket parse_unix_socket_line(const std::string& line)
         TYPE      = 4,
         STATE     = 5,
         INODE     = 6,
-        MIN_COUNT = INODE,
+        MIN_COUNT = 7, // Only path might be missing
         PATH      = 7,
         COUNT
     };
