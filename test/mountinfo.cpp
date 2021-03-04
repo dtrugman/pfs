@@ -6,7 +6,7 @@
 
 using namespace pfs::impl::parsers;
 
-TEST_CASE("Parse mountinfo", "[procfs][mountinfo]")
+TEST_CASE("Parse mountinfo", "[task][mountinfo]")
 {
     pfs::mount expected;
     std::string line;
