@@ -184,6 +184,9 @@ void print_net(const pfs::net& net)
 
         auto unix = net.get_unix();
         print(unix);
+
+        auto netlink = net.get_netlink();
+        print(netlink);
     }
     catch (const std::runtime_error& ex)
     {

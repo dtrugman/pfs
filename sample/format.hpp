@@ -238,6 +238,22 @@ std::ostream& operator<<(std::ostream& out, const pfs::unix_socket& socket)
     return out;
 }
 
+std::ostream& operator<<(std::ostream& out, const pfs::netlink_socket& socket)
+{
+    out << "skbuff[0x" << std::hex << socket.skbuff << std::dec << "] ";
+    out << "protocol[" << socket.protocol << "] ";
+    out << "port_id[" << socket.port_id << "] ";
+    out << "groups[" << std::hex << std::setw(8) << std::setfill('0')
+        << socket.groups << std::dec << "] ";
+    out << "rmem[" << socket.rmem << "] ";
+    out << "wmem[" << socket.wmem << "] ";
+    out << "dumping[" << std::boolalpha << socket.dumping << "] ";
+    out << "ref_count[" << socket.ref_count << "] ";
+    out << "drops[" << socket.drops << "] ";
+    out << "inode[" << socket.inode << "] ";
+    return out;
+}
+
 std::ostream& operator<<(std::ostream& out, const pfs::task_state state)
 {
     switch (state)

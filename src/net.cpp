@@ -91,6 +91,19 @@ std::vector<net_socket> net::get_udplite6() const
     return get_net_sockets(UDPLITE6_FILE);
 }
 
+std::vector<netlink_socket> net::get_netlink() const
+{
+    static const std::string NETLINK_FILE("netlink");
+    auto path = _net_root + NETLINK_FILE;
+
+    static const size_t HEADER_LINES = 1;
+
+    std::vector<netlink_socket> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_netlink_socket_line, HEADER_LINES);
+    return output;
+}
+
 std::vector<unix_socket> net::get_unix() const
 {
     static const std::string UNIX_FILE("unix");

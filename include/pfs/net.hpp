@@ -52,6 +52,8 @@ public:
     std::vector<net_socket> get_udplite() const;
     std::vector<net_socket> get_udplite6() const;
 
+    std::vector<netlink_socket> get_netlink() const;
+
     std::vector<unix_socket> get_unix() const;
 
 private:
