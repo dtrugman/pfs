@@ -4,6 +4,16 @@
 
 using namespace pfs::impl::parsers;
 
+TEST_CASE("Parse corrupted net socket", "[net][net_socket]")
+{
+    // Missing last token (skbuff)
+    std::string line =
+        "1: 3500007F:0035 00000000:0000 0A 00000000:00000000 00:00000000 "
+        "00000000   101        0 15979 1";
+
+    REQUIRE_THROWS_AS(parse_net_socket_line(line), pfs::parser_error);
+}
+
 TEST_CASE("Parse net socket", "[net][net_socket]")
 {
     pfs::net_socket expected;

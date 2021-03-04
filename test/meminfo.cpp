@@ -4,6 +4,14 @@
 
 using namespace pfs::impl::parsers;
 
+TEST_CASE("Parse corrupted meminfo", "[procfs][meminfo]")
+{
+    // Missing last token (value)
+    std::string line = "VmallocTotal";
+
+    REQUIRE_THROWS_AS(parse_meminfo_line(line), pfs::parser_error);
+}
+
 TEST_CASE("Parse meminfo", "[procfs][meminfo]")
 {
     std::string line;

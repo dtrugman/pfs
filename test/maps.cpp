@@ -6,6 +6,16 @@
 
 #include "pfs/parsers.hpp"
 
+using namespace pfs::impl::parsers;
+
+TEST_CASE("Parse corrupted maps", "[task][maps]")
+{
+    // Missing last token (inode)
+    std::string line = "559037183000-559037184000 rw-p 00185000 fd:00";
+
+    REQUIRE_THROWS_AS(parse_maps_line(line), pfs::parser_error);
+}
+
 TEST_CASE("Parse maps", "[task][maps]")
 {
     size_t start;
@@ -142,7 +152,7 @@ TEST_CASE("Parse maps", "[task][maps]")
     auto line = out.str();
     INFO(line);
 
-    auto region = pfs::impl::parsers::parse_maps_line(line);
+    auto region = parse_maps_line(line);
     REQUIRE(region.start_address == start);
     REQUIRE(region.end_address == end);
     REQUIRE(region.perm.can_read == can_read);

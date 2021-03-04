@@ -4,6 +4,14 @@
 
 using namespace pfs::impl::parsers;
 
+TEST_CASE("Parse corrupted modules", "[procfs][modules]")
+{
+    // Missing last token (offset)
+    std::string line = "raid1 40960 0 - Live";
+
+    REQUIRE_THROWS_AS(parse_modules_line(line), pfs::parser_error);
+}
+
 TEST_CASE("Parse modules", "[procfs][modules]")
 {
     pfs::module expected;
