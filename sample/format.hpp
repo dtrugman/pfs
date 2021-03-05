@@ -20,7 +20,7 @@
 #include "pfs/procfs.hpp"
 
 template <typename T>
-std::string join(const T& container)
+inline std::string join(const T& container)
 {
     if (container.empty())
     {
@@ -37,7 +37,7 @@ std::string join(const T& container)
     return out_str;
 }
 
-bool is_printable(uint8_t byte)
+inline bool is_printable(uint8_t byte)
 {
     static const uint8_t PRINTABLE_MIN = 0x21;
     static const uint8_t PRINTABLE_MAX = 0x7e;
@@ -45,7 +45,7 @@ bool is_printable(uint8_t byte)
     return PRINTABLE_MIN <= byte && byte <= PRINTABLE_MAX;
 }
 
-std::string hexlify(const std::vector<uint8_t>& buffer)
+inline std::string hexlify(const std::vector<uint8_t>& buffer)
 {
     std::ostringstream out;
     out << std::hex;
@@ -59,7 +59,8 @@ std::string hexlify(const std::vector<uint8_t>& buffer)
     return out.str();
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::net_socket::timer timer)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::net_socket::timer timer)
 {
     switch (timer)
     {
@@ -91,8 +92,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::net_socket::timer timer)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out,
-                         const pfs::net_socket::net_state state)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::net_socket::net_state state)
 {
     switch (state)
     {
@@ -148,7 +149,8 @@ std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::net_socket& socket)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::net_socket& socket)
 {
     out << "slot[" << socket.slot << "] ";
     out << "local[" << socket.local_ip.to_string() << ":" << socket.local_port
@@ -169,7 +171,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::net_socket& socket)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::unix_socket::type type)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::unix_socket::type type)
 {
     switch (type)
     {
@@ -193,7 +196,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::unix_socket::type type)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::unix_socket::state state)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::unix_socket::state state)
 {
     switch (state)
     {
@@ -225,7 +229,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::unix_socket::state state)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::unix_socket& socket)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::unix_socket& socket)
 {
     out << "skbuff[0x" << std::hex << socket.skbuff << std::dec << "] ";
     out << "ref_count[" << socket.ref_count << "] ";
@@ -238,7 +243,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::unix_socket& socket)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::netlink_socket& socket)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::netlink_socket& socket)
 {
     out << "skbuff[0x" << std::hex << socket.skbuff << std::dec << "] ";
     out << "protocol[" << socket.protocol << "] ";
@@ -254,7 +260,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::netlink_socket& socket)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::task_state state)
+inline std::ostream& operator<<(std::ostream& out, const pfs::task_state state)
 {
     switch (state)
     {
@@ -310,8 +316,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::task_state state)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out,
-                         const pfs::task_status::uid_set& set)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::task_status::uid_set& set)
 {
     out << set.real << ',';
     out << set.effective << ',';
@@ -320,8 +326,8 @@ std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out,
-                         const pfs::task_status::seccomp seccomp)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::task_status::seccomp seccomp)
 {
     switch (seccomp)
     {
@@ -345,21 +351,21 @@ std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
-std::string to_octal_mask(uint64_t mask)
+inline std::string to_octal_mask(uint64_t mask)
 {
     std::ostringstream out;
     out << std::oct << std::setfill('0') << std::setw(4) << mask;
     return out.str();
 }
 
-std::string to_hex_mask(uint64_t mask)
+inline std::string to_hex_mask(uint64_t mask)
 {
     std::ostringstream out;
     out << std::hex << std::setfill('0') << std::setw(16) << mask;
     return out.str();
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::task_status& st)
+inline std::ostream& operator<<(std::ostream& out, const pfs::task_status& st)
 {
     out << "name[" << st.name << "] ";
     out << "umask[" << to_octal_mask(st.umask) << "] ";
@@ -417,7 +423,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::task_status& st)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::task_stat& st)
+inline std::ostream& operator<<(std::ostream& out, const pfs::task_stat& st)
 {
     out << "pid[" << st.pid << "] ";
     out << "comm[" << st.comm << "] ";
@@ -474,7 +480,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::task_stat& st)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::mem_stats& mem)
+inline std::ostream& operator<<(std::ostream& out, const pfs::mem_stats& mem)
 {
     out << "total[" << mem.total << "] ";
     out << "resident[" << mem.resident << "] ";
@@ -484,7 +490,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::mem_stats& mem)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::mem_perm& perm)
+inline std::ostream& operator<<(std::ostream& out, const pfs::mem_perm& perm)
 {
     out << (perm.can_read ? 'r' : '-');
     out << (perm.can_write ? 'w' : '-');
@@ -493,7 +499,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::mem_perm& perm)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::mem_region& region)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::mem_region& region)
 {
     out << std::hex;
     out << "addr[0x" << region.start_address << "]-[0x" << region.end_address
@@ -507,7 +514,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::mem_region& region)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::mount& mount)
+inline std::ostream& operator<<(std::ostream& out, const pfs::mount& mount)
 {
     out << "id[" << mount.id << "] ";
     out << "parent_id[" << mount.parent_id << "] ";
@@ -522,7 +529,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::mount& mount)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::module::state state)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::module::state state)
 {
     switch (state)
     {
@@ -546,7 +554,7 @@ std::ostream& operator<<(std::ostream& out, const pfs::module::state state)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::module& module)
+inline std::ostream& operator<<(std::ostream& out, const pfs::module& module)
 {
     out << "name[" << module.name << "] ";
     out << "size[" << module.size << "] ";
@@ -560,7 +568,8 @@ std::ostream& operator<<(std::ostream& out, const pfs::module& module)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::load_average& load)
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::load_average& load)
 {
     out << "load[" << load.last_1min << ", " << load.last_5min << ", "
         << load.last_15min << "] ";
@@ -570,14 +579,14 @@ std::ostream& operator<<(std::ostream& out, const pfs::load_average& load)
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::zone& zone)
+inline std::ostream& operator<<(std::ostream& out, const pfs::zone& zone)
 {
     out << "zone[" << zone.name << "] ";
     out << "chunks[" << join(zone.chunks) << "] ";
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const pfs::fd& fd)
+inline std::ostream& operator<<(std::ostream& out, const pfs::fd& fd)
 {
     out << "target[" << fd.get_target() << "] ";
     return out;

@@ -29,7 +29,8 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_link_libraries (pfs PUBLIC -lasan ${SANITIZE_FLAGS})
 endif ()
 
-add_executable (sample sample/sample.cpp)
+aux_source_directory (sample SAMPLE_SOURCES)
+add_executable (sample ${SAMPLE_SOURCES})
 target_link_libraries (sample PRIVATE pfs)
 
 set (UNITTEST_SOURCE_DIR test)

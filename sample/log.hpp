@@ -25,7 +25,7 @@
 #define LOG(...) std::cout << __VA_ARGS__ << ENDL
 
 template <typename K, typename V>
-std::ostream& operator<<(std::ostream& out, const std::pair<K, V>& pair)
+inline std::ostream& operator<<(std::ostream& out, const std::pair<K, V>& pair)
 {
     out << pair.first << " = " << pair.second;
     return out;
@@ -50,7 +50,7 @@ public:
 };
 
 template <typename T>
-typename std::enable_if<has_const_iterator<T>::value>::type
+inline typename std::enable_if<has_const_iterator<T>::value>::type
 __print(const std::string& title, const T& iterable)
 {
     LOG(title);
@@ -63,7 +63,7 @@ __print(const std::string& title, const T& iterable)
 }
 
 template <typename T>
-typename std::enable_if<!has_const_iterator<T>::value>::type
+inline typename std::enable_if<!has_const_iterator<T>::value>::type
 __print(const std::string& title, const T& value)
 {
     LOG(title);
@@ -73,7 +73,7 @@ __print(const std::string& title, const T& value)
 }
 
 template <>
-void __print(const std::string& title, const std::string& str)
+inline void __print(const std::string& title, const std::string& str)
 {
     LOG(title);
     LOG(std::string(title.size(), '-'));
