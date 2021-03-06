@@ -18,7 +18,7 @@
 #define PFS_VERSION_HPP
 
 #define PFS_VER_MAJOR 0
-#define PFS_VER_MINOR 2
+#define PFS_VER_MINOR 3
 #define PFS_VER_PATCH 0
 
 #define PFS_VERSION                                                            \
