@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-present Daniel Trugman
+3*  Copyright 2020-present Daniel Trugman
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #define PFS_VERSION_HPP
 
 #define PFS_VER_MAJOR 0
-#define PFS_VER_MINOR 1
+#define PFS_VER_MINOR 2
 #define PFS_VER_PATCH 0
 
 #define PFS_VERSION                                                            \
