@@ -343,6 +343,12 @@ struct module
     bool operator<(const module& rhs) const { return name < rhs.name; }
 };
 
+struct uptime
+{
+    double system_time;
+    double idle_time;
+};
+
 struct load_average
 {
     double last_1min;

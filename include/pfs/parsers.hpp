@@ -68,6 +68,7 @@ std::pair<std::string, size_t> parse_meminfo_line(const std::string& line);
 
 zone parse_buddyinfo_line(const std::string& line);
 load_average parse_loadavg_line(const std::string& line);
+uptime parse_uptime_line(const std::string& line);
 module parse_modules_line(const std::string& line);
 mem_region parse_maps_line(const std::string& line);
 mem_region parse_maps_line(const std::string& line);

@@ -59,6 +59,8 @@ public: // System API
 
     load_average get_loadavg() const;
 
+    uptime get_uptime() const;
+
     std::unordered_map<std::string, size_t> get_meminfo() const;
 
     std::vector<module> get_modules() const;
