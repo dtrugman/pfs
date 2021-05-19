@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.5)
 
+project(pfs)
+
 option(BUILD_SHARED_LIBS "Build shared library (.so) instead of static one (.a)" ON)
 
 if (NOT CMAKE_BUILD_TYPE)
