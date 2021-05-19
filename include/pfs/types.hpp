@@ -17,6 +17,8 @@
 #ifndef PFS_TYPES_HPP
 #define PFS_TYPES_HPP
 
+#include <sys/types.h>
+
 #include <array>
 #include <set>
 #include <string>
