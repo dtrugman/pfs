@@ -20,6 +20,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 #include <fstream>
 #include <iostream>
@@ -381,7 +382,7 @@ std::unordered_map<std::string, ino_t> task::get_ns() const
         std::string link = utils::readlink(file, dirfd);
 
         ino_t inode;
-        if (std::sscanf(link.c_str(), "%*[^:]:[%lu]", &inode) != 1)
+        if (std::sscanf(link.c_str(), "%*[^:]:[%" PRIuMAX "]", &inode) != 1)
         {
             throw parser_error("Couldn't parse ns link", link);
         }
