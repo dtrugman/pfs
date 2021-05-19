@@ -47,6 +47,9 @@ int enum_system(std::vector<std::string>&& args)
         auto loadavg = pfs.get_loadavg();
         print(loadavg);
 
+        auto uptime = pfs.get_uptime();
+        print(uptime);
+
         auto meminfo = pfs.get_meminfo();
         print(meminfo);
 

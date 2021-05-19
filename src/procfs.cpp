@@ -128,6 +128,15 @@ load_average procfs::get_loadavg() const
     return parsers::parse_loadavg_line(line);
 }
 
+uptime procfs::get_uptime() const
+{
+    static const std::string UPTIME_FILE("uptime");
+    auto path = _root + UPTIME_FILE;
+
+    auto line = utils::readline(path);
+    return parsers::parse_uptime_line(line);
+}
+
 std::vector<module> procfs::get_modules() const
 {
     static const std::string MODULES_FILE("modules");

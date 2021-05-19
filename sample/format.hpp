@@ -579,6 +579,14 @@ inline std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::uptime& uptime)
+{
+    out << "system_time[" << uptime.system_time << "] ";
+    out << "idle_time[" << uptime.idle_time << "] ";
+    return out;
+}
+
 inline std::ostream& operator<<(std::ostream& out, const pfs::zone& zone)
 {
     out << "zone[" << zone.name << "] ";
