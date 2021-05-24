@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+#include <stddef.h>
 #include <dirent.h>
 #include <linux/limits.h>
 #include <sys/stat.h>
@@ -30,6 +31,36 @@
 namespace pfs {
 namespace impl {
 namespace utils {
+
+size_t count_files(const std::string& dir, bool include_dots)
+{
+    static const char DOTFILE_PREFIX = '.';
+
+    DIR* dp = opendir(dir.c_str());
+    if (!dp)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't open dir");
+    }
+    defer close_dp([dp] { closedir(dp); });
+
+    size_t count = 0;
+
+    struct dirent* entry;
+    while ((entry = readdir(dp)))
+    {
+        // It's safe to access index 0.
+        // It's either a valid char or a null-terminator.
+        if (entry->d_name[0] == DOTFILE_PREFIX && !include_dots)
+        {
+            continue;
+        }
+
+        count++;
+    }
+
+    return count;
+}
 
 std::set<std::string> enumerate_files(const std::string& dir, bool include_dots)
 {

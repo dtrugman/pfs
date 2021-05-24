@@ -17,6 +17,7 @@
 #ifndef PFS_UTILS_HPP
 #define PFS_UTILS_HPP
 
+#include <stddef.h>
 #include <fcntl.h>
 
 #include <limits>
@@ -81,6 +82,10 @@ stot(const std::string& str, T& out, base b = base::decimal)
 
     out = static_cast<T>(temp);
 }
+
+// Count all the files under the specified directory.
+// File can be any unix file type, i.e. regular file, directory, link, etc.
+size_t count_files(const std::string& dir, bool include_dots = false);
 
 // Get a set of all the files under the specified directory.
 // File can be any unix file type, i.e. regular file, directory, link, etc.

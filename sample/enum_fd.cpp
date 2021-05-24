@@ -54,7 +54,7 @@ void enum_task_fds(const pfs::task& task)
 {
     try
     {
-        LOG("fds");
+        LOG("fds (total: " << task.count_fds() << ")");
         LOG("---");
 
         auto sockets = enum_sockets(task.get_net());

@@ -17,6 +17,7 @@
 #ifndef PFS_TASK_HPP
 #define PFS_TASK_HPP
 
+#include <stddef.h>
 #include <set>
 #include <string>
 #include <vector>
@@ -57,6 +58,8 @@ public: // Getters
     get_environ(size_t max_size = 65536) const;
 
     std::string get_exe() const;
+
+    size_t count_fds() const;
 
     std::unordered_map<int, fd> get_fds() const;
 
