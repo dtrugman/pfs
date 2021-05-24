@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+#include <stddef.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <linux/limits.h>
@@ -341,6 +342,14 @@ std::vector<mount> task::get_mountinfo() const
     parsers::parse_lines(path, std::back_inserter(output),
                          parsers::parse_mountinfo_line);
     return output;
+}
+
+size_t task::count_fds() const
+{
+    static const std::string FDS_DIR("fd/");
+    auto path = _task_root + FDS_DIR;
+
+    return utils::count_files(path);
 }
 
 std::unordered_map<int, fd> task::get_fds() const
