@@ -17,9 +17,10 @@
 #ifndef PFS_UTILS_HPP
 #define PFS_UTILS_HPP
 
-#include <stddef.h>
 #include <fcntl.h>
+#include <stddef.h>
 
+#include <functional>
 #include <limits>
 #include <set>
 #include <string>
@@ -82,6 +83,13 @@ stot(const std::string& str, T& out, base b = base::decimal)
 
     out = static_cast<T>(temp);
 }
+
+// Iterate over all the files in a given directory.
+// Calls 'handle' for every file found.
+// Note: 'handle' can be nullptr. Use this to count the number of files in a
+// directory. Returns the number of files found.
+size_t iterate_files(const std::string& dir, bool include_dots,
+                     std::function<void(const char*)> handle);
 
 // Count all the files under the specified directory.
 // File can be any unix file type, i.e. regular file, directory, link, etc.

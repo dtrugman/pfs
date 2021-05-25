@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-#include <stddef.h>
 #include <dirent.h>
 #include <linux/limits.h>
+#include <stddef.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -32,9 +32,12 @@ namespace pfs {
 namespace impl {
 namespace utils {
 
-size_t count_files(const std::string& dir, bool include_dots)
+size_t iterate_files(const std::string& dir, bool include_dots,
+                     std::function<void(const char*)> handle)
 {
     static const char DOTFILE_PREFIX = '.';
+
+    size_t count = 0;
 
     DIR* dp = opendir(dir.c_str());
     if (!dp)
@@ -43,8 +46,6 @@ size_t count_files(const std::string& dir, bool include_dots)
                                 "Couldn't open dir");
     }
     defer close_dp([dp] { closedir(dp); });
-
-    size_t count = 0;
 
     struct dirent* entry;
     while ((entry = readdir(dp)))
@@ -56,61 +57,47 @@ size_t count_files(const std::string& dir, bool include_dots)
             continue;
         }
 
-        count++;
+        ++count;
+
+        if (handle)
+        {
+            handle(entry->d_name);
+        }
     }
 
     return count;
 }
 
+size_t count_files(const std::string& dir, bool include_dots)
+{
+    return iterate_files(dir, include_dots, nullptr);
+}
+
 std::set<std::string> enumerate_files(const std::string& dir, bool include_dots)
 {
-    static const char DOTFILE_PREFIX = '.';
-
-    DIR* dp = opendir(dir.c_str());
-    if (!dp)
-    {
-        throw std::system_error(errno, std::system_category(),
-                                "Couldn't open dir");
-    }
-    defer close_dp([dp] { closedir(dp); });
-
     std::set<std::string> files;
+    auto handle = [&files](const char* name) { files.emplace(name); };
 
-    struct dirent* entry;
-    while ((entry = readdir(dp)))
-    {
-        // It's safe to access index 0.
-        // It's either a valid char or a null-terminator.
-        if (entry->d_name[0] == DOTFILE_PREFIX && !include_dots)
-        {
-            continue;
-        }
-
-        files.emplace(entry->d_name);
-    }
-
+    (void)iterate_files(dir, include_dots, handle);
     return files;
 }
 
 std::set<int> enumerate_numeric_files(const std::string& dir)
 {
-    std::set<int> num_files;
-
-    auto files = enumerate_files(dir);
-    for (const auto& file : files)
-    {
+    std::set<int> files;
+    auto handle = [&files](const char* name) {
         try
         {
-            int num = std::stoi(file);
-            num_files.insert(num);
+            files.insert(std::stoi(name));
         }
         catch (const std::logic_error&)
         {
             // Do nothing, not a numeric file name
         }
-    }
+    };
 
-    return num_files;
+    (void)iterate_files(dir, false /* include_dots */, handle);
+    return files;
 }
 
 std::string readlink(const std::string& link, int dirfd)
