@@ -370,6 +370,14 @@ net task::get_net() const
     return net(_procfs_root);
 }
 
+ino_t task::get_ns(const std::string& ns) const
+{
+    static const std::string NS_DIR("ns/");
+    auto path = _task_root + NS_DIR + ns;
+
+    return utils::get_inode(path);
+}
+
 std::unordered_map<std::string, ino_t> task::get_ns() const
 {
     static const std::string NS_DIR("ns/");
@@ -388,15 +396,7 @@ std::unordered_map<std::string, ino_t> task::get_ns() const
     for (const auto& file :
          utils::enumerate_files(path, /* include_dots */ false))
     {
-        std::string link = utils::readlink(file, dirfd);
-
-        ino_t inode;
-        if (std::sscanf(link.c_str(), "%*[^:]:[%" PRIuMAX "]", &inode) != 1)
-        {
-            throw parser_error("Couldn't parse ns link", link);
-        }
-
-        ns.emplace(file, inode);
+        ns.emplace(file, utils::get_inode(file, dirfd));
     }
 
     return ns;

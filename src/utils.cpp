@@ -100,6 +100,19 @@ std::set<int> enumerate_numeric_files(const std::string& dir)
     return files;
 }
 
+ino_t get_inode(const std::string& path, int dirfd)
+{
+    struct stat st;
+    int err = fstatat(dirfd, path.c_str(), &st, 0);
+    if (err)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't stat file for inode");
+    }
+
+    return st.st_ino;
+}
+
 std::string readlink(const std::string& link, int dirfd)
 {
     std::string buffer;

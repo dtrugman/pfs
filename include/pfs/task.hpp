@@ -71,6 +71,8 @@ public: // Getters
 
     net get_net() const;
 
+    ino_t get_ns(const std::string& ns) const;
+
     std::unordered_map<std::string, ino_t> get_ns() const;
 
     std::string get_root() const;
