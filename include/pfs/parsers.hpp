@@ -98,11 +98,9 @@ public:
         std::string line;
         while (std::getline(in, line))
         {
-            static const char DELIM = ':';
-
             std::string key;
             std::string value;
-            std::tie(key, value) = utils::split_once(line, DELIM);
+            std::tie(key, value) = utils::split_once(line, _delim);
             if (key.empty())
             {
                 throw parser_error("Corrupted line - Missing key", line);
@@ -132,20 +130,25 @@ public:
     }
 
 protected:
-    using value_parser =
-        std::function<void(const std::string& value, Output& out)>;
+    using value_parser  = std::function<void(
+        const std::string& value, Output& out)>;
     using value_parsers = std::unordered_map<std::string, value_parser>;
 
-    file_parser(const value_parsers& parsers) : _parsers(parsers) {}
+    file_parser(const char delim, const value_parsers& parsers)
+        : _delim(delim), _parsers(parsers)
+    {}
 
 private:
+    const char _delim;
     const value_parsers& _parsers;
 };
 
+// A parser of the /proc/%pid%/status file.
 class status_parser : public file_parser<task_status>
 {
 public:
-    status_parser() : file_parser<task_status>(parsers) {}
+    status_parser(const char delim) : file_parser<task_status>(delim, parsers)
+    {}
 
 private:
     static const value_parsers parsers;
