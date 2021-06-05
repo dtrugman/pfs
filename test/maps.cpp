@@ -11,7 +11,11 @@ using namespace pfs::impl::parsers;
 TEST_CASE("Parse corrupted maps", "[task][maps]")
 {
     // Missing last token (inode)
+#if defined(ARCH_64BIT)
     std::string line = "559037183000-559037184000 rw-p 00185000 fd:00";
+#elif defined(ARCH_32BIT)
+    std::string line = "08153000-08158000 rw-p 0010a000 fc:00";
+#endif
 
     REQUIRE_THROWS_AS(parse_maps_line(line), pfs::parser_error);
 }
@@ -37,8 +41,13 @@ TEST_CASE("Parse maps", "[task][maps]")
 
     SECTION("Anonymous")
     {
+#if defined(ARCH_64BIT)
         start = 0x7f0b476b6000;
         end   = 0x7f0b476b7000;
+#elif defined(ARCH_32BIT)
+        start = 0x08158000;
+        end   = 0x0815d000;
+#endif
 
         can_read    = true;
         can_write   = false;
@@ -57,8 +66,13 @@ TEST_CASE("Parse maps", "[task][maps]")
 
     SECTION("Special")
     {
+#if defined(ARCH_64BIT)
         start = 0xffffffffff600000;
         end   = 0xffffffffff601000;
+#elif defined(ARCH_32BIT)
+        start = 0xbfbd7000;
+        end   = 0xbfbf8000;
+#endif
 
         can_read    = true;
         can_write   = false;
@@ -77,8 +91,13 @@ TEST_CASE("Parse maps", "[task][maps]")
 
     SECTION("Shared object")
     {
+#if defined(ARCH_64BIT)
         start = 0x7f0b476c6000;
         end   = 0x7f0b476c7000;
+#elif defined(ARCH_32BIT)
+        start = 0xb75b7000;
+        end   = 0xb7766000;
+#endif
 
         can_read    = true;
         can_write   = false;
@@ -97,8 +116,13 @@ TEST_CASE("Parse maps", "[task][maps]")
 
     SECTION("Deleted")
     {
+#if defined(ARCH_64BIT)
         start = 0x7fcbe4bc0000;
         end   = 0x7f0b476c6000;
+#elif defined(ARCH_32BIT)
+        start = 0xb7792000;
+        end   = 0xb7794000;
+#endif
 
         can_read    = true;
         can_write   = false;
@@ -117,8 +141,13 @@ TEST_CASE("Parse maps", "[task][maps]")
 
     SECTION("Pathname with spaces")
     {
+#if defined(ARCH_64BIT)
         start = 0x7f3fcf467000;
         end   = 0x7f3fcf666000;
+#elif defined(ARCH_32BIT)
+        start = 0xb737e000;
+        end   = 0xb7384000;
+#endif
 
         can_read    = false;
         can_write   = false;

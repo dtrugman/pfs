@@ -1,4 +1,7 @@
+#include <sstream>
+
 #include "catch.hpp"
+#include "test_utils.hpp"
 
 #include "pfs/parsers.hpp"
 
@@ -17,13 +20,21 @@ TEST_CASE("Parse corrupted net socket", "[net][net_socket]")
 TEST_CASE("Parse net socket", "[net][net_socket]")
 {
     pfs::net_socket expected;
-    std::string line;
+
+    std::stringstream line;
+    line << std::hex;
 
     SECTION("IPv4")
     {
-        line =
+#if defined(ARCH_64BIT)
+        size_t skbuff = 0xffff9f55b1420800;
+#elif defined(ARCH_32BIT)
+        size_t skbuff = 0xd8658c00;
+#endif
+
+        line <<
             "1: 3500007F:0035 00000000:0000 0A 00000000:00000000 00:00000000 "
-            "00000000   101        0 15979 1 ffff9f55b1420800 100 0 0 10 0";
+            "00000000   101        0 15979 1 " << skbuff << " 100 0 0 10 0";
 
         expected.slot                 = 1;
         expected.local_ip             = pfs::ip(0x3500007F);
@@ -40,15 +51,21 @@ TEST_CASE("Parse net socket", "[net][net_socket]")
         expected.timeouts             = 0;
         expected.inode                = 15979;
         expected.ref_count            = 1;
-        expected.skbuff               = 0xffff9f55b1420800;
+        expected.skbuff               = skbuff;
     }
 
     SECTION("IPv6")
     {
-        line = "5: 00000000000000000000000000000000:006F "
-               "00000000000000000000000000000000:0000 0A 00000000:00000000 "
-               "00:00000000 00000000     0        0 15737 1 ffff9f55bdb91980 "
-               "100 0 0 10 0";
+#if defined(ARCH_64BIT)
+        size_t skbuff = 0xffff9f55bdb91980;
+#elif defined(ARCH_32BIT)
+        size_t skbuff = 0xdb2b0000;
+#endif
+
+        line << "5: 00000000000000000000000000000000:006F "
+                "00000000000000000000000000000000:0000 0A 00000000:00000000 "
+                "00:00000000 00000000     0        0 15737 1 " << skbuff << " "
+                "100 0 0 10 0";
 
         expected.slot     = 5;
         expected.local_ip = pfs::ip(
@@ -67,10 +84,10 @@ TEST_CASE("Parse net socket", "[net][net_socket]")
         expected.timeouts             = 0;
         expected.inode                = 15737;
         expected.ref_count            = 1;
-        expected.skbuff               = 0xffff9f55bdb91980;
+        expected.skbuff               = skbuff;
     }
 
-    auto socket = parse_net_socket_line(line);
+    auto socket = parse_net_socket_line(line.str());
     REQUIRE(socket.slot == expected.slot);
     REQUIRE(socket.local_ip == expected.local_ip);
     REQUIRE(socket.local_port == expected.local_port);
