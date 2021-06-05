@@ -1,4 +1,7 @@
+#include <sstream>
+
 #include "catch.hpp"
+#include "test_utils.hpp"
 
 #include "pfs/parsers.hpp"
 
@@ -14,36 +17,40 @@ TEST_CASE("Parse corrupted meminfo", "[procfs][meminfo]")
 
 TEST_CASE("Parse meminfo", "[procfs][meminfo]")
 {
-    std::string line;
+    std::stringstream line;
 
     std::string description;
     size_t amount;
 
     SECTION("With kB")
     {
-        line = "VmallocTotal:   34359738367 kB";
-
         description = "VmallocTotal";
+#if defined(ARCH_64BIT)
         amount      = 34359738367;
+#elif defined(ARCH_32BIT)
+        amount      = 512056;
+#endif
+
+        line << description << ":   " << amount << " kB";
     }
 
     SECTION("Zero with kB")
     {
-        line = "VmallocUsed:           0 kB";
-
         description = "VmallocUsed";
         amount      = 0;
+
+        line << description << ":           " << amount << " kB";
     }
 
     SECTION("Zero without kB")
     {
-        line = "HugePages_Total:       0";
-
         description = "HugePages_Total";
         amount      = 0;
+
+        line << description << ":       " << amount;
     }
 
-    auto output = parse_meminfo_line(line);
+    auto output = parse_meminfo_line(line.str());
     REQUIRE(output.first == description);
     REQUIRE(output.second == amount);
 }

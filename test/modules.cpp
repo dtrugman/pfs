@@ -1,4 +1,7 @@
+#include <sstream>
+
 #include "catch.hpp"
+#include "test_utils.hpp"
 
 #include "pfs/parsers.hpp"
 
@@ -15,55 +18,79 @@ TEST_CASE("Parse corrupted modules", "[procfs][modules]")
 TEST_CASE("Parse modules", "[procfs][modules]")
 {
     pfs::module expected;
-    std::string line;
+    std::ostringstream line;
+    line << std::hex;
 
     SECTION("No dependencies")
     {
-        line = "raid1 40960 0 - Live 0xffffffffc03eb000";
+#if defined(ARCH_64BIT)
+        size_t offset = 0xffffffffc03eb000;
+#elif defined(ARCH_32BIT)
+        size_t offset = 0xe089a000;
+#endif
+
+        line << "raid1 40960 0 - Live 0x" << offset;
 
         expected.name           = "raid1";
         expected.size           = 40960;
         expected.instances      = 0;
         expected.dependencies   = {};
         expected.module_state   = pfs::module::state::live;
-        expected.offset         = 0xffffffffc03eb000;
+        expected.offset         = offset;
         expected.is_out_of_tree = false;
         expected.is_unsigned    = false;
     }
 
     SECTION("Unsigned and Out-of-tree")
     {
-        line = "vboxsf 77824 2 - Live 0xffffffffc0759000 (OE)";
+#if defined(ARCH_64BIT)
+        size_t offset = 0xffffffffc0759000;
+#elif defined(ARCH_32BIT)
+        size_t offset = 0xe0ac1000;
+#endif
+
+        line << "vboxsf 77824 2 - Live 0x" << offset << " (OE)";
 
         expected.name           = "vboxsf";
         expected.size           = 77824;
         expected.instances      = 2;
         expected.dependencies   = {};
         expected.module_state   = pfs::module::state::live;
-        expected.offset         = 0xffffffffc0759000;
+        expected.offset         = offset;
         expected.is_out_of_tree = true;
         expected.is_unsigned    = true;
     }
 
     SECTION("Single dependency")
     {
-        line = "libcrc32c 16384 1 raid456, Live 0xffffffffc03b6000";
+#if defined(ARCH_64BIT)
+        size_t offset = 0xffffffffc03b6000;
+#elif defined(ARCH_32BIT)
+        size_t offset = 0xe089f000;
+#endif
+
+        line << "libcrc32c 16384 1 raid456, Live 0x" << offset;
 
         expected.name           = "libcrc32c";
         expected.size           = 16384;
         expected.instances      = 1;
         expected.dependencies   = {"raid456"};
         expected.module_state   = pfs::module::state::live;
-        expected.offset         = 0xffffffffc03b6000;
+        expected.offset         = offset;
         expected.is_out_of_tree = false;
         expected.is_unsigned    = false;
     }
 
     SECTION("Multi dependencies")
     {
-        line =
-            "raid6_pq 114688 4 btrfs,raid456,async_raid6_recov,async_pq, Live "
-            "0xffffffffc03f6000";
+#if defined(ARCH_64BIT)
+        size_t offset = 0xffffffffc03f6000;
+#elif defined(ARCH_32BIT)
+        size_t offset = 0xe081b000;
+#endif
+
+        line << "raid6_pq 114688 4 btrfs,raid456,async_raid6_recov,async_pq, Live 0x"
+             << offset;
 
         expected.name           = "raid6_pq";
         expected.size           = 114688;
@@ -71,13 +98,13 @@ TEST_CASE("Parse modules", "[procfs][modules]")
         expected.dependencies   = {"btrfs", "raid456", "async_raid6_recov",
                                  "async_pq"};
         expected.module_state   = pfs::module::state::live;
-        expected.offset         = 0xffffffffc03f6000;
+        expected.offset         = offset;
         expected.is_out_of_tree = false;
         expected.is_unsigned    = false;
         ;
     }
 
-    auto module = parse_modules_line(line);
+    auto module = parse_modules_line(line.str());
     REQUIRE(module.name == expected.name);
     REQUIRE(module.size == expected.size);
     REQUIRE(module.instances == expected.instances);
