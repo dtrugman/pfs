@@ -45,8 +45,18 @@ uptime parse_uptime_line(const std::string& line)
     {
         uptime system_uptime;
 
-        system_uptime.system_time  = std::stod(tokens[SYSTEM_TIME]);
-        system_uptime.idle_time  = std::stod(tokens[IDLE_TIME]);
+        double system_time;
+        double idle_time;
+
+        system_time = std::stod(tokens[SYSTEM_TIME]);
+        idle_time = std::stod(tokens[IDLE_TIME]);
+
+        system_uptime.system_time = std::chrono::duration_cast<
+            std::chrono::steady_clock::duration
+        >(std::chrono::duration<double>(system_time));
+        system_uptime.idle_time = std::chrono::duration_cast<
+            std::chrono::steady_clock::duration
+        >(std::chrono::duration<double>(idle_time));
 
         return system_uptime;
     }
