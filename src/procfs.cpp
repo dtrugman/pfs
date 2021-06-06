@@ -137,6 +137,26 @@ uptime procfs::get_uptime() const
     return parsers::parse_uptime_line(line);
 }
 
+proc_stat procfs::get_stat() const
+{
+    static constexpr char DELIM = ' ';
+    static const std::string STATUS_FILE("stat");
+    auto path = _root + STATUS_FILE;
+
+    auto key_remap = [&](std::string& key) -> void {
+        if (key == "cpu")
+        {
+            key = "cpu_total";
+        }
+        else if (key.rfind("cpu", 0) == 0)
+        {
+            key = "cpu_single";
+        }
+    };
+
+    return parsers::proc_stat_parser(DELIM, key_remap).parse(path);
+}
+
 std::vector<module> procfs::get_modules() const
 {
     static const std::string MODULES_FILE("modules");

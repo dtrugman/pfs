@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+#include <chrono>
 #include <iomanip>
 #include <sstream>
 
@@ -579,18 +580,63 @@ inline std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
-inline std::ostream& operator<<(std::ostream& out,
-                                const pfs::uptime& uptime)
+inline std::ostream& operator<<(std::ostream& out, const pfs::uptime& uptime)
 {
-    auto system_time_seconds = std::chrono::duration_cast<std::chrono::seconds>(
-        uptime.system_time
-    ).count();
+    auto system_time_seconds =
+        std::chrono::duration_cast<std::chrono::seconds>(uptime.system_time)
+            .count();
     out << "system_time[" << system_time_seconds << "s] ";
 
-    auto idle_time_seconds = std::chrono::duration_cast<std::chrono::seconds>(
-        uptime.idle_time
-    ).count();
+    auto idle_time_seconds =
+        std::chrono::duration_cast<std::chrono::seconds>(uptime.idle_time)
+            .count();
     out << "idle_time[" << idle_time_seconds << "s] ";
+    return out;
+}
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::proc_stat::cpu cpu)
+{
+    out << "user[" << cpu.user << "] ";
+    out << "nice[" << cpu.nice << "] ";
+    out << "system[" << cpu.system << "] ";
+    out << "idle[" << cpu.idle << "] ";
+    out << "iowait[" << cpu.iowait << "] ";
+    out << "irq[" << cpu.irq << "] ";
+    out << "softirq[" << cpu.softirq << "] ";
+    out << "steal[" << cpu.steal << "] ";
+    out << "guest[" << cpu.guest << "] ";
+    out << "guest_nice[" << cpu.guest_nice << "]";
+    return out;
+}
+
+inline std::ostream& operator<<(std::ostream& out, const pfs::proc_stat& stats)
+{
+    out << "stat_cpu_total";
+    out << "[" << stats.cpus.total << "]\n";
+    for (size_t i = 0; i < stats.cpus.per_item.size(); i++)
+    {
+        out << "stat_cpu" << i;
+        out << "[" << stats.cpus.per_item[i] << "]\n";
+    }
+
+    out << "stat_intr[";
+    out << "total: " << stats.intr.total << ", ";
+    out << "per_interrupt: " << join(stats.intr.per_item);
+    out << "]\n";
+
+    out << "stat_ctxt[" << stats.ctxt << "] ";
+
+    auto boot_seconds =
+        std::chrono::time_point_cast<std::chrono::seconds>(stats.btime);
+    out << "stat_btime[" << boot_seconds.time_since_epoch().count() << "] ";
+
+    out << "stat_processes[" << stats.processes << "] ";
+    out << "stat_procs_running[" << stats.procs_running << "] ";
+    out << "stat_procs_blocked[" << stats.procs_blocked << "]\n";
+    out << "stat_softirq[";
+    out << "total: " << stats.softirq.total << ", ";
+    out << "per_irq: " << join(stats.softirq.per_item);
+    out << "] ";
     return out;
 }
 
