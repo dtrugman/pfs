@@ -71,7 +71,6 @@ load_average parse_loadavg_line(const std::string& line);
 uptime parse_uptime_line(const std::string& line);
 module parse_modules_line(const std::string& line);
 mem_region parse_maps_line(const std::string& line);
-mem_region parse_maps_line(const std::string& line);
 mount parse_mountinfo_line(const std::string& line);
 net_socket parse_net_socket_line(const std::string& line);
 unix_socket parse_unix_socket_line(const std::string& line);
