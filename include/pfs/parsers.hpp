@@ -80,6 +80,11 @@ netlink_socket parse_netlink_socket_line(const std::string& line);
 dev_t parse_device(const std::string& device_str);
 task_state parse_task_state(char state_char);
 
+// When parsing key value text files, we might encounter different keys which
+// should be parsed in the same manner. To relate those lines in the same
+// manner, a remap function can be used.
+using remap_function = const std::function<std::string(std::string&)>;
+
 template <typename Output>
 class file_parser
 {
@@ -107,6 +112,10 @@ public:
             }
 
             utils::rtrim(key);
+            if (_key_remap)
+            {
+                _key_remap(key);
+            }
 
             // Value MIGHT be an empty value, for example:
             // Process without any groups
@@ -130,19 +139,20 @@ public:
     }
 
 protected:
-    using value_parser  = std::function<void(
-        const std::string& value, Output& out)>;
+    using value_parser =
+        std::function<void(const std::string& value, Output& out)>;
     using value_parsers = std::unordered_map<std::string, value_parser>;
 
-    file_parser(const char delim, const value_parsers& parsers)
-        : _delim(delim), _parsers(parsers)
+    file_parser(const char delim, const value_parsers& parsers,
+                remap_function key_remap = nullptr)
+        : _delim(delim), _parsers(parsers), _key_remap(key_remap)
     {}
 
 private:
     const char _delim;
     const value_parsers& _parsers;
+    remap_function _key_remap;
 };
-
 // A parser of the /proc/%pid%/status file.
 class status_parser : public file_parser<task_status>
 {
