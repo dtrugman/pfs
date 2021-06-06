@@ -50,6 +50,9 @@ int enum_system(std::vector<std::string>&& args)
         auto uptime = pfs.get_uptime();
         print(uptime);
 
+        auto stats = pfs.get_stat();
+        print(stats);
+
         auto meminfo = pfs.get_meminfo();
         print(meminfo);
 

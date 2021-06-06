@@ -20,11 +20,11 @@
 #include <sys/types.h>
 
 #include <array>
+#include <chrono>
 #include <set>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <chrono>
 
 namespace pfs {
 
@@ -358,6 +358,39 @@ struct load_average
     int runnable_tasks;
     int total_tasks;
     int last_created_task;
+};
+
+struct proc_stat
+{
+    template <typename T>
+    struct sequence
+    {
+        T total;
+        std::vector<T> per_item;
+    };
+
+    struct cpu
+    {
+        unsigned long long user{0};
+        unsigned long long nice{0};
+        unsigned long long system{0};
+        unsigned long long idle{0};
+        unsigned long long iowait{0};
+        unsigned long long irq{0};
+        unsigned long long softirq{0};
+        unsigned long long steal{0};
+        unsigned long long guest{0};
+        unsigned long long guest_nice{0};
+    };
+
+    sequence<cpu> cpus;
+    sequence<unsigned long long> intr;
+    size_t ctxt;
+    std::chrono::system_clock::time_point btime;
+    size_t processes;
+    size_t procs_running;
+    size_t procs_blocked;
+    sequence<unsigned long long> softirq;
 };
 
 struct mount
