@@ -24,6 +24,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <chrono>
 
 namespace pfs {
 
@@ -345,8 +346,8 @@ struct module
 
 struct uptime
 {
-    double system_time;
-    double idle_time;
+    std::chrono::steady_clock::duration system_time;
+    std::chrono::steady_clock::duration idle_time;
 };
 
 struct load_average

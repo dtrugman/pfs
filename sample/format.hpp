@@ -582,8 +582,15 @@ inline std::ostream& operator<<(std::ostream& out,
 inline std::ostream& operator<<(std::ostream& out,
                                 const pfs::uptime& uptime)
 {
-    out << "system_time[" << uptime.system_time << "] ";
-    out << "idle_time[" << uptime.idle_time << "] ";
+    auto system_time_seconds = std::chrono::duration_cast<std::chrono::seconds>(
+        uptime.system_time
+    ).count();
+    out << "system_time[" << system_time_seconds << "s] ";
+
+    auto idle_time_seconds = std::chrono::duration_cast<std::chrono::seconds>(
+        uptime.idle_time
+    ).count();
+    out << "idle_time[" << idle_time_seconds << "s] ";
     return out;
 }
 
