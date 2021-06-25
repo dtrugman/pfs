@@ -176,8 +176,22 @@ static void parse_softirq(const std::string& value, proc_stat& out)
 
 } // anonymous namespace
 
+const char proc_stat_parser::DELIM = ' ';
+
+void proc_stat_parser::key_remap(std::string& key)
+{
+    if (key == "cpu")
+    {
+        key = "cpu_total";
+    }
+    else if (key.rfind("cpu", 0) == 0)
+    {
+        key = "cpu_single";
+    }
+}
+
 // clang-format off
-const proc_stat_parser::value_parsers proc_stat_parser::parsers = {
+const proc_stat_parser::value_parsers proc_stat_parser::PARSERS = {
     { "cpu_total", parse_cpu_total },
     { "cpu_single", parse_cpu_single },
     { "intr", parse_intr },

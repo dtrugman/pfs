@@ -211,12 +211,14 @@ private:
 class proc_stat_parser : public file_parser<proc_stat>
 {
 public:
-    proc_stat_parser(const char delim, remap_function key_remap)
-        : file_parser<proc_stat>(delim, parsers, key_remap)
-    {}
+    proc_stat_parser() : file_parser<proc_stat>(DELIM, PARSERS, key_remap) {}
 
 private:
-    static const value_parsers parsers;
+    static void key_remap(std::string& key);
+
+private:
+    static const char DELIM;
+    static const value_parsers PARSERS;
 };
 
 } // namespace parsers
