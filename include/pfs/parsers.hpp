@@ -200,11 +200,11 @@ private:
 class status_parser : public file_parser<task_status>
 {
 public:
-    status_parser(const char delim) : file_parser<task_status>(delim, parsers)
-    {}
+    status_parser() : file_parser<task_status>(DELIM, PARSERS) {}
 
 private:
-    static const value_parsers parsers;
+    static const char DELIM;
+    static const value_parsers PARSERS;
 };
 
 // A parser of the /proc/stat file.
