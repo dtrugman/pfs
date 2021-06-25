@@ -70,7 +70,7 @@ TEST_CASE("Parse status", "[task][status]")
     std::string file = create_temp_file(content);
     pfs::impl::defer unlink_temp_file([&file] { unlink(file.c_str()); });
 
-    status_parser parser(':');
+    status_parser parser;
 
     SECTION("Parse all")
     {

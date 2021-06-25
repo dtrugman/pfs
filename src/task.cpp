@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-#include <stddef.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <inttypes.h>
 #include <linux/limits.h>
+#include <stddef.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <inttypes.h>
 
 #include <fstream>
 #include <iostream>
@@ -308,11 +308,10 @@ mem_stats task::get_statm() const
 
 task_status task::get_status(const std::set<std::string>& keys) const
 {
-    static constexpr char DELIM = ':';
     static const std::string STATUS_FILE("status");
     auto path = _task_root + STATUS_FILE;
 
-    return parsers::status_parser(DELIM).parse(path, keys);
+    return parsers::status_parser().parse(path, keys);
 }
 
 std::vector<mem_region> task::get_maps() const
