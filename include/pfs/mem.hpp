@@ -37,7 +37,7 @@ public:
 
 public: // API
     std::vector<uint8_t> read(const mem_region& region);
-    std::vector<uint8_t> read(off_t offset, size_t len);
+    std::vector<uint8_t> read(loff_t offset, size_t len);
 
 private:
     friend class task;
