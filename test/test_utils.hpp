@@ -1,9 +1,9 @@
 #ifndef PFS_TEST_UTILS_HPP
 #define PFS_TEST_UTILS_HPP
 
+#include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdint.h>
 
 #include <linux/kdev_t.h>
 
@@ -12,6 +12,7 @@
 
 #include "pfs/defer.hpp"
 
+// clang-format off
 #if INTPTR_MAX == INT64_MAX
     #define ARCH_64BIT
 #elif INTPTR_MAX == INT32_MAX
@@ -19,6 +20,7 @@
 #else
     #error Unsupported pointer size or missing size macros
 #endif
+// clang-format on
 
 template <typename T>
 inline T generate_random()
