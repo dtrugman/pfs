@@ -53,6 +53,8 @@ public: // Network API
 public: // System API
     std::vector<zone> get_buddyinfo() const;
 
+    std::vector<cgroup_controller> get_cgroups() const;
+
     std::string get_cmdline() const;
 
     std::unordered_map<std::string, bool> get_filesystems() const;
