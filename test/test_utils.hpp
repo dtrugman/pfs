@@ -66,4 +66,22 @@ inline std::string create_temp_file(const std::vector<std::string>& lines)
     return std::string(temp);
 }
 
+template <typename T>
+inline std::string join(const T& container)
+{
+    if (container.empty())
+    {
+        return "";
+    }
+
+    std::ostringstream out;
+    for (const auto& v : container)
+    {
+        out << v << ',';
+    }
+    auto out_str = out.str();
+    out_str.pop_back();
+    return out_str;
+}
+
 #endif // PFS_TEST_UTILS_HPP

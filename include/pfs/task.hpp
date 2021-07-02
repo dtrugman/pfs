@@ -17,8 +17,8 @@
 #ifndef PFS_TASK_HPP
 #define PFS_TASK_HPP
 
-#include <stddef.h>
 #include <set>
+#include <stddef.h>
 #include <string>
 #include <vector>
 
@@ -48,6 +48,8 @@ public: // Properties
     const std::string& dir() const;
 
 public: // Getters
+    std::vector<cgroup> get_cgroups() const;
+
     std::vector<std::string> get_cmdline(size_t max_size = 65536) const;
 
     std::string get_comm() const;
