@@ -61,6 +61,9 @@ int enum_system(std::vector<std::string>&& args)
 
         auto version_signature = pfs.get_version_signature();
         print(version_signature);
+
+        auto controllers = pfs.get_cgroups();
+        print(controllers);
     }
     catch (const std::runtime_error& ex)
     {

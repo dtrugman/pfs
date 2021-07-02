@@ -89,6 +89,19 @@ std::vector<zone> procfs::get_buddyinfo() const
     return output;
 }
 
+std::vector<cgroup_controller> procfs::get_cgroups() const
+{
+    static const size_t HEADER_LINES = 1;
+
+    static const std::string CGROUPS_FILE("cgroups");
+    auto path = _root + CGROUPS_FILE;
+
+    std::vector<cgroup_controller> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_cgroup_controller_line, HEADER_LINES);
+    return output;
+}
+
 std::string procfs::get_cmdline() const
 {
     static const std::string CMDLINE_FILE("cmdline");

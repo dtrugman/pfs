@@ -551,6 +551,14 @@ struct netlink_socket
     }
 };
 
+struct cgroup_controller
+{
+    std::string subsys_name;
+    unsigned hierarchy;
+    unsigned num_cgroups;
+    bool enabled;
+};
+
 } // namespace pfs
 
 #endif // PFS_TYPES_HPP

@@ -652,3 +652,14 @@ inline std::ostream& operator<<(std::ostream& out, const pfs::fd& fd)
     out << "target[" << fd.get_target() << "] ";
     return out;
 }
+
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::cgroup_controller& controller)
+{
+    out << std::boolalpha;
+    out << "subsys_name[" << controller.subsys_name << "] ";
+    out << "hierarchy[" << controller.hierarchy << "] ";
+    out << "num_cgroups[" << controller.num_cgroups << "] ";
+    out << "enabled[" << controller.enabled << "] ";
+    return out;
+}
