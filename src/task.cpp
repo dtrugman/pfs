@@ -68,6 +68,17 @@ const std::string& task::dir() const
     return _task_root;
 }
 
+std::vector<cgroup> task::get_cgroups() const
+{
+    static const std::string CGROUP_FILE("cgroup");
+    auto path = _task_root + CGROUP_FILE;
+
+    std::vector<cgroup> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_cgroup_line);
+    return output;
+}
+
 std::string task::get_exe() const
 {
     static const std::string EXE_FILE("exe");

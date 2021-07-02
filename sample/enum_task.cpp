@@ -71,6 +71,9 @@ static void enum_task(const pfs::task& task)
         auto mountinfo = task.get_mountinfo();
         print(mountinfo);
 
+        auto cgroups = task.get_cgroups();
+        print(cgroups);
+
         auto ns = task.get_ns();
         print(ns);
 

@@ -67,6 +67,7 @@ std::pair<std::string, bool> parse_filesystems_line(const std::string& line);
 std::pair<std::string, size_t> parse_meminfo_line(const std::string& line);
 
 zone parse_buddyinfo_line(const std::string& line);
+cgroup parse_cgroup_line(const std::string& line);
 cgroup_controller parse_cgroup_controller_line(const std::string& line);
 load_average parse_loadavg_line(const std::string& line);
 uptime parse_uptime_line(const std::string& line);

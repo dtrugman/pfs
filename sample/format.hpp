@@ -663,3 +663,11 @@ inline std::ostream& operator<<(std::ostream& out,
     out << "enabled[" << controller.enabled << "] ";
     return out;
 }
+
+inline std::ostream& operator<<(std::ostream& out, const pfs::cgroup& cg)
+{
+    out << "hierarchy[" << cg.hierarchy << "] ";
+    out << "controllers[" << join(cg.controllers) << "] ";
+    out << "pathname[" << cg.pathname << "] ";
+    return out;
+}

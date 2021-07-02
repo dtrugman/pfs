@@ -559,6 +559,13 @@ struct cgroup_controller
     bool enabled;
 };
 
+struct cgroup
+{
+    unsigned hierarchy;
+    std::vector<std::string> controllers;
+    std::string pathname;
+};
+
 } // namespace pfs
 
 #endif // PFS_TYPES_HPP
