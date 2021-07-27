@@ -3,6 +3,7 @@ cmake_minimum_required (VERSION 3.5)
 project(pfs)
 
 option(BUILD_SHARED_LIBS "Build shared library (.so) instead of static one (.a)" ON)
+option(ADDRESS_SANITIZER "Enable address sanitizer" OFF)
 
 if (NOT CMAKE_BUILD_TYPE)
     set (CMAKE_BUILD_TYPE Debug)
@@ -24,7 +25,7 @@ set (SOURCES ${ROOT_SOURCES} ${PARSERS_SOURCES})
 
 add_library (pfs ${SOURCES})
 
-if (CMAKE_BUILD_TYPE MATCHES Debug)
+if (ADDRESS_SANITIZER MATCHES ON)
     message (STATUS "Enabling address sanitizer")
     set (SANITIZE_FLAGS -fno-omit-frame-pointer -fsanitize=address -fsanitize=leak)
     target_compile_options (pfs PUBLIC ${SANITIZE_FLAGS})
