@@ -17,6 +17,9 @@
 #ifndef PFS_MEM_HPP
 #define PFS_MEM_HPP
 
+#include <fcntl.h>
+#include <sys/types.h>
+
 #include <string>
 #include <vector>
 
