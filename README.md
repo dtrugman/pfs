@@ -92,7 +92,7 @@ _(You can either create `pfs` every time or once and keep it, the overhead is re
 // Same as pfs::procfs().get_task().get_net().get_tcp()
 for (auto& socket : pfs::procfs().get_net().get_tcp())
 {
-    if (socket.current_state == socket::state::listen)
+    if (socket.socket_net_state == pfs::net_socket::net_state::listen)
     {
         ... do your work ...
     }
