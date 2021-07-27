@@ -14,9 +14,7 @@
  *  limitations under the License.
  */
 
-#include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
 
