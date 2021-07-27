@@ -413,6 +413,16 @@ std::unordered_map<std::string, ino_t> task::get_ns() const
     return ns;
 }
 
+task task::get_task(int id) const
+{
+    static const std::string TASKS_DIR("task/");
+    auto path = _task_root + TASKS_DIR;
+
+    // Important, see README note about collecting information
+    // about threads to understand why we pass 'path' as the root dir.
+    return task(path, id);
+}
+
 std::set<task> task::get_tasks() const
 {
     static const std::string TASKS_DIR("task/");
@@ -422,7 +432,9 @@ std::set<task> task::get_tasks() const
 
     for (auto thread_id : utils::enumerate_numeric_files(path))
     {
-        threads.emplace(task(_procfs_root, thread_id));
+        // Important, see README note about collecting information
+        // about threads to understand why we pass 'path' as the root dir.
+        threads.emplace(task(path, thread_id));
     }
 
     return threads;
