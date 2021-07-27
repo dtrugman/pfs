@@ -43,10 +43,31 @@ That's it, you are good to go.
 
 ## Notes
 
+### General notes
+
 - All APIs and function calls might throw `std::bad_alloc` exceptions when allocations of standard containers such as `std::string` fail.
 - APIs are thread-safe. There are no internal states/members/caches that might be affected by simultaneous calls.
 - Objects do NOT handle data caching. All the APIs are pure getters that always(!) fetch the information from the filesystem.
 - The location of the procfs filesystem is configurable. Just create the `procfs` object with the right path for your machine.
+
+### Accessing inexisting tasks
+
+If you call `procfs().get_task(<id>)` and that task doesn't really exist, the constructor will succeed.
+
+Since tasks can die any time, instead of adding some extra validation during construction, that might be confusing, the current design assumes the first call after the tasks died will fail.
+
+### Collecting thread information
+
+There are two ways to collect information about a thread:
+1. `/proc/<tid>`
+1. `/proc/<pid>/task/<tid>`
+And the amazing fact is that they MIGHT provide different information.
+
+For example, when accessing using the first path, the `utime` and `stime` values under `stat` represent the amount of time scheduled for the entire process(!), whereas when accessing using the second path, they represent the amount of time scheduled for that thread only.
+
+How does that affect `pfs`?
+- When using `procfs().get_task(<id>)` you'll be accessing information using `/proc/<tid>`.
+- When using `my_task.get_task(<id>)` OR `my_task.get_tasks()` you'll be accessing information through `/proc/<pid>/task<tid>`
 
 ## Samples
 

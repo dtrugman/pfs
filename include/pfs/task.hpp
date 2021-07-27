@@ -85,6 +85,8 @@ public: // Getters
 
     task_status get_status(const std::set<std::string>& keys = {}) const;
 
+    task get_task(int id) const;
+
     std::set<task> get_tasks() const;
 
 private:
