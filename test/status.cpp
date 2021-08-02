@@ -23,10 +23,10 @@ TEST_CASE("Parse status", "[task][status]")
         "Gid:    1000\t1000\t1000\t1000",
         "FDSize: 256",
         "Groups: 4 24 27",
-        "NStgid: 4481",
-        "NSpid:  4481",
-        "NSpgid: 4481",
-        "NSsid:  4481",
+        "NStgid: 4481 1",
+        "NSpid:  4481 1",
+        "NSpgid: 4481 1",
+        "NSsid:  4481 1",
         "VmPeak:    23848 kB",
         "VmSize:    23816 kB",
         "VmLck:         0 kB",
@@ -92,11 +92,11 @@ TEST_CASE("Parse status", "[task][status]")
         REQUIRE(status.gid.saved_set == 1000);
         REQUIRE(status.gid.filesystem == 1000);
         REQUIRE(status.fd_size == 256);
-        REQUIRE(status.groups == std::set<uid_t>({4, 24, 27}));
-        REQUIRE(status.ns_tgid == 4481);
-        REQUIRE(status.ns_pid == 4481);
-        REQUIRE(status.ns_pgid == 4481);
-        REQUIRE(status.ns_sid == 4481);
+        REQUIRE(status.groups == std::set<uid_t>{4, 24, 27});
+        REQUIRE(status.ns_tgid == std::vector<pid_t>{4481, 1});
+        REQUIRE(status.ns_pid == std::vector<pid_t>{4481, 1});
+        REQUIRE(status.ns_pgid == std::vector<pid_t>{4481, 1});
+        REQUIRE(status.ns_sid == std::vector<pid_t>{4481, 1});
         REQUIRE(status.vm_peak == 23848);
         REQUIRE(status.vm_size == 23816);
         REQUIRE(status.vm_lck == 0);
@@ -153,10 +153,10 @@ TEST_CASE("Parse status", "[task][status]")
         REQUIRE(status.gid == empty_uids);
         REQUIRE(status.fd_size == 0);
         REQUIRE(status.groups.empty());
-        REQUIRE(status.ns_tgid == pfs::INVALID_PID);
-        REQUIRE(status.ns_pid == pfs::INVALID_PID);
-        REQUIRE(status.ns_pgid == pfs::INVALID_PID);
-        REQUIRE(status.ns_sid == pfs::INVALID_PID);
+        REQUIRE(status.ns_tgid.empty());
+        REQUIRE(status.ns_pid.empty());
+        REQUIRE(status.ns_pgid.empty());
+        REQUIRE(status.ns_sid.empty());
         REQUIRE(status.vm_peak == 0);
         REQUIRE(status.vm_size == 0);
         REQUIRE(status.vm_lck == 0);
