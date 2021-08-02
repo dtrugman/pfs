@@ -178,24 +178,45 @@ void parse_groups(const std::string& value, task_status& out)
     }
 }
 
+void to_ns_ids_vector(const std::string& value, std::vector<pid_t>& out)
+{
+    try
+    {
+        auto tokens = utils::split(value);
+        for (const auto& token : tokens)
+        {
+            pid_t id;
+            utils::stot(token, id);
+            out.push_back(id);
+        }
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        throw parser_error("Corrupted id - Invalid argument", value);
+    }
+    catch (const std::out_of_range& ex)
+    {
+        throw parser_error("Corrupted id - Out of range", value);
+    }
+}
 void parse_ns_tgid(const std::string& value, task_status& out)
 {
-    to_number(value, out.ns_tgid);
+    to_ns_ids_vector(value, out.ns_tgid);
 }
 
 void parse_ns_pid(const std::string& value, task_status& out)
 {
-    to_number(value, out.ns_pid);
+    to_ns_ids_vector(value, out.ns_pid);
 }
 
 void parse_ns_pgid(const std::string& value, task_status& out)
 {
-    to_number(value, out.ns_pgid);
+    to_ns_ids_vector(value, out.ns_pgid);
 }
 
 void parse_ns_sid(const std::string& value, task_status& out)
 {
-    to_number(value, out.ns_sid);
+    to_ns_ids_vector(value, out.ns_sid);
 }
 
 void to_memory_size(const std::string& value, size_t& out)

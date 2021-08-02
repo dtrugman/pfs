@@ -380,10 +380,10 @@ inline std::ostream& operator<<(std::ostream& out, const pfs::task_status& st)
     out << "gid[" << st.gid << "] ";
     out << "fdsize[" << st.fd_size << "] ";
     out << "groups[" << join(st.groups) << "] ";
-    out << "ns_tgid[" << st.tgid << "] ";
-    out << "ns_pid[" << st.pid << "] ";
-    out << "ns_pgid[" << st.ns_pgid << "] ";
-    out << "ns_sid[" << st.ns_sid << "] ";
+    out << "ns_tgid[" << join(st.ns_tgid) << "] ";
+    out << "ns_pid[" << join(st.ns_pid) << "] ";
+    out << "ns_pgid[" << join(st.ns_pgid) << "] ";
+    out << "ns_sid[" << join(st.ns_sid) << "] ";
     out << "vm_peak[" << st.vm_peak << "] ";
     out << "vm_size[" << st.vm_size << "] ";
     out << "vm_lck[" << st.vm_lck << "] ";

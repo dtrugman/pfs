@@ -245,10 +245,10 @@ struct task_status
     uid_set gid;
     size_t fd_size = 0;
     std::set<uid_t> groups;
-    int ns_tgid                     = INVALID_PID;
-    int ns_pid                      = INVALID_PID;
-    int ns_pgid                     = INVALID_PID;
-    int ns_sid                      = INVALID_PID;
+    std::vector<pid_t> ns_tgid;
+    std::vector<pid_t> ns_pid;
+    std::vector<pid_t> ns_pgid;
+    std::vector<pid_t> ns_sid;
     size_t vm_peak                  = 0; // In kB
     size_t vm_size                  = 0; // In kB
     size_t vm_lck                   = 0; // In kB
