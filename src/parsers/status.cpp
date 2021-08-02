@@ -182,7 +182,9 @@ void to_ns_ids_vector(const std::string& value, std::vector<pid_t>& out)
 {
     try
     {
-        auto tokens = utils::split(value);
+        static const char DELIM = '\t';
+
+        auto tokens = utils::split(value, DELIM);
         for (const auto& token : tokens)
         {
             pid_t id;
