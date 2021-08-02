@@ -278,8 +278,8 @@ struct task_status
     capabilities_mask cap_eff;
     capabilities_mask cap_bnd;
     capabilities_mask cap_amb;
-    bool no_new_privs = false;
-    seccomp seccomp_mode;
+    bool no_new_privs    = false;
+    seccomp seccomp_mode = seccomp::disabled;
     // Speculation_Store_Bypass will be added upon request.
     // Cpus_allowed[_list] will be added upon request.
     // Mems_allowed[_list] will be added upon request.
