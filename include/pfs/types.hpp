@@ -385,9 +385,9 @@ struct proc_stat
 
     sequence<cpu> cpus;
     sequence<unsigned long long> intr;
-    size_t ctxt;
+    unsigned long long ctxt;
     std::chrono::system_clock::time_point btime;
-    size_t processes;
+    unsigned long long processes;
     size_t procs_running;
     size_t procs_blocked;
     sequence<unsigned long long> softirq;
