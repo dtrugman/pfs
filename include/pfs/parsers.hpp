@@ -223,6 +223,17 @@ private:
     static const value_parsers PARSERS;
 };
 
+class io_stat_parser : public file_parser<io_stat>
+{
+public:
+    io_stat_parser() : file_parser<io_stat>(DELIM, PARSERS) {}
+
+private:
+    static value_parsers make_value_parsers();
+    static const char DELIM;
+    static const value_parsers PARSERS;
+};
+
 } // namespace parsers
 } // namespace impl
 } // namespace pfs
