@@ -104,6 +104,16 @@ struct task_stat
     unsigned long exit_code  = 0; // Since 3.5, Affected by ptrace access mode
 };
 
+struct io_stat {
+    unsigned long rchar;
+    unsigned long wchar;
+    unsigned long syscr;
+    unsigned long syscw;
+    unsigned long read_bytes;
+    unsigned long write_bytes;
+    unsigned long cancelled_write_bytes;
+};
+
 enum class capability
 {
     chown            = 0,

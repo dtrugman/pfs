@@ -81,6 +81,8 @@ public: // Getters
 
     task_stat get_stat() const;
 
+    io_stat get_io() const;
+
     mem_stats get_statm() const;
 
     task_status get_status(const std::set<std::string>& keys = {}) const;
