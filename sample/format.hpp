@@ -491,6 +491,18 @@ inline std::ostream& operator<<(std::ostream& out, const pfs::mem_stats& mem)
     return out;
 }
 
+inline std::ostream& operator<<(std::ostream& out, const pfs::io_stat& io)
+{
+    out << "rchar[" << io.rchar << "] ";
+    out << "wchar[" << io.wchar << "] ";
+    out << "syscr[" << io.syscr << "] ";
+    out << "syscw[" << io.syscw << "] ";
+    out << "read_bytes[" << io.read_bytes << "] ";
+    out << "write_bytes[" << io.write_bytes << "] ";
+    out << "cancelled_write_bytes[" << io.cancelled_write_bytes << "] ";
+    return out;
+}
+
 inline std::ostream& operator<<(std::ostream& out, const pfs::mem_perm& perm)
 {
     out << (perm.can_read ? 'r' : '-');
