@@ -37,6 +37,9 @@ static void enum_task(const pfs::task& task)
         auto mem_stat = task.get_statm();
         print(mem_stat);
 
+        auto io_stat = task.get_io();
+        print(io_stat);
+
         auto comm = task.get_comm();
         print(comm);
 
