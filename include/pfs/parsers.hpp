@@ -140,7 +140,7 @@ public:
         std::ifstream in(path);
         if (!in)
         {
-            throw std::runtime_error("Couldn't open file");
+            throw parser_error("Couldn't open file", path);
         }
 
         Output output;
