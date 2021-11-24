@@ -19,7 +19,7 @@
 
 #define PFS_VER_MAJOR 0
 #define PFS_VER_MINOR 4
-#define PFS_VER_PATCH 4
+#define PFS_VER_PATCH 5
 
 #define PFS_VERSION                                                            \
     (PFS_VER_MAJOR * 10000 + PFS_VER_MINOR * 100 + PFS_VER_PATCH)
