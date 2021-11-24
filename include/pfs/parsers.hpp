@@ -232,6 +232,8 @@ public:
 
 private:
     static value_parsers make_value_parsers();
+
+private:
     static const char DELIM;
     static const value_parsers PARSERS;
 };
