@@ -491,7 +491,7 @@ inline std::ostream& operator<<(std::ostream& out, const pfs::mem_stats& mem)
     return out;
 }
 
-inline std::ostream& operator<<(std::ostream& out, const pfs::io_stat& io)
+inline std::ostream& operator<<(std::ostream& out, const pfs::io_stats& io)
 {
     out << "rchar[" << io.rchar << "] ";
     out << "wchar[" << io.wchar << "] ";

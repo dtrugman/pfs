@@ -81,7 +81,7 @@ public: // Getters
 
     task_stat get_stat() const;
 
-    io_stat get_io() const;
+    io_stats get_io() const;
 
     mem_stats get_statm() const;
 

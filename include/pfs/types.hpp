@@ -104,7 +104,7 @@ struct task_stat
     unsigned long exit_code  = 0; // Since 3.5, Affected by ptrace access mode
 };
 
-struct io_stat {
+struct io_stats {
     unsigned long rchar;
     unsigned long wchar;
     unsigned long syscr;

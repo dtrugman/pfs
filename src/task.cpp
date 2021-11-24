@@ -142,7 +142,7 @@ task::get_environ(size_t max_size) const
     return environ;
 }
 
-io_stat task::get_io() const {
+io_stats task::get_io() const {
     static const std::string IO_FILE("io");
     auto path = _task_root + IO_FILE;
 

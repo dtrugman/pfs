@@ -225,10 +225,10 @@ private:
 };
 
 // A parser for /proc/[pid]/io
-class task_io_parser : public file_parser<io_stat>
+class task_io_parser : public file_parser<io_stats>
 {
 public:
-    task_io_parser() : file_parser<io_stat>(DELIM, PARSERS) {}
+    task_io_parser() : file_parser<io_stats>(DELIM, PARSERS) {}
 
 private:
     static value_parsers make_value_parsers();

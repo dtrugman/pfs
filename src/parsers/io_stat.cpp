@@ -47,20 +47,20 @@ static void to_number(const std::string& value, T& out,
 const char task_io_parser::DELIM = ':';
 
 task_io_parser::value_parsers task_io_parser::make_value_parsers() {
-    auto io_parser = [] (unsigned long io_stat::*member) {
-        return [member] (const std::string& value, io_stat& out) {
+    auto io_parser = [] (unsigned long io_stats::*member) {
+        return [member] (const std::string& value, io_stats& out) {
             to_number(value, out.*member);
         };
     };
 
     return {
-        { "rchar",                 io_parser(&io_stat::rchar) },
-        { "wchar",                 io_parser(&io_stat::wchar) },
-        { "syscr",                 io_parser(&io_stat::syscr) },
-        { "syscw",                 io_parser(&io_stat::syscw) },
-        { "read_bytes",            io_parser(&io_stat::read_bytes) },
-        { "write_bytes",           io_parser(&io_stat::write_bytes) },
-        { "cancelled_write_bytes", io_parser(&io_stat::cancelled_write_bytes) },
+        { "rchar",                 io_parser(&io_stats::rchar) },
+        { "wchar",                 io_parser(&io_stats::wchar) },
+        { "syscr",                 io_parser(&io_stats::syscr) },
+        { "syscw",                 io_parser(&io_stats::syscw) },
+        { "read_bytes",            io_parser(&io_stats::read_bytes) },
+        { "write_bytes",           io_parser(&io_stats::write_bytes) },
+        { "cancelled_write_bytes", io_parser(&io_stats::cancelled_write_bytes) },
     };
 }
 
