@@ -493,10 +493,10 @@ void parse_nonvoluntary_ctx_switches(const std::string& value, task_status& out)
 
 } // anonymous namespace
 
-const char status_parser::DELIM = ':';
+const char task_status_parser::DELIM = ':';
 
 // clang-format off
-const status_parser::value_parsers status_parser::PARSERS = {
+const task_status_parser::value_parsers task_status_parser::PARSERS = {
     { "Name", parse_name },
     { "Umask", parse_umask },
     { "State", parse_state },

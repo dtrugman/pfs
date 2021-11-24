@@ -44,9 +44,9 @@ static void to_number(const std::string& value, T& out,
 
 } // anonymous namespace
 
-const char io_stat_parser::DELIM = ':';
+const char task_io_parser::DELIM = ':';
 
-io_stat_parser::value_parsers io_stat_parser::make_value_parsers() {
+task_io_parser::value_parsers task_io_parser::make_value_parsers() {
     auto io_parser = [] (unsigned long io_stat::*member) {
         return [member] (const std::string& value, io_stat& out) {
             to_number(value, out.*member);
@@ -64,9 +64,9 @@ io_stat_parser::value_parsers io_stat_parser::make_value_parsers() {
     };
 }
 
-
 // clang-format off
-const io_stat_parser::value_parsers io_stat_parser::PARSERS = io_stat_parser::make_value_parsers();
+const task_io_parser::value_parsers
+task_io_parser::PARSERS = task_io_parser::make_value_parsers();
 // clang-format on
 
 } // namespace parsers

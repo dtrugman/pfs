@@ -146,7 +146,7 @@ io_stat task::get_io() const {
     static const std::string IO_FILE("io");
     auto path = _task_root + IO_FILE;
 
-    return parsers::io_stat_parser().parse(path);
+    return parsers::task_io_parser().parse(path);
 }
 
 task_stat task::get_stat() const
@@ -329,7 +329,7 @@ task_status task::get_status(const std::set<std::string>& keys) const
     static const std::string STATUS_FILE("status");
     auto path = _task_root + STATUS_FILE;
 
-    return parsers::status_parser().parse(path, keys);
+    return parsers::task_status_parser().parse(path, keys);
 }
 
 std::vector<mem_region> task::get_maps() const

@@ -198,11 +198,12 @@ private:
     const value_parsers& _parsers;
     remap_function _key_remap;
 };
-// A parser of the /proc/%pid%/status file.
-class status_parser : public file_parser<task_status>
+
+// A parser for /proc/[pid]/status
+class task_status_parser : public file_parser<task_status>
 {
 public:
-    status_parser() : file_parser<task_status>(DELIM, PARSERS) {}
+    task_status_parser() : file_parser<task_status>(DELIM, PARSERS) {}
 
 private:
     static const char DELIM;
@@ -223,10 +224,11 @@ private:
     static const value_parsers PARSERS;
 };
 
-class io_stat_parser : public file_parser<io_stat>
+// A parser for /proc/[pid]/io
+class task_io_parser : public file_parser<io_stat>
 {
 public:
-    io_stat_parser() : file_parser<io_stat>(DELIM, PARSERS) {}
+    task_io_parser() : file_parser<io_stat>(DELIM, PARSERS) {}
 
 private:
     static value_parsers make_value_parsers();
