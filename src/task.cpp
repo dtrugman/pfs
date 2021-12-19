@@ -447,4 +447,26 @@ std::set<task> task::get_tasks() const
     return threads;
 }
 
+std::vector<id_map> task::get_uid_map() const
+{
+    static const std::string UID_MAP_FILE("uid_map");
+    auto path = _task_root + UID_MAP_FILE;
+
+    std::vector<id_map> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_id_map_line);
+    return output;
+}
+
+std::vector<id_map> task::get_gid_map() const
+{
+    static const std::string GID_MAP_FILE("gid_map");
+    auto path = _task_root + GID_MAP_FILE;
+
+    std::vector<id_map> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_id_map_line);
+    return output;
+}
+
 } // namespace pfs

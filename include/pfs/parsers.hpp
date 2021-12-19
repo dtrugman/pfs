@@ -77,6 +77,7 @@ mount parse_mountinfo_line(const std::string& line);
 net_socket parse_net_socket_line(const std::string& line);
 unix_socket parse_unix_socket_line(const std::string& line);
 netlink_socket parse_netlink_socket_line(const std::string& line);
+id_map parse_id_map_line(const std::string& line);
 
 dev_t parse_device(const std::string& device_str);
 task_state parse_task_state(char state_char);

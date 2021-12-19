@@ -35,3 +35,32 @@ TEST_CASE("Parse device", "[common][device]")
 
     REQUIRE(parse_device(device_str) == dev);
 }
+
+TEST_CASE("Parse uid_map", "[common][uid_map]")
+{
+    pfs::id_map expected;
+    std::string line;
+
+    SECTION("Valid 1")
+    {
+        line = "         0          0 4294967295";
+
+        expected.id_inside_ns  = 0;
+        expected.id_outside_ns = 0;
+        expected.length        = UINT32_MAX;
+    }
+
+    SECTION("Valid 2")
+    {
+        line = "0 1000 1";
+
+        expected.id_inside_ns  = 0;
+        expected.id_outside_ns = 1000;
+        expected.length        = 1;
+    }
+
+    auto idmap = parse_id_map_line(line);
+    REQUIRE(idmap.id_inside_ns == expected.id_inside_ns);
+    REQUIRE(idmap.id_outside_ns == expected.id_outside_ns);
+    REQUIRE(idmap.length == expected.length);
+}
