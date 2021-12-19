@@ -107,6 +107,42 @@ task_state parse_task_state(char state_char)
     }
 }
 
+id_map parse_id_map_line(const std::string& line)
+{
+    enum token
+    {
+        ID_INSIDE_NS  = 0,
+        ID_OUTSIDE_NS = 1,
+        LENGTH        = 2,
+        COUNT
+    };
+
+    auto tokens = utils::split(line);
+    if (tokens.size() < COUNT)
+    {
+        throw parser_error("Corrupted uid_map/gid_map - Unexpected tokens count", line);
+    }
+
+    try
+    {
+        id_map idmap;
+
+        utils::stot(tokens[ID_INSIDE_NS], idmap.id_inside_ns);
+        utils::stot(tokens[ID_OUTSIDE_NS], idmap.id_outside_ns);
+        utils::stot(tokens[LENGTH], idmap.length);
+
+        return idmap;
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        throw parser_error("Corrupted uid_map/gid_map - Invalid argument", line);
+    }
+    catch (const std::out_of_range& ex)
+    {
+        throw parser_error("Corrupted uid_map/gid_map - Out of range", line);
+    }
+}
+
 } // namespace parsers
 } // namespace impl
 } // namespace pfs

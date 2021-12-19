@@ -576,6 +576,13 @@ struct cgroup
     std::string pathname;
 };
 
+struct id_map
+{
+    uid_t id_inside_ns = 0;
+    uid_t id_outside_ns = 0;
+    size_t length = UINT32_MAX;
+};
+
 } // namespace pfs
 
 #endif // PFS_TYPES_HPP
