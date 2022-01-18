@@ -13,6 +13,8 @@ Currently supported CMake configuration flags:
 - `CMAKE_BUILD_TYPE=<Debug|Release>`: Standard CMake flags to control build type (DEFAULT: Debug)
 - `BUILD_SHARED_LIBS=<ON|OFF>`: ON to compile a shared library. OFF to compile a static library (DEFAULT: ON)
 - `ENABLE_SANITIZER=<ON|OFF>`: ON to enable address sanitizer
+- `BUILD_SAMPLES=<ON|OFF>`: ON to build the sample programs
+- `BUILD_TESTING=<ON|OFF>`: ON to build the tests
 
 You can pass any number of those to the `cmake` command: `cmake -D<CONFIG_FLAG>=<VALUE> .`
 
