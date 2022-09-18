@@ -430,7 +430,7 @@ struct zone
     bool operator<(const zone& rhs) const
     {
         return (node_id < rhs.node_id) || (name < rhs.name);
-    };
+    }
 };
 
 using ipv4 = uint32_t;
