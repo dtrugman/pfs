@@ -1,0 +1,68 @@
+#!/bin/bash
+
+lowercase() {
+    echo "$1" | tr '[:upper:]' '[:lower:]'
+}
+
+usage() {
+    echo "$0 [build|run] platform"
+    echo ""
+    echo "Build and/or run a docker image that can build pfs."
+    echo "There is a Dockerfile for each supported platform family."
+    echo ""
+    echo "  build      build docker image for specified platform"
+    echo "             will be tagged as pfs:<platform>"
+    echo ""
+    echo "  run        run an already built image for a specified platform"
+    echo ""
+
+    return 2
+}
+
+build() {
+    declare -r platform="$(lowercase "$1")"
+
+    declare -r tag="$project:$platform"
+
+    declare -r file="Dockerfile-$platform"
+    if [[ ! -f "$file" ]]; then
+        echo "Platform probably not supported, cannot find $file"
+        return 1
+    fi
+
+    docker build \
+        --tag "$tag" \
+        --file "$file" \
+        "$root"
+}
+
+run() {
+    declare -r platform="$(lowercase "$1")"
+
+    declare -r tag="$project:$platform"
+
+    docker run --rm --interactive --tty \
+        --volume "$root:/$project" \
+        "$tag"
+}
+
+main() {
+    if [[ $# -ne 2 ]]; then
+        usage
+        return $?
+    fi
+
+    declare -r action="$1"
+    declare -r platform="$2"
+
+    declare -r project="pfs"
+    declare -r root="$(git rev-parse --show-toplevel)"
+
+    case "$action" in
+        build) build "$platform";;
+        run) run "$platform";;
+        *) usage; return $?;;
+    esac
+}
+
+main "$@"

@@ -1,0 +1,11 @@
+FROM redhat/ubi8:latest
+
+WORKDIR /pfs
+
+RUN yum update && \
+    yum install -y cmake gcc-c++
+
+ENV CXX=g++
+ENV CC=gcc
+
+CMD /bin/bash
