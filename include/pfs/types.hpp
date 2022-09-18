@@ -454,6 +454,27 @@ struct ip
     ipv6 storage;
 };
 
+struct net_device
+{
+    std::string name;
+    uint64_t rx_bytes;
+    uint64_t rx_packets;
+    uint64_t rx_errors;
+    uint64_t rx_drop;
+    uint64_t rx_fifo;
+    uint64_t rx_frame;
+    uint64_t rx_compressed;
+    uint64_t rx_multicast;
+    uint64_t tx_bytes;
+    uint64_t tx_packets;
+    uint64_t tx_errors;
+    uint64_t tx_drop;
+    uint64_t tx_fifo;
+    uint64_t tx_colls;
+    uint64_t tx_carrier;
+    uint64_t tx_compressed;
+};
+
 // Hint: See 'get_tcp4_sock @ tcp_ipv4.c'
 struct net_socket
 {
