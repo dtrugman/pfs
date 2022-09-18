@@ -31,6 +31,12 @@ std::string net::build_net_root(const std::string& procfs_root)
     return procfs_root + NET_DIR;
 }
 
+std::vector<net_device> net::get_dev() const
+{
+    static const std::string DEV_FILE("dev");
+    return get_net_devices(DEV_FILE);
+}
+
 std::vector<net_socket> net::get_icmp() const
 {
     static const std::string ICMP_FILE("icmp");
@@ -126,6 +132,16 @@ std::vector<net_socket> net::get_net_sockets(const std::string& file) const
     std::vector<net_socket> output;
     parsers::parse_lines(path, std::back_inserter(output),
                          parsers::parse_net_socket_line, HEADER_LINES);
+    return output;
+}
+
+std::vector<net_device> net::get_net_devices(const std::string& file) const
+{
+    auto path = _net_root + file;
+
+    static const size_t HEADER_LINES = 2;
+    std::vector<net_device> output;
+    parsers::parse_lines(path, std::back_inserter(output), parsers::parse_net_device_line, HEADER_LINES);
     return output;
 }
 

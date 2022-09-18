@@ -33,6 +33,9 @@ int enum_net(std::vector<std::string>&& args)
         pfs::procfs pfs;
         auto net = pfs.get_net();
 
+        auto dev = net.get_dev();
+        print(dev);
+        
         auto icmp = net.get_icmp();
         print(icmp);
 
