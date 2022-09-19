@@ -63,7 +63,6 @@ private:
     net(const std::string& procfs_root);
 
 private:
-    std::vector<net_device> get_net_devices(const std::string& file) const;
     std::vector<net_socket> get_net_sockets(const std::string& file) const;
 
     static std::string build_net_root(const std::string& procfs_root);
