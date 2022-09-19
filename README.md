@@ -70,13 +70,13 @@ For example, when accessing using the first path, the `utime` and `stime` values
 
 How does that affect `pfs`?
 - When using `procfs().get_task(<id>)` you'll be accessing information using `/proc/<tid>`.
-- When using `my_task.get_task(<id>)` OR `my_task.get_tasks()` you'll be accessing information through `/proc/<pid>/task<tid>`
+- When using `my_task = procfs().get_task(<pid>)` and then `my_task.get_task(<id>)` OR `my_task.get_tasks()` you'll be accessing information through `/proc/<pid>/task/<tid>`
 
 ## Samples
 
 The directory `sample` contains a full blown application that calls all(!) the supported APIs and prints all the information gathered. When compiling the library, the sample applications is compiled as well.
 
-Anyway, here are some cool examples:
+Anyway, here are some cool (and concise) examples:
 
 **Example 1:** Iterater over all the loaded unsigned or out-of-tree kernel modules
 ```
