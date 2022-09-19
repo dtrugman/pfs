@@ -8,15 +8,17 @@ Very easy to use, procfs parsing library in C++.
 
 Run `cmake . && make`
 
-Currently supported CMake configuration flags:
+### Currently supported CMake configuration flags:
 
 - `CMAKE_BUILD_TYPE=<Debug|Release>`: Standard CMake flags to control build type (DEFAULT: Debug)
-- `BUILD_SHARED_LIBS=<ON|OFF>`: ON to compile a shared library. OFF to compile a static library (DEFAULT: ON)
-- `ENABLE_SANITIZER=<ON|OFF>`: ON to enable address sanitizer
-- `BUILD_SAMPLES=<ON|OFF>`: ON to build the sample programs
-- `BUILD_TESTS=<ON|OFF>`: ON to build the tests
+- `pfs_BUILD_SHARED_LIBS=<ON|OFF>`: ON to compile a shared library. OFF to compile a static library (DEFAULT: Inherit `BUILD_SHARE_LIBS`, which is `OFF` by default))
+- `pfs_BUILD_ASAN=<ON|OFF>`: ON to enable address sanitizer (DEFAULT: `OFF`)
+- `pfs_BUILD_SAMPLES=<ON|OFF>`: ON to build the sample programs (DEFAULT: `ON`)
+- `pfs_BUILD_TESTS=<ON|OFF>`: ON to build the tests (DEFAULT: `ON`)
 
 You can pass any number of those to the `cmake` command: `cmake -D<CONFIG_FLAG>=<VALUE> .`
+
+**NOTE**: After running `cmake` for the first time, some values are cached in `CMakeCache.txt` and will not change when running `cmake` for a second time with different flags.
 
 ### Build using clang
 
