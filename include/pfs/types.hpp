@@ -456,10 +456,10 @@ struct ip
 
 struct net_device
 {
-    std::string name;
+    std::string interface;
     uint64_t rx_bytes;
     uint64_t rx_packets;
-    uint64_t rx_errors;
+    uint64_t rx_errs;
     uint64_t rx_drop;
     uint64_t rx_fifo;
     uint64_t rx_frame;
@@ -467,7 +467,7 @@ struct net_device
     uint64_t rx_multicast;
     uint64_t tx_bytes;
     uint64_t tx_packets;
-    uint64_t tx_errors;
+    uint64_t tx_errs;
     uint64_t tx_drop;
     uint64_t tx_fifo;
     uint64_t tx_colls;

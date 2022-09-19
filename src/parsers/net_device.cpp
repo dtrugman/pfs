@@ -25,17 +25,18 @@ net_device parse_net_device_line(const std::string& line)
 {
     // Example:
     // clang-format off
-    // Inter-|   Receive                                                |  Transmit
-    // face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
-    // lo: 27267010   48045    0    0    0     0          0         0 27267010   48045    0    0    0     0       0          0
-    // eth0: 335754274   58179    0    0    0     0          0         0  9805218   48519    0    0    0     0       0          0
+    // Inter-| Receive                                                  |Transmit
+    //  face |   bytes packets errs drop fifo frame compressed multicast|   bytes packets errs drop fifo colls carrier compressed
+    //     lo:   93144    1366    0    0    0     0          0         0    93144    1366    0    0    0     0       0          0
+    //   eth0: 2893258    9219    0    0    0     0          0       556  1029533    7276    0    0    0     0       0          0
     // clang-format on
 
-    enum token {
-        NAME          = 0,
+    enum token
+    {
+        INTERFACE     = 0,
         RX_BYTES      = 1,
         RX_PACKETS    = 2,
-        RX_ERRORS     = 3,
+        RX_ERRS       = 3,
         RX_DROP       = 4,
         RX_FIFO       = 5,
         RX_FRAME      = 6,
@@ -43,7 +44,7 @@ net_device parse_net_device_line(const std::string& line)
         RX_MULTICAST  = 8,
         TX_BYTES      = 9,
         TX_PACKETS    = 10,
-        TX_ERRORS     = 11,
+        TX_ERRS       = 11,
         TX_DROP       = 12,
         TX_FIFO       = 13,
         TX_COLLS      = 14,
@@ -59,23 +60,25 @@ net_device parse_net_device_line(const std::string& line)
                            line);
     }
 
-    try {
+    try
+    {
         net_device dev;
 
-        dev.name = tokens[NAME];
-        dev.name.pop_back(); // Remove ':';
+        dev.interface = tokens[INTERFACE];
+        dev.interface.pop_back(); // Remove ':';
         
         utils::stot(tokens[RX_BYTES], dev.rx_bytes, utils::base::decimal);
         utils::stot(tokens[RX_PACKETS], dev.rx_packets, utils::base::decimal);
-        utils::stot(tokens[RX_ERRORS], dev.rx_errors, utils::base::decimal);
+        utils::stot(tokens[RX_ERRS], dev.rx_errs, utils::base::decimal);
         utils::stot(tokens[RX_DROP], dev.rx_drop, utils::base::decimal);
         utils::stot(tokens[RX_FIFO], dev.rx_fifo, utils::base::decimal);
         utils::stot(tokens[RX_FRAME], dev.rx_frame, utils::base::decimal);
         utils::stot(tokens[RX_COMPRESSED], dev.rx_compressed, utils::base::decimal);
         utils::stot(tokens[RX_MULTICAST], dev.rx_multicast, utils::base::decimal);
+
         utils::stot(tokens[TX_BYTES], dev.tx_bytes, utils::base::decimal);
         utils::stot(tokens[TX_PACKETS], dev.tx_packets, utils::base::decimal);
-        utils::stot(tokens[TX_ERRORS], dev.tx_errors, utils::base::decimal);
+        utils::stot(tokens[TX_ERRS], dev.tx_errs, utils::base::decimal);
         utils::stot(tokens[TX_DROP], dev.tx_drop, utils::base::decimal);
         utils::stot(tokens[TX_FIFO], dev.tx_fifo, utils::base::decimal);
         utils::stot(tokens[TX_COLLS], dev.tx_colls, utils::base::decimal);

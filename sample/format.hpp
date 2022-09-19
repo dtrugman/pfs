@@ -153,23 +153,26 @@ inline std::ostream& operator<<(std::ostream& out,
 inline std::ostream& operator<<(std::ostream& out, 
                                 const pfs::net_device& device)
 {
-    out << "name[" << device.name << "] ";
+    out << "interface[" << device.interface << "] ";
+
     out << "rx_bytes[" << device.rx_bytes << "] ";
     out << "rx_packets[" << device.rx_packets << "] ";
-    out << "rx_errors[" << device.rx_errors << "] ";
+    out << "rx_errs[" << device.rx_errs << "] ";
     out << "rx_drop[" << device.rx_drop << "] ";
     out << "rx_fifo[" << device.rx_fifo << "] ";
     out << "rx_frame[" << device.rx_frame << "] ";
     out << "rx_compressed[" << device.rx_compressed << "] ";
     out << "rx_multicast[" << device.rx_multicast << "] ";
+
     out << "tx_bytes[" << device.tx_bytes << "] ";
     out << "tx_packets[" << device.tx_packets << "] ";
-    out << "tx_errors[" << device.tx_errors << "] ";
+    out << "tx_errs[" << device.tx_errs << "] ";
     out << "tx_drop[" << device.tx_drop << "] ";
     out << "tx_fifo[" << device.tx_fifo << "] ";
     out << "tx_colls[" << device.tx_colls << "] ";
     out << "tx_carrier[" << device.tx_carrier << "] ";
     out << "tx_compressed[" << device.tx_compressed << "] ";
+
     return out;
 }
 
