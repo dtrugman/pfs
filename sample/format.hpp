@@ -709,3 +709,20 @@ inline std::ostream& operator<<(std::ostream& out, const pfs::cgroup& cg)
     out << "pathname[" << cg.pathname << "] ";
     return out;
 }
+
+inline std::ostream& operator<<(std::ostream& out, const pfs::net_route& route)
+{
+    out << "interface[" << route.iface << "] ";
+    out << "destination[" << route.destination.to_string() << "] ";
+    out << "gateway[" << route.gateway.to_string() << "] ";
+    out << "flags[" << route.flags << "] ";
+    out << "refcnt[" << route.refcnt << "] ";
+    out << "use[" << route.use << "] ";
+    out << "metric[" << route.metric << "] ";
+    out << "mask[" << route.mask.to_string() << "] ";
+    out << "mtu[" << route.mtu << "] ";
+    out << "window[" << route.window << "] ";
+    out << "irtt[" << route.irtt << "] ";
+
+    return out;
+}

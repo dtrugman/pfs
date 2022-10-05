@@ -604,6 +604,22 @@ struct id_map
     size_t length = UINT32_MAX;
 };
 
+// Hint: See 'fib_route_seq_show @ fib_trie.c'
+struct net_route
+{
+    std::string iface;
+    ip destination;
+    ip gateway;
+    unsigned int flags;
+    int refcnt;
+    unsigned int use;
+    int metric;
+    ip mask;
+    int mtu;
+    unsigned int window;
+    unsigned int irtt;
+};
+
 } // namespace pfs
 
 #endif // PFS_TYPES_HPP

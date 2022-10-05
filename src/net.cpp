@@ -142,4 +142,17 @@ std::vector<net_socket> net::get_net_sockets(const std::string& file) const
     return output;
 }
 
+std::vector<net_route> net::get_route() const
+{
+    static const size_t HEADER_LINES = 1;
+
+    static const std::string ROUTES_FILE("route");
+    auto path = _net_root + ROUTES_FILE;
+
+    std::vector<net_route> output;
+    parsers::parse_lines(path, std::back_inserter(output),
+                         parsers::parse_net_route_line, HEADER_LINES);
+    return output;
+}
+
 } // namespace pfs

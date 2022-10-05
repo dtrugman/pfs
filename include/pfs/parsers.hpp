@@ -83,6 +83,8 @@ id_map parse_id_map_line(const std::string& line);
 dev_t parse_device(const std::string& device_str);
 task_state parse_task_state(char state_char);
 
+net_route parse_net_route_line(const std::string& line);
+
 // When parsing key value text files, we might encounter different keys which
 // should be parsed in the same manner. To relate those lines in the same
 // manner, a remap function can be used.
