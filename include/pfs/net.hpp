@@ -58,6 +58,8 @@ public:
 
     std::vector<unix_socket> get_unix() const;
 
+    std::vector<net_route> get_route() const;
+
 private:
     friend class task;
     net(const std::string& procfs_root);

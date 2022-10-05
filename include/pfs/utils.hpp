@@ -26,6 +26,8 @@
 #include <string>
 #include <vector>
 
+#include "pfs/types.hpp"
+
 namespace pfs {
 namespace impl {
 namespace utils {
@@ -151,6 +153,15 @@ void trim(std::string& str);
 
 // Ensure directory path is terminated using a directory separator '/'
 void ensure_dir_terminator(std::string& dir_path);
+
+// Parse IPv4 address in the hex form (e.g. 0x7f000001) and return it as a ip struct
+ip parse_ipv4_address(const std::string& ip_address_hex);
+
+// Parse IPv6 address in the hex form (e.g. 0x00000000000000000000000000000001) and return it as a ip struct
+ip parse_ipv6_address(const std::string& ip_address_hex);
+
+// Figure out ip version (IPv4/IPv6), parse it and return it as a ip struct
+std::pair<ip, uint16_t> parse_address(const std::string& address_str);
 
 } // namespace utils
 } // namespace impl

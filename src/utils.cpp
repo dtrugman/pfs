@@ -27,6 +27,8 @@
 
 #include "pfs/defer.hpp"
 #include "pfs/utils.hpp"
+#include "pfs/types.hpp"
+#include "pfs/parser_error.hpp"
 
 namespace pfs {
 namespace impl {
@@ -256,6 +258,71 @@ void ensure_dir_terminator(std::string& dir_path)
     {
         dir_path += DIR_SEPARATOR;
     }
+}
+
+ip parse_ipv4_address(const std::string& ip_address_str)
+{
+    ipv4 raw;
+    utils::stot(ip_address_str, raw, utils::base::hex);
+    return ip(raw);
+}
+
+ip parse_ipv6_address(const std::string& ip_address_str)
+{
+    static const size_t HEX_BYTE_LEN = 8;
+
+    ipv6 raw;
+
+    for (size_t i = 0; i < raw.size(); ++i)
+    {
+        auto nibble = ip_address_str.substr(i * HEX_BYTE_LEN, HEX_BYTE_LEN);
+        utils::stot(nibble, raw[i], utils::base::hex);
+    }
+
+    return ip(raw);
+}
+
+std::pair<ip, uint16_t> parse_address(const std::string& address_str)
+{
+    enum token
+    {
+        IP   = 0,
+        PORT = 1,
+        COUNT
+    };
+
+    static const size_t HEX_BYTE_LEN = 8;
+
+    static const char DELIM = ':';
+
+    auto tokens = utils::split(address_str, DELIM);
+    if (tokens.size() != COUNT)
+    {
+        throw parser_error(
+            "Corrupted net socket address - Unexpected token counts",
+            address_str);
+    }
+
+    ip addr;
+    auto& ip_str = tokens[IP];
+    if (ip_str.size() == HEX_BYTE_LEN)
+    {
+        addr = utils::parse_ipv4_address(ip_str);
+    }
+    else if (ip_str.size() == std::tuple_size<ipv6>::value * HEX_BYTE_LEN)
+    {
+        addr = utils::parse_ipv6_address(ip_str);
+    }
+    else
+    {
+        throw parser_error("Corrupted net socket address - Bad length",
+                           address_str);
+    }
+
+    uint16_t port;
+    utils::stot(tokens[PORT], port, utils::base::hex);
+
+    return std::make_pair(addr, port);
 }
 
 } // namespace utils
