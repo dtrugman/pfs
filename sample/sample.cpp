@@ -42,6 +42,7 @@ int main(int argc, char** argv)
             {command("tasks", "[task-id]...", "Enumerate running tasks", enum_tasks)},
             {command("fds", "[task-id]...", "Enumerate fds for a specific task", enum_fds)},
             {command("lsmod", "[filter]", "Enumerate all loaded modules that match the filter", tool_lsmod)},
+            {command("blocks", "[block-name]...", "Enumerate block devices", enum_blocks)},
         };
         // clang-format on
 

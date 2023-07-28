@@ -24,5 +24,6 @@ int enum_system(std::vector<std::string>&& args);
 int enum_net(std::vector<std::string>&& args);
 int enum_tasks(std::vector<std::string>&& args);
 int enum_fds(std::vector<std::string>&& args);
+int enum_blocks(std::vector<std::string>&& args);
 
 #endif // SAMPLE_ENUM_HPP
