@@ -35,6 +35,19 @@ After that, just use `make` as always.
 - Add the contents of `/include` into your include directories.
 That's it, you are good to go.
 
+### Use CMake's [`find_package()`](https://cmake.org/cmake/help/latest/command/find_package.html)
+
+After building the project, you can install it locally using `make install`.
+In your project's CMake file, you can then add the following snippet, and CMake will handle the rest:
+```
+find_package(pfs)
+include_directories (${pfs_INCLUDE_DIRS})
+...
+target_link_libraries (<your-target> pfs)
+```
+
+CMake generates an `install_manifest.txt` file to track all the created files, this will help you uninstall the library if you need to do so.
+
 ## Features
 
 - Parsing system-wide information from files directly under `/procfs`. See `procfs.hpp` for all the supported files.

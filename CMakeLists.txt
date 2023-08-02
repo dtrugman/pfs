@@ -64,16 +64,39 @@ if (pfs_BUILD_TESTS)
     target_link_libraries (unittest PRIVATE pfs)
 endif()
 
+# ------------------------------------------------------------------------
+# Generate a CMake package configuration file to support find_package()
+# ------------------------------------------------------------------------
+
 include(CMakePackageConfigHelpers)
+include(GNUInstallDirs) # Sets a default value for CMAKE_INSTALL_LIBDIR
+
+set (pfs_PACKAGE_CONFIG ${CMAKE_PROJECT_NAME}-config.cmake)
+set (pfs_PACKAGE_CONFIG_IN ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${pfs_PACKAGE_CONFIG}.in)
+set (pfs_PACKAGE_CONFIG_OUT ${CMAKE_CURRENT_BINARY_DIR}/${pfs_PACKAGE_CONFIG})
+
+set (pfs_PACKAGE_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+
+set (pfs_EXPORT_NAME ${CMAKE_PROJECT_NAME}Targets)
+
 configure_package_config_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${CMAKE_PROJECT_NAME}-config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}-config.cmake
-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}
+    ${pfs_PACKAGE_CONFIG_IN}
+    ${pfs_PACKAGE_CONFIG_OUT}
+    INSTALL_DESTINATION ${pfs_PACKAGE_INSTALL_DESTINATION}
 )
 
-install(TARGETS ${CMAKE_PROJECT_NAME} EXPORT ${CMAKE_PROJECT_NAME}Targets)
-install(EXPORT ${CMAKE_PROJECT_NAME}Targets
-  FILE ${CMAKE_PROJECT_NAME}-config.cmake
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}
+install(
+    TARGETS ${CMAKE_PROJECT_NAME}
+    EXPORT ${pfs_EXPORT_NAME}
 )
-install(DIRECTORY include/ DESTINATION include)
+
+install(
+    EXPORT ${pfs_EXPORT_NAME}
+    FILE ${pfs_PACKAGE_CONFIG}
+    DESTINATION ${pfs_PACKAGE_INSTALL_DESTINATION}
+)
+
+install(
+    DIRECTORY include/
+    DESTINATION include
+)

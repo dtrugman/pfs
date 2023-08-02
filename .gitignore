@@ -36,6 +36,8 @@ CMakeCache.txt
 CMakeFiles/*
 Makefile
 cmake_install.cmake
+install_manifest.txt
+pfs-config.cmake
 
 # Artifacts
 lib/*
