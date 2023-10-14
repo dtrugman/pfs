@@ -17,7 +17,9 @@
 #include <string>
 
 #include "pfs/defer.hpp"
+#include "pfs/parsers.hpp"
 #include "pfs/block.hpp"
+#include "pfs/utils.hpp"
 
 namespace pfs {
 
@@ -48,6 +50,35 @@ const std::string& block::name() const
 const std::string& block::dir() const
 {
     return _block_root;
+}
+
+size_t block::get_size() const
+{
+    static const std::string SIZE_FILE("size");
+    auto path = _block_root + SIZE_FILE;
+
+    size_t size;
+    auto line = utils::readline(path);
+    parsers::to_number(line, size);
+    return size;
+}
+
+dev_t block::get_dev() const
+{
+    static const std::string DEV_FILE("dev");
+    auto path = _block_root + DEV_FILE;
+
+    auto line = utils::readline(path);
+    return parsers::parse_device(line);
+}
+
+block_stat block::get_stat() const
+{
+    static const std::string STAT_FILE("stat");
+    auto path = _block_root + STAT_FILE;
+
+    auto line = utils::readline(path);
+    return parsers::parse_block_stat_line(line);
 }
 
 } // namespace pfs

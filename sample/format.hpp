@@ -150,7 +150,7 @@ inline std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
-inline std::ostream& operator<<(std::ostream& out, 
+inline std::ostream& operator<<(std::ostream& out,
                                 const pfs::net_device& device)
 {
     out << "interface[" << device.interface << "] ";
@@ -723,6 +723,28 @@ inline std::ostream& operator<<(std::ostream& out, const pfs::net_route& route)
     out << "mtu[" << route.mtu << "] ";
     out << "window[" << route.window << "] ";
     out << "irtt[" << route.irtt << "] ";
+
+    return out;
+}
+
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::block_stat& stat)
+{
+    out << "read_ios[" << stat.read_ios << "] ";
+    out << "read_merges[" << stat.read_merges << "] ";
+    out << "read_sectors[" << stat.read_sectors << "] ";
+    out << "read_ticks[" << stat.read_ticks << "] ";
+    out << "write_ios[" << stat.write_ios << "] ";
+    out << "write_merges[" << stat.write_merges << "] ";
+    out << "write_sectors[" << stat.write_sectors << "] ";
+    out << "write_ticks[" << stat.write_ticks << "] ";
+    out << "in_flight[" << stat.in_flight << "] ";
+    out << "io_ticks[" << stat.io_ticks << "] ";
+    out << "time_in_queue[" << stat.time_in_queue << "] ";
+    out << "discard_ios[" << stat.discard_ios << "] ";
+    out << "discard_merges[" << stat.discard_merges << "] ";
+    out << "discard_sectors[" << stat.discard_sectors << "] ";
+    out << "discard_ticks[" << stat.discard_ticks << "] ";
 
     return out;
 }
