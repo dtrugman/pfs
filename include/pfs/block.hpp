@@ -17,6 +17,8 @@
 #ifndef PFS_BLOCK_HPP
 #define PFS_BLOCK_HPP
 
+#include "types.hpp"
+
 namespace pfs {
 
 class block final
@@ -33,6 +35,11 @@ public:
 public: // Properties
     const std::string& name() const;
     const std::string& dir() const;
+
+    size_t get_size() const;
+    dev_t get_dev() const;
+
+    block_stat get_stat() const;
 
 public: // Getters
 

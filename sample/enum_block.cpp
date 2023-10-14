@@ -16,6 +16,7 @@
 
 #include "enum.hpp"
 #include "log.hpp"
+#include "format.hpp"
 
 #include "pfs/sysfs.hpp"
 
@@ -26,6 +27,15 @@ static void enum_block(const pfs::block& block)
         LOG("=========================================================");
         LOG("Block name[" << block.name() << "]");
         LOG("=========================================================");
+
+        auto size = block.get_size();
+        print(size);
+
+        auto dev = block.get_dev();
+        print(dev);
+
+        auto stat = block.get_stat();
+        print(stat);
     }
     catch (const std::runtime_error& ex)
     {

@@ -620,6 +620,28 @@ struct net_route
     unsigned int irtt;
 };
 
+// Hint: See 'https://docs.kernel.org/block/stat.html'
+struct block_stat
+{
+    unsigned int read_ios;        // number of read I/Os processed [unit: requests]
+    unsigned int read_merges;     // number of read I/Os merged with in-queue I/O [unit: requests]
+    unsigned int read_sectors;    // number of sectors read [unit: sectors]
+    unsigned int read_ticks;      // total wait time for read requests [unit: ms]
+    unsigned int write_ios;       // number of write I/Os processed [unit: requests]
+    unsigned int write_merges;    // number of write I/Os merged with in-queue I/O [unit: requests]
+    unsigned int write_sectors;   // number of sectors written [unit: sectors]
+    unsigned int write_ticks;     // total wait time for write requests [unit: ms]
+    unsigned int in_flight;       // number of I/Os currently in flight [unit: requests]
+    unsigned int io_ticks;        // total time this block device has been active [unit: ms]
+    unsigned int time_in_queue;   // total wait time for all requests [unit: ms]
+    unsigned int discard_ios;     // number of discard I/Os processed [unit: requests]
+    unsigned int discard_merges;  // number of discard I/Os merged with in-queue I/O [unit: requests]
+    unsigned int discard_sectors; // number of sectors discarded [unit: sectors]
+    unsigned int discard_ticks;   // total wait time for discard requests [unit: ms]
+    unsigned int flush_ios;       // number of flush I/Os processed [unit: requests]
+    unsigned int flush_ticks;     // total wait time for flush requests [unit: ms]
+};
+
 } // namespace pfs
 
 #endif // PFS_TYPES_HPP
