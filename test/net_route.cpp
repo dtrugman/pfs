@@ -8,7 +8,7 @@
 
 using namespace pfs::impl::parsers;
 
-TEST_CASE("Parse corrupted route", "[net][route]")
+TEST_CASE("Parse corrupted net route", "[net][route]")
 {
     SECTION("Missing token")
     {
@@ -23,7 +23,7 @@ TEST_CASE("Parse corrupted route", "[net][route]")
     }
 }
 
-TEST_CASE("Parse route", "[net][route]")
+TEST_CASE("Parse net route", "[net][route]")
 {
     pfs::net_route expected;
 
@@ -40,7 +40,7 @@ TEST_CASE("Parse route", "[net][route]")
     expected.mtu         = 0;
     expected.window      = 0;
     expected.irtt        = 0;
- 
+
     auto route = parse_net_route_line(line);
 
     REQUIRE(route.iface == expected.iface);
