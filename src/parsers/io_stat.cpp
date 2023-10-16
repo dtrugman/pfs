@@ -22,28 +22,6 @@ namespace pfs {
 namespace impl {
 namespace parsers {
 
-namespace {
-
-template <typename T>
-static void to_number(const std::string& value, T& out,
-                      utils::base base = utils::base::decimal)
-{
-    try
-    {
-        utils::stot(value, out, base);
-    }
-    catch (const std::invalid_argument& ex)
-    {
-        throw parser_error("Corrupted number - Invalid argument", value);
-    }
-    catch (const std::out_of_range& ex)
-    {
-        throw parser_error("Corrupted number - Out of range", value);
-    }
-}
-
-} // anonymous namespace
-
 const char task_io_parser::DELIM = ':';
 
 task_io_parser::value_parsers task_io_parser::make_value_parsers() {
