@@ -60,19 +60,30 @@ net_route parse_net_route_line(const std::string& line)
         throw parser_error("Corrupted net route - Unexpected tokens count", line);
     }
 
-    // Parse tokens into route struct
-    route.iface = tokens[INTERFACE];
-    route.destination = utils::parse_ipv4_address(tokens[DESTINATION]);
-    route.gateway = utils::parse_ipv4_address(tokens[GATEWAY]);
-    route.mask = utils::parse_ipv4_address(tokens[MASK]);
+    try
+    {
+        // Parse tokens into route struct
+        route.iface = tokens[INTERFACE];
+        route.destination = utils::parse_ipv4_address(tokens[DESTINATION]);
+        route.gateway = utils::parse_ipv4_address(tokens[GATEWAY]);
+        route.mask = utils::parse_ipv4_address(tokens[MASK]);
 
-    utils::stot(tokens[FLAGS], route.flags, utils::base::hex);
-    utils::stot(tokens[REFCNT], route.refcnt, utils::base::decimal);
-    utils::stot(tokens[USE], route.use, utils::base::decimal);
-    utils::stot(tokens[METRIC], route.metric, utils::base::decimal);
-    utils::stot(tokens[MTU], route.mtu, utils::base::decimal);
-    utils::stot(tokens[WINDOW], route.window, utils::base::decimal);
-    utils::stot(tokens[IRTT], route.irtt, utils::base::decimal);
+        utils::stot(tokens[FLAGS], route.flags, utils::base::hex);
+        utils::stot(tokens[REFCNT], route.refcnt, utils::base::decimal);
+        utils::stot(tokens[USE], route.use, utils::base::decimal);
+        utils::stot(tokens[METRIC], route.metric, utils::base::decimal);
+        utils::stot(tokens[MTU], route.mtu, utils::base::decimal);
+        utils::stot(tokens[WINDOW], route.window, utils::base::decimal);
+        utils::stot(tokens[IRTT], route.irtt, utils::base::decimal);
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        throw parser_error("Corrupted net route - Invalid argument", line);
+    }
+    catch (const std::out_of_range& ex)
+    {
+        throw parser_error("Corrupted net route - Out of range", line);
+    }
 
     return route;
 }
