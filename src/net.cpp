@@ -15,7 +15,12 @@
  */
 
 #include "pfs/net.hpp"
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/net_route.hpp"
+#include "pfs/parsers/net_device.hpp"
+#include "pfs/parsers/net_socket.hpp"
+#include "pfs/parsers/unix_socket.hpp"
+#include "pfs/parsers/netlink_socket.hpp"
+#include "pfs/parsers/generic.hpp"
 
 namespace pfs {
 

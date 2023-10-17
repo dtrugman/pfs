@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/modules.hpp"
+#include "pfs/parser_error.hpp"
 #include "pfs/utils.hpp"
 
 namespace pfs {

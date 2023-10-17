@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "test_utils.hpp"
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/task_status.hpp"
 
 using namespace pfs::impl::parsers;
 

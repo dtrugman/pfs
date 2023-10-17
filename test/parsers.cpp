@@ -2,7 +2,7 @@
 #include "test_utils.hpp"
 
 #include "pfs/defer.hpp"
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/generic.hpp"
 
 using namespace pfs::impl::parsers;
 

@@ -14,23 +14,31 @@
  *  limitations under the License.
  */
 
-#ifndef PFS_PARSER_ERROR_HPP
-#define PFS_PARSER_ERROR_HPP
+#ifndef PFS_PARSERS_TASK_IO_HPP
+#define PFS_PARSERS_TASK_IO_HPP
 
-#include <string>
-#include <stdexcept>
+#include "file_parser.hpp"
+#include "pfs/types.hpp"
 
 namespace pfs {
+namespace impl {
+namespace parsers {
 
-class parser_error : public std::runtime_error
+class task_io_parser : public file_parser<io_stats>
 {
 public:
-    template <typename T>
-    parser_error(const std::string& message, const T& extra)
-        : std::runtime_error(message + " [" + extra + "]")
-    {}
+    task_io_parser() : file_parser<io_stats>(DELIM, PARSERS) {}
+
+private:
+    static value_parsers make_value_parsers();
+
+private:
+    static const char DELIM;
+    static const value_parsers PARSERS;
 };
 
+} // namespace parsers
+} // namespace impl
 } // namespace pfs
 
-#endif // PFS_PARSER_ERROR_HPP
+#endif // PFS_PARSERS_TASK_IO_HPP

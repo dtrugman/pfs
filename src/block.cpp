@@ -17,7 +17,9 @@
 #include <string>
 
 #include "pfs/defer.hpp"
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/block_stat.hpp"
+#include "pfs/parsers/common.hpp"
+#include "pfs/parsers/generic.hpp"
 #include "pfs/block.hpp"
 #include "pfs/utils.hpp"
 

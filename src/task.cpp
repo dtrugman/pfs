@@ -28,7 +28,13 @@
 #include <system_error>
 
 #include "pfs/defer.hpp"
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/cgroup.hpp"
+#include "pfs/parsers/maps.hpp"
+#include "pfs/parsers/mountinfo.hpp"
+#include "pfs/parsers/generic.hpp"
+#include "pfs/parsers/common.hpp"
+#include "pfs/parsers/task_io.hpp"
+#include "pfs/parsers/task_status.hpp"
 #include "pfs/task.hpp"
 #include "pfs/utils.hpp"
 

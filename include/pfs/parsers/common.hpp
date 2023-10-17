@@ -14,23 +14,25 @@
  *  limitations under the License.
  */
 
-#ifndef PFS_PARSER_ERROR_HPP
-#define PFS_PARSER_ERROR_HPP
+#ifndef PFS_PARSERS_COMMON_HPP
+#define PFS_PARSERS_COMMON_HPP
 
 #include <string>
-#include <stdexcept>
+
+#include "pfs/types.hpp"
 
 namespace pfs {
+namespace impl {
+namespace parsers {
 
-class parser_error : public std::runtime_error
-{
-public:
-    template <typename T>
-    parser_error(const std::string& message, const T& extra)
-        : std::runtime_error(message + " [" + extra + "]")
-    {}
-};
+dev_t parse_device(const std::string& device_str);
 
+task_state parse_task_state(char state_char);
+
+id_map parse_id_map_line(const std::string& line);
+
+} // namespace parsers
+} // namespace impl
 } // namespace pfs
 
-#endif // PFS_PARSER_ERROR_HPP
+#endif // PFS_PARSERS_COMMON_HPP

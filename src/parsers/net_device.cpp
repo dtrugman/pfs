@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/net_device.hpp"
+#include "pfs/parser_error.hpp"
 #include "pfs/utils.hpp"
 
 namespace pfs {
@@ -66,7 +67,7 @@ net_device parse_net_device_line(const std::string& line)
 
         dev.interface = tokens[INTERFACE];
         dev.interface.pop_back(); // Remove ':';
-        
+
         utils::stot(tokens[RX_BYTES], dev.rx_bytes, utils::base::decimal);
         utils::stot(tokens[RX_PACKETS], dev.rx_packets, utils::base::decimal);
         utils::stot(tokens[RX_ERRS], dev.rx_errs, utils::base::decimal);

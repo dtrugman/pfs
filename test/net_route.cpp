@@ -3,7 +3,8 @@
 #include "catch.hpp"
 #include "test_utils.hpp"
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/net_route.hpp"
+#include "pfs/parser_error.hpp"
 #include "pfs/types.hpp"
 
 using namespace pfs::impl::parsers;

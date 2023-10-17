@@ -14,23 +14,20 @@
  *  limitations under the License.
  */
 
-#ifndef PFS_PARSER_ERROR_HPP
-#define PFS_PARSER_ERROR_HPP
+#ifndef PFS_PARSERS_FILESYSTEMS_HPP
+#define PFS_PARSERS_FILESYSTEMS_HPP
 
+#include <functional>
 #include <string>
-#include <stdexcept>
 
 namespace pfs {
+namespace impl {
+namespace parsers {
 
-class parser_error : public std::runtime_error
-{
-public:
-    template <typename T>
-    parser_error(const std::string& message, const T& extra)
-        : std::runtime_error(message + " [" + extra + "]")
-    {}
-};
+std::pair<std::string, bool> parse_filesystems_line(const std::string& line);
 
+} // namespace parsers
+} // namespace impl
 } // namespace pfs
 
-#endif // PFS_PARSER_ERROR_HPP
+#endif // PFS_PARSERS_FILESYSTEMS_HPP

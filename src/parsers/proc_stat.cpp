@@ -17,7 +17,8 @@
 #include <chrono>
 #include <cstring>
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/generic.hpp"
+#include "pfs/parsers/proc_stat.hpp"
 #include "pfs/utils.hpp"
 
 namespace pfs {
