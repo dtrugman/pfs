@@ -14,23 +14,21 @@
  *  limitations under the License.
  */
 
-#ifndef PFS_PARSER_ERROR_HPP
-#define PFS_PARSER_ERROR_HPP
+#ifndef PFS_PARSERS_NETLINK_SOCKET_HPP
+#define PFS_PARSERS_NETLINK_SOCKET_HPP
 
 #include <string>
-#include <stdexcept>
+
+#include "pfs/types.hpp"
 
 namespace pfs {
+namespace impl {
+namespace parsers {
 
-class parser_error : public std::runtime_error
-{
-public:
-    template <typename T>
-    parser_error(const std::string& message, const T& extra)
-        : std::runtime_error(message + " [" + extra + "]")
-    {}
-};
+netlink_socket parse_netlink_socket_line(const std::string& line);
 
+} // namespace parsers
+} // namespace impl
 } // namespace pfs
 
-#endif // PFS_PARSER_ERROR_HPP
+#endif // PFS_PARSERS_NETLINK_SOCKET_HPP

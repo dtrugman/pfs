@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-present Roman Karlstetter
+ *  Copyright 2020-present Daniel Trugman
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/generic.hpp"
+#include "pfs/parsers/task_io.hpp"
 #include "pfs/utils.hpp"
 
 namespace pfs {

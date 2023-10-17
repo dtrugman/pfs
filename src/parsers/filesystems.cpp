@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/filesystems.hpp"
+#include "pfs/parser_error.hpp"
 #include "pfs/utils.hpp"
 
 #include <iostream>

@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/buddyinfo.hpp"
 
 using namespace pfs::impl::parsers;
 

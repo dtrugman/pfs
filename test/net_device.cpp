@@ -3,7 +3,8 @@
 #include "catch.hpp"
 #include "test_utils.hpp"
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/net_device.hpp"
+#include "pfs/parser_error.hpp"
 
 using namespace pfs::impl::parsers;
 
@@ -55,7 +56,7 @@ TEST_CASE("Parse net device", "[net][net_device]")
     expected.tx_colls      = 14;
     expected.tx_carrier    = 15;
     expected.tx_compressed = 16;
- 
+
     auto device = parse_net_device_line(line);
 
     REQUIRE(device.interface == expected.interface);

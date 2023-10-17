@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/mountinfo.hpp"
 
 using namespace pfs::impl::parsers;
 

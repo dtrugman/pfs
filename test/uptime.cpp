@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/uptime.hpp"
 
 using namespace pfs::impl::parsers;
 

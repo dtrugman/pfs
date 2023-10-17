@@ -3,7 +3,8 @@
 #include "catch.hpp"
 #include "test_utils.hpp"
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/modules.hpp"
+#include "pfs/parser_error.hpp"
 
 using namespace pfs::impl::parsers;
 

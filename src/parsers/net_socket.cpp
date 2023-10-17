@@ -16,7 +16,8 @@
 
 #include <arpa/inet.h>
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/net_socket.hpp"
+#include "pfs/parser_error.hpp"
 #include "pfs/utils.hpp"
 
 namespace pfs {

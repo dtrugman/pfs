@@ -20,7 +20,15 @@
 
 #include <system_error>
 
-#include "pfs/parsers.hpp"
+#include "pfs/parsers/filesystems.hpp"
+#include "pfs/parsers/meminfo.hpp"
+#include "pfs/parsers/buddyinfo.hpp"
+#include "pfs/parsers/cgroup_controller.hpp"
+#include "pfs/parsers/loadavg.hpp"
+#include "pfs/parsers/uptime.hpp"
+#include "pfs/parsers/modules.hpp"
+#include "pfs/parsers/generic.hpp"
+#include "pfs/parsers/proc_stat.hpp"
 #include "pfs/procfs.hpp"
 #include "pfs/utils.hpp"
 
