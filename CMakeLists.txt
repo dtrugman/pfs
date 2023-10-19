@@ -22,6 +22,7 @@ endif ()
 # Flags that are NOT expected to be shared when added as sub-directory
 # ------------------------------------------------------------------------
 
+option (pfs_BUILD_COVERAGE "Enable coverage instrumentation" OFF)
 option (pfs_BUILD_ASAN "Enable address sanitizer" OFF)
 option (pfs_BUILD_SAMPLES "Build samples" ON)
 option (pfs_BUILD_TESTS "Build tests" ON)
@@ -45,6 +46,12 @@ set (SOURCES ${pfs_ROOT_SOURCES} ${pfs_PARSERS_SOURCES})
 
 add_library (pfs ${pfs_SHARED_OR_STATIC} ${SOURCES})
 
+if (pfs_BUILD_COVERAGE)
+    set (pfs_BUILD_COVERAGE_FLAGS -O0 --coverage)
+    target_compile_options (pfs PUBLIC ${pfs_BUILD_COVERAGE_FLAGS})
+    target_link_libraries (pfs PUBLIC ${pfs_BUILD_COVERAGE_FLAGS})
+endif ()
+
 if (pfs_BUILD_ASAN)
     set (pfs_BUILD_ASAN_FLAGS -fno-omit-frame-pointer -fsanitize=address -fsanitize=leak)
     target_compile_options (pfs PUBLIC ${pfs_BUILD_ASAN_FLAGS})
@@ -63,6 +70,12 @@ if (pfs_BUILD_TESTS)
     add_executable (unittest ${pfs_UNITTEST_SOURCES})
     target_link_libraries (unittest PRIVATE pfs)
 endif()
+
+if (pfs_BUILD_TESTS AND pfs_BUILD_COVERAGE)
+    set (pfs_BUILD_TESTS_COVERAGE_FLAGS --coverage)
+    target_compile_options (pfs PUBLIC ${pfs_BUILD_TESTS_COVERAGE_FLAGS})
+    target_link_libraries (pfs PUBLIC ${pfs_BUILD_TESTS_COVERAGE_FLAGS})
+endif ()
 
 # ------------------------------------------------------------------------
 # Generate a CMake package configuration file to support find_package()
