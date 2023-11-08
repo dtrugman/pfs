@@ -177,7 +177,8 @@ task_stat task::get_stat() const
 
     long pre_comm = ftell(fp);
 
-    static const size_t COMM_LEN_MAX = 18; // Actual comm (16) + parenthesis (2)
+    // https://elixir.bootlin.com/linux/v6.4.1/source/fs/proc/array.c#L99
+    static const size_t COMM_LEN_MAX = 66; // Actual comm (64) + parenthesis (2)
     st.comm.resize(COMM_LEN_MAX);
     size_t bytes = fread(&st.comm[0], 1, st.comm.size(), fp);
     if (bytes != st.comm.size())

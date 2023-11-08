@@ -66,6 +66,73 @@ inline std::string create_temp_file(const std::vector<std::string>& lines)
     return std::string(temp);
 }
 
+class temp_sandbox_dir
+{
+public:
+    temp_sandbox_dir() noexcept
+    {
+        char temp_dir[] = "/tmp/temp_dir_XXXXXX";
+        char* dirpath   = mkdtemp(temp_dir);
+        if (!dirpath)
+        {
+            perror("mkdtemp");
+        }
+        else
+        {
+            _sandbox_root = std::string{dirpath};
+        }
+    }
+    ~temp_sandbox_dir() noexcept { remove_sandbox(); }
+
+    bool is_valid() const noexcept { return !_sandbox_root.empty(); }
+
+    const std::string& get_root() const noexcept { return _sandbox_root; }
+
+    bool create_file(const std::string& relative_path,
+                     const std::string& content) const noexcept
+    {
+        if (!is_valid())
+        {
+            return false;
+        }
+
+        const std::string file_path = _sandbox_root + '/' + relative_path;
+        const std::string dir       = file_path.substr(0, file_path.rfind("/"));
+        const int result =
+            std::system((std::string{"mkdir -p "} + dir).c_str());
+        if (result != 0)
+        {
+            perror((std::string{"create folder "} + dir + " fail.").c_str());
+            return false;
+        }
+        std::ofstream file(file_path);
+        if (!file)
+        {
+            perror(
+                (std::string{"create file "} + file_path + " fail.").c_str());
+            return false;
+        }
+
+        file << content;
+        return true;
+    }
+
+private:
+    void remove_sandbox()
+    {
+        if (!_sandbox_root.empty())
+        {
+            const int result =
+                std::system((std::string{"rm -rf "} + _sandbox_root).c_str());
+            if (result != 0)
+            {
+                perror("rm -rf");
+            }
+        }
+    }
+    std::string _sandbox_root;
+};
+
 template <typename T>
 inline std::string join(const T& container)
 {
