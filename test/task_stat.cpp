@@ -11,12 +11,10 @@ TEST_CASE("Parse task stat", "[task][stat]")
             "30739 (kworker/0:3-cgroup_destroy) I 2 0 0 0 -1 69238880 0 0 0 0 "
             "0 1485 0 0 20 0 1 0 409074 0 0 18446744073709551615 0 0 0 0 0 0 0 "
             "2147483647 0 1 0 0 17 0 0 0 0 0 0 0 0 0 0 0 0 0 0"};
-        temp_sandbox_dir root_dir{};
+        temp_dir test_dir{};
 
-        REQUIRE(root_dir.is_valid());
-        const std::string root_path{root_dir.get_root()};
-        const std::string test_stat{
-            root_dir.create_file("30739/stat", content)};
+        const std::string root_path{test_dir.get_root()};
+        test_dir.create_file("30739/stat", content);
         const auto stat{pfs::procfs(root_path).get_task(30739).get_stat()};
         REQUIRE(stat.pid == 30739);
         REQUIRE(stat.comm == "kworker/0:3-cgroup_destroy");
@@ -80,12 +78,10 @@ TEST_CASE("Parse task stat", "[task][stat]")
             "367560228864 367560955744 549025709984 0 0 0 0 0 58751527 1 0 0 "
             "17 3 0 0 0 0 0 367561021696 367561032301 367940091904 "
             "549025713116 549025713175 549025713175 549025714154 0"};
-        temp_sandbox_dir root_dir{};
+        temp_dir test_dir{};
 
-        REQUIRE(root_dir.is_valid());
-        const std::string root_path{root_dir.get_root()};
-        const std::string test_stat{
-            root_dir.create_file("63654/stat", content)};
+        const std::string root_path{test_dir.get_root()};
+        test_dir.create_file("63654/stat", content);
         const auto stat{pfs::procfs(root_path).get_task(63654).get_stat()};
         REQUIRE(stat.pid == 63654);
         REQUIRE(stat.comm == "less");
