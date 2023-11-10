@@ -66,68 +66,55 @@ inline std::string create_temp_file(const std::vector<std::string>& lines)
     return std::string(temp);
 }
 
-class temp_sandbox_dir
+class temp_dir
 {
 public:
-    temp_sandbox_dir() noexcept
+    temp_dir()
     {
-        char temp_dir[] = "/tmp/temp_dir_XXXXXX";
+        char temp_dir[] = "/tmp/pfs_test_XXXXXX";
         char* dirpath   = mkdtemp(temp_dir);
         if (!dirpath)
         {
-            perror("mkdtemp");
+            throw std::runtime_error("Cannot create temp directory");
         }
         else
         {
             _sandbox_root = std::string{dirpath};
         }
     }
-    ~temp_sandbox_dir() noexcept { remove_sandbox(); }
-
-    bool is_valid() const noexcept { return !_sandbox_root.empty(); }
+    ~temp_dir() noexcept { cleanup_temp_dir(); }
 
     const std::string& get_root() const noexcept { return _sandbox_root; }
 
-    bool create_file(const std::string& relative_path,
-                     const std::string& content) const noexcept
+    void create_file(const std::string& relative_path,
+                     const std::string& content) const
     {
-        if (!is_valid())
-        {
-            return false;
-        }
-
         const std::string file_path = _sandbox_root + '/' + relative_path;
         const std::string dir       = file_path.substr(0, file_path.rfind("/"));
         const int result =
             std::system((std::string{"mkdir -p "} + dir).c_str());
         if (result != 0)
         {
-            perror((std::string{"create folder "} + dir + " fail.").c_str());
-            return false;
+            throw std::runtime_error("Cannot create temp directory");
         }
         std::ofstream file(file_path);
         if (!file)
         {
-            perror(
-                (std::string{"create file "} + file_path + " fail.").c_str());
-            return false;
+            throw std::runtime_error("Cannot open temp file");
         }
 
         file << content;
-        return true;
     }
 
 private:
-    void remove_sandbox()
+    void cleanup_temp_dir() noexcept
     {
-        if (!_sandbox_root.empty())
+        const int result =
+            std::system((std::string{"rm -rf "} + _sandbox_root).c_str());
+        if (result != 0)
         {
-            const int result =
-                std::system((std::string{"rm -rf "} + _sandbox_root).c_str());
-            if (result != 0)
-            {
-                perror("rm -rf");
-            }
+            perror(std::string{"Failed to clean up temp dir: " + _sandbox_root}
+                       .c_str());
         }
     }
     std::string _sandbox_root;
