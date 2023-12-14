@@ -37,12 +37,20 @@ int main(int argc, char** argv)
 
         // clang-format off
         auto commands = std::vector<command>{
-            {command("system", "", "Enumerate system-wide information", enum_system)},
-            {command("net", "", "Enumerate network information", enum_net)},
-            {command("tasks", "[task-id]...", "Enumerate running tasks", enum_tasks)},
-            {command("fds", "[task-id]...", "Enumerate fds for a specific task", enum_fds)},
-            {command("lsmod", "[filter]", "Enumerate all loaded modules that match the filter", tool_lsmod)},
-            {command("blocks", "[block-name]...", "Enumerate block devices", enum_blocks)},
+            {command("system", "",
+                    "Enumerate system-wide information", enum_system)},
+            {command("net", "",
+                    "Enumerate network information", enum_net)},
+            {command("tasks", "[task-id]...",
+                    "Enumerate running tasks", enum_tasks)},
+            {command("fds", "[task-id]...",
+                    "Enumerate fds for a specific task", enum_fds)},
+            {command("blocks", "[block-name]...",
+                    "Enumerate block devices", enum_blocks)},
+            {command("lsmod", "[filter]",
+                    "Enumerate all loaded modules that match the filter", tool_lsmod)},
+            {command("netstat", "(tcp|udp) [task-id]...",
+                    "Enumerate all sockets of said type for tasks", tool_netstat)},
         };
         // clang-format on
 

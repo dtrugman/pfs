@@ -18,5 +18,6 @@
 #define SAMPLE_TOOL_HPP
 
 int tool_lsmod(std::vector<std::string>&& args);
+int tool_netstat(std::vector<std::string>&& args);
 
 #endif // SAMPLE_TOOL_HPP
