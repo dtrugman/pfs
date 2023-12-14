@@ -91,6 +91,8 @@ How does that affect `pfs`?
 
 The directory `sample` contains a full blown application that calls all(!) the supported APIs and prints all the information gathered. When compiling the library, the sample applications is compiled as well.
 
+You can find a basic implementation of `netstat` (see `sample/tool_netstat.cpp`) and `lsmod` (see `sample/tool_lsmod.cpp`) that you can easily reuse in your projects.
+
 Anyway, here are some cool (and concise) examples:
 
 **Example 1:** Iterater over all the loaded unsigned or out-of-tree kernel modules
