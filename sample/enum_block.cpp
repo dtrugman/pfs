@@ -36,6 +36,9 @@ static void enum_block(const pfs::block& block)
 
         auto stat = block.get_stat();
         print(stat);
+
+        auto queue = block.get_queue();
+        print(queue);
     }
     catch (const std::runtime_error& ex)
     {

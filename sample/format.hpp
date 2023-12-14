@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "pfs/procfs.hpp"
+#include "pfs/sysfs.hpp"
 
 template <typename T>
 inline std::string join(const T& container)
@@ -745,6 +746,15 @@ inline std::ostream& operator<<(std::ostream& out,
     out << "discard_merges[" << stat.discard_merges << "] ";
     out << "discard_sectors[" << stat.discard_sectors << "] ";
     out << "discard_ticks[" << stat.discard_ticks << "] ";
+
+    return out;
+}
+
+inline std::ostream& operator<<(std::ostream& out,
+                                const pfs::block_queue& queue)
+{
+    out << std::boolalpha;
+    out << "rotational[" << queue.get_rotational() << "] ";
 
     return out;
 }
