@@ -25,8 +25,6 @@ namespace parsers {
 
 namespace {
 
-static const size_t HEX_BYTE_LEN = 8;
-
 net_socket::net_state parse_state(const std::string& state_str)
 {
     int state_int;

@@ -26,6 +26,7 @@
 #include <fstream>
 #include <iostream>
 #include <system_error>
+#include <algorithm>
 
 #include "pfs/defer.hpp"
 #include "pfs/parsers.hpp"
@@ -387,6 +388,46 @@ std::unordered_map<int, fd> task::get_fds() const
 net task::get_net() const
 {
     return net(_procfs_root);
+}
+
+std::vector<net_socket> task::get_net_sockets() const
+{
+    std::vector<net_socket> sockets;
+    std::vector<net_socket> all_sockets;
+    std::vector<ino_t> process_inodes;
+    static const std::string FDS_DIR("fd/");
+    auto path = _task_root + FDS_DIR;
+    net net_sockets = get_net();
+
+    for (const auto& num : utils::enumerate_numeric_files(path))
+    {
+        fd descriptor(path, num);
+        process_inodes.emplace_back(descriptor.get_target_stat().st_ino);
+    }
+
+    std::sort(process_inodes.begin(), process_inodes.end());
+
+    auto add_sockets = [&sockets, process_inodes](std::vector<net_socket> sockets_){
+        for (const net_socket& sock : sockets_)
+        {
+            if(std::find(process_inodes.begin(), process_inodes.end(), sock.inode) != process_inodes.end()){
+                sockets.push_back(sock);
+            }
+        }
+    };
+
+    add_sockets(net_sockets.get_icmp());
+    add_sockets(net_sockets.get_icmp6());
+    add_sockets(net_sockets.get_raw());
+    add_sockets(net_sockets.get_raw6());
+    add_sockets(net_sockets.get_tcp());
+    add_sockets(net_sockets.get_tcp6());
+    add_sockets(net_sockets.get_udp());
+    add_sockets(net_sockets.get_udp6());
+    add_sockets(net_sockets.get_udplite());
+    add_sockets(net_sockets.get_udplite6());
+
+    return sockets;
 }
 
 ino_t task::get_ns(const std::string& ns) const
