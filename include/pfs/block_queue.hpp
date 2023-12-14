@@ -14,51 +14,41 @@
  *  limitations under the License.
  */
 
-#ifndef PFS_BLOCK_HPP
-#define PFS_BLOCK_HPP
+#ifndef PFS_BLOCK_QUEUE_HPP
+#define PFS_BLOCK_QUEUE_HPP
 
 #include "types.hpp"
-#include "block_queue.hpp"
 
 namespace pfs {
 
-class block final
+// Hint: See 'https://www.kernel.org/doc/Documentation/block/queue-sysfs.txt'
+class block_queue final
 {
 public:
-    block(const block&) = default;
-    block(block&&)      = default;
+    block_queue(const block_queue&) = default;
+    block_queue(block_queue&&)      = default;
 
-    block& operator=(const block&) = delete;
-    block& operator=(block&&) = delete;
-
-    bool operator<(const block& rhs) const;
+    block_queue& operator=(const block_queue&) = delete;
+    block_queue& operator=(block_queue&&) = delete;
 
 public: // Properties
-    const std::string& name() const;
     const std::string& dir() const;
 
-    size_t get_size() const;
-    dev_t get_dev() const;
-
-    block_stat get_stat() const;
-    block_queue get_queue() const;
-
 public: // Getters
+    bool get_rotational() const;
 
 private:
-    friend class sysfs;
-    block(const std::string& sysfs_root, const std::string& name);
+    friend class block;
+    block_queue(const std::string& block_root);
 
 private:
-    static std::string build_block_root(const std::string& sysfs_root, const std::string& name);
+    static std::string build_block_queue_root(const std::string& block_root);
 
 private:
-    static const std::string BLOCK_DIR;
+    static const std::string QUEUE_DIR;
 
 private:
-    const std::string _name;
-    const std::string _sysfs_root;
-    const std::string _block_root;
+    const std::string _block_queue_root;
 };
 
 } // namespace pfs

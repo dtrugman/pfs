@@ -83,4 +83,9 @@ block_stat block::get_stat() const
     return parsers::parse_block_stat_line(line);
 }
 
+block_queue block::get_queue() const
+{
+    return block_queue(_block_root);
+}
+
 } // namespace pfs
