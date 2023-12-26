@@ -480,10 +480,10 @@ struct net_socket
 {
     enum class timer
     {
-        none       = 0, // No timer is pending
-        retransmit = 1, // Retransmit-timer is pending
-        another = 2, // Another timer (e.g. delayed ack or keepalive) is pending
-        time_wait = 3,   // This is a socket in TIME_WAIT state. Not all fields
+        none        = 0, // No timer is pending
+        retransmit  = 1, // Retransmit-timer is pending
+        another     = 2, // Another timer (e.g. delayed ack or keepalive) is pending
+        time_wait   = 3, // This is a socket in TIME_WAIT state. Not all fields
                          // will contain data (or even exist)
         zero_window = 4, // zero window probe timer is pending
     };
