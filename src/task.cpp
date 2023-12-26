@@ -392,7 +392,7 @@ std::unordered_map<int, fd> task::get_fds() const
 
 net task::get_net() const
 {
-    return net(_procfs_root);
+    return net(_task_root);
 }
 
 ino_t task::get_ns(const std::string& ns) const

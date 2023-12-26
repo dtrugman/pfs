@@ -42,7 +42,7 @@ public:
 
 public:
     std::vector<net_device> get_dev() const;
-    
+
     std::vector<net_socket> get_icmp() const;
     std::vector<net_socket> get_icmp6() const;
     std::vector<net_socket> get_raw() const;
@@ -62,15 +62,17 @@ public:
 
 private:
     friend class task;
-    net(const std::string& procfs_root);
+    net(const std::string& parent_root);
 
 private:
     std::vector<net_socket> get_net_sockets(const std::string& file) const;
 
-    static std::string build_net_root(const std::string& procfs_root);
+    static std::string build_net_root(const std::string& parent_root);
 
 private:
-    const std::string _procfs_root;
+    // Net has a "parent root", and not a "procfs root", because we could
+    // be looking at a net namespace of a specific process.
+    const std::string _parent_root;
     const std::string _net_root;
 };
 
