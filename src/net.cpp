@@ -26,14 +26,14 @@ namespace pfs {
 
 using namespace impl;
 
-net::net(const std::string& procfs_root)
-    : _procfs_root(procfs_root), _net_root(build_net_root(procfs_root))
+net::net(const std::string& parent_root)
+    : _parent_root(parent_root), _net_root(build_net_root(parent_root))
 {}
 
-std::string net::build_net_root(const std::string& procfs_root)
+std::string net::build_net_root(const std::string& parent_root)
 {
     static const std::string NET_DIR("net/");
-    return procfs_root + NET_DIR;
+    return parent_root + NET_DIR;
 }
 
 std::vector<net_device> net::get_dev() const
