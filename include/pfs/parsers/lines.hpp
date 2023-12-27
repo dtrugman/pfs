@@ -77,68 +77,6 @@ void parse_lines(
     parse_and_filter_lines(path, inserter, parser, nullptr, lines_to_skip);
 }
 
-template <typename T>
-static void to_number(const std::string& value, T& out,
-                      utils::base base = utils::base::decimal)
-{
-    try
-    {
-        utils::stot(value, out, base);
-    }
-    catch (const std::invalid_argument& ex)
-    {
-        throw parser_error("Corrupted number - Invalid argument", value);
-    }
-    catch (const std::out_of_range& ex)
-    {
-        throw parser_error("Corrupted number - Out of range", value);
-    }
-}
-
-template <typename T>
-static void to_sequence(const std::string& value, proc_stat::sequence<T>& out)
-{
-    // Some examples:
-    // clang-format off
-    // 975101428 40707218 345522235 433770 2054357 19668 0 1807723 381659448 33954 202863055
-    // clang-format on
-
-    enum token
-    {
-        TOTAL     = 0,
-        MIN_COUNT = 1,
-    };
-
-    auto tokens = utils::split(value);
-    if (tokens.size() < MIN_COUNT)
-    {
-        throw parser_error("Corrupted sequence - Unexpected tokens count",
-                           value);
-    }
-
-    try
-    {
-        proc_stat::sequence<T> sequence;
-
-        utils::stot(tokens[TOTAL], out.total);
-
-        for (size_t i = MIN_COUNT; i < tokens.size(); i++)
-        {
-            unsigned long long value;
-            utils::stot(tokens[i], value);
-            out.per_item.push_back(value);
-        }
-    }
-    catch (const std::invalid_argument& ex)
-    {
-        throw parser_error("Corrupted sequence - Invalid argument", value);
-    }
-    catch (const std::out_of_range& ex)
-    {
-        throw parser_error("Corrupted sequence - Out of range", value);
-    }
-}
-
 } // namespace parsers
 } // namespace impl
 } // namespace pfs

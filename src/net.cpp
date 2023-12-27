@@ -20,7 +20,7 @@
 #include "pfs/parsers/net_socket.hpp"
 #include "pfs/parsers/unix_socket.hpp"
 #include "pfs/parsers/netlink_socket.hpp"
-#include "pfs/parsers/generic.hpp"
+#include "pfs/parsers/lines.hpp"
 
 namespace pfs {
 
