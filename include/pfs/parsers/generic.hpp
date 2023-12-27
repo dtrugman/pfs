@@ -31,9 +31,11 @@ template <typename Inserter>
 using inserted_type = typename Inserter::container_type::value_type;
 
 template <typename Inserter>
-void parse_lines(
-    const std::string& path, Inserter inserter,
+void parse_and_filter_lines(
+    const std::string& path,
+    Inserter inserter,
     std::function<inserted_type<Inserter>(const std::string&)> parser,
+    std::function<bool(const inserted_type<Inserter>&)> filter = nullptr,
     size_t lines_to_skip = 0)
 {
     std::ifstream in(path);
@@ -55,8 +57,24 @@ void parse_lines(
             continue;
         }
 
-        inserter = parser(line);
+        auto inserted = parser(line);
+        if (filter && filter(inserted))
+        {
+            continue;
+        }
+
+        inserter = std::move(inserted);
     }
+}
+
+template <typename Inserter>
+void parse_lines(
+    const std::string& path,
+    Inserter inserter,
+    std::function<inserted_type<Inserter>(const std::string&)> parser,
+    size_t lines_to_skip = 0)
+{
+    parse_and_filter_lines(path, inserter, parser, nullptr, lines_to_skip);
 }
 
 template <typename T>

@@ -70,6 +70,7 @@ TEST_CASE("Parse lines functionality", "[parsers]")
     std::vector<std::string> content;
     std::vector<std::string> expected;
     std::vector<std::string> output;
+    std::function<bool(const std::string&)> filter = nullptr;
     size_t skipped = 0;
 
     std::string file;
@@ -96,7 +97,14 @@ TEST_CASE("Parse lines functionality", "[parsers]")
         skipped  = 5;
     }
 
+    SECTION("Filter lines")
+    {
+        content  = {"a", "x", "x", "b", "x", "c"};
+        expected = {"a", "b", "c"};
+        filter = [](const std::string& entry) { return entry == "x"; };
+    }
+
     file = create_temp_file(content);
-    parse_lines(file, std::back_inserter(output), parser, skipped);
+    parse_and_filter_lines(file, std::back_inserter(output), parser, filter, skipped);
     REQUIRE(output == expected);
 }
