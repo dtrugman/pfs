@@ -17,6 +17,7 @@
 #ifndef PFS_NET_HPP
 #define PFS_NET_HPP
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -41,31 +42,39 @@ public:
     net& operator=(net&&) = delete;
 
 public:
-    std::vector<net_device> get_dev() const;
+    using net_device_filter = std::function<bool(const net_device&)>;
+    using net_socket_filter = std::function<bool(const net_socket&)>;
+    using netlink_socket_filter = std::function<bool(const netlink_socket&)>;
+    using unix_socket_filter = std::function<bool(const unix_socket&)>;
+    using net_route_filter = std::function<bool(const net_route&)>;
 
-    std::vector<net_socket> get_icmp() const;
-    std::vector<net_socket> get_icmp6() const;
-    std::vector<net_socket> get_raw() const;
-    std::vector<net_socket> get_raw6() const;
-    std::vector<net_socket> get_tcp() const;
-    std::vector<net_socket> get_tcp6() const;
-    std::vector<net_socket> get_udp() const;
-    std::vector<net_socket> get_udp6() const;
-    std::vector<net_socket> get_udplite() const;
-    std::vector<net_socket> get_udplite6() const;
+public:
+    std::vector<net_device> get_dev(net_device_filter filter = nullptr) const;
 
-    std::vector<netlink_socket> get_netlink() const;
+    std::vector<net_socket> get_icmp(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_icmp6(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_raw(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_raw6(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_tcp(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_tcp6(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_udp(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_udp6(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_udplite(net_socket_filter filter = nullptr) const;
+    std::vector<net_socket> get_udplite6(net_socket_filter filter = nullptr) const;
 
-    std::vector<unix_socket> get_unix() const;
+    std::vector<netlink_socket> get_netlink(netlink_socket_filter filter = nullptr) const;
 
-    std::vector<net_route> get_route() const;
+    std::vector<unix_socket> get_unix(unix_socket_filter filter = nullptr) const;
+
+    std::vector<net_route> get_route(net_route_filter filter = nullptr) const;
 
 private:
     friend class task;
     net(const std::string& parent_root);
 
 private:
-    std::vector<net_socket> get_net_sockets(const std::string& file) const;
+    std::vector<net_socket> get_net_sockets(const std::string& file,
+            net_socket_filter filter = nullptr) const;
 
     static std::string build_net_root(const std::string& parent_root);
 

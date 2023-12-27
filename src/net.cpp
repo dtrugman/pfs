@@ -36,7 +36,7 @@ std::string net::build_net_root(const std::string& parent_root)
     return parent_root + NET_DIR;
 }
 
-std::vector<net_device> net::get_dev() const
+std::vector<net_device> net::get_dev(net_device_filter filter) const
 {
     static const std::string DEV_FILE("dev");
     auto path = _net_root + DEV_FILE;
@@ -44,72 +44,72 @@ std::vector<net_device> net::get_dev() const
     static const size_t HEADER_LINES = 2;
 
     std::vector<net_device> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-		         parsers::parse_net_device_line, HEADER_LINES);
+    parsers::parse_and_filter_lines(path, std::back_inserter(output),
+		         parsers::parse_net_device_line, filter, HEADER_LINES);
     return output;
 }
 
-std::vector<net_socket> net::get_icmp() const
+std::vector<net_socket> net::get_icmp(net_socket_filter filter) const
 {
     static const std::string ICMP_FILE("icmp");
-    return get_net_sockets(ICMP_FILE);
+    return get_net_sockets(ICMP_FILE, filter);
 }
 
-std::vector<net_socket> net::get_icmp6() const
+std::vector<net_socket> net::get_icmp6(net_socket_filter filter) const
 {
     static const std::string ICMP6_FILE("icmp6");
-    return get_net_sockets(ICMP6_FILE);
+    return get_net_sockets(ICMP6_FILE, filter);
 }
 
-std::vector<net_socket> net::get_raw() const
+std::vector<net_socket> net::get_raw(net_socket_filter filter) const
 {
     static const std::string RAW_FILE("raw");
-    return get_net_sockets(RAW_FILE);
+    return get_net_sockets(RAW_FILE, filter);
 }
 
-std::vector<net_socket> net::get_raw6() const
+std::vector<net_socket> net::get_raw6(net_socket_filter filter) const
 {
     static const std::string RAW6_FILE("raw6");
-    return get_net_sockets(RAW6_FILE);
+    return get_net_sockets(RAW6_FILE, filter);
 }
 
-std::vector<net_socket> net::get_tcp() const
+std::vector<net_socket> net::get_tcp(net_socket_filter filter) const
 {
     static const std::string TCP_FILE("tcp");
-    return get_net_sockets(TCP_FILE);
+    return get_net_sockets(TCP_FILE, filter);
 }
 
-std::vector<net_socket> net::get_tcp6() const
+std::vector<net_socket> net::get_tcp6(net_socket_filter filter) const
 {
     static const std::string TCP6_FILE("tcp6");
-    return get_net_sockets(TCP6_FILE);
+    return get_net_sockets(TCP6_FILE, filter);
 }
 
-std::vector<net_socket> net::get_udp() const
+std::vector<net_socket> net::get_udp(net_socket_filter filter) const
 {
     static const std::string UDP_FILE("udp");
-    return get_net_sockets(UDP_FILE);
+    return get_net_sockets(UDP_FILE, filter);
 }
 
-std::vector<net_socket> net::get_udp6() const
+std::vector<net_socket> net::get_udp6(net_socket_filter filter) const
 {
     static const std::string UDP6_FILE("udp6");
-    return get_net_sockets(UDP6_FILE);
+    return get_net_sockets(UDP6_FILE, filter);
 }
 
-std::vector<net_socket> net::get_udplite() const
+std::vector<net_socket> net::get_udplite(net_socket_filter filter) const
 {
     static const std::string UDPLITE_FILE("udplite");
-    return get_net_sockets(UDPLITE_FILE);
+    return get_net_sockets(UDPLITE_FILE, filter);
 }
 
-std::vector<net_socket> net::get_udplite6() const
+std::vector<net_socket> net::get_udplite6(net_socket_filter filter) const
 {
     static const std::string UDPLITE6_FILE("udplite6");
-    return get_net_sockets(UDPLITE6_FILE);
+    return get_net_sockets(UDPLITE6_FILE, filter);
 }
 
-std::vector<netlink_socket> net::get_netlink() const
+std::vector<netlink_socket> net::get_netlink(netlink_socket_filter filter) const
 {
     static const std::string NETLINK_FILE("netlink");
     auto path = _net_root + NETLINK_FILE;
@@ -117,12 +117,13 @@ std::vector<netlink_socket> net::get_netlink() const
     static const size_t HEADER_LINES = 1;
 
     std::vector<netlink_socket> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_netlink_socket_line, HEADER_LINES);
+    parsers::parse_and_filter_lines(path, std::back_inserter(output),
+                                    parsers::parse_netlink_socket_line,
+                                    filter, HEADER_LINES);
     return output;
 }
 
-std::vector<unix_socket> net::get_unix() const
+std::vector<unix_socket> net::get_unix(unix_socket_filter filter) const
 {
     static const std::string UNIX_FILE("unix");
     auto path = _net_root + UNIX_FILE;
@@ -130,24 +131,27 @@ std::vector<unix_socket> net::get_unix() const
     static const size_t HEADER_LINES = 1;
 
     std::vector<unix_socket> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_unix_socket_line, HEADER_LINES);
+    parsers::parse_and_filter_lines(path, std::back_inserter(output),
+                                    parsers::parse_unix_socket_line,
+                                    filter, HEADER_LINES);
     return output;
 }
 
-std::vector<net_socket> net::get_net_sockets(const std::string& file) const
+std::vector<net_socket> net::get_net_sockets(const std::string& file,
+        net_socket_filter filter) const
 {
     auto path = _net_root + file;
 
     static const size_t HEADER_LINES = 1;
 
     std::vector<net_socket> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_net_socket_line, HEADER_LINES);
+    parsers::parse_and_filter_lines(path, std::back_inserter(output),
+                                    parsers::parse_net_socket_line,
+                                    filter, HEADER_LINES);
     return output;
 }
 
-std::vector<net_route> net::get_route() const
+std::vector<net_route> net::get_route(net_route_filter filter) const
 {
     static const size_t HEADER_LINES = 1;
 
@@ -155,8 +159,9 @@ std::vector<net_route> net::get_route() const
     auto path = _net_root + ROUTES_FILE;
 
     std::vector<net_route> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_net_route_line, HEADER_LINES);
+    parsers::parse_and_filter_lines(path, std::back_inserter(output),
+                                    parsers::parse_net_route_line,
+                                    filter, HEADER_LINES);
     return output;
 }
 
