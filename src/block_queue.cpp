@@ -18,7 +18,7 @@
 
 #include "pfs/defer.hpp"
 #include "pfs/parsers/common.hpp"
-#include "pfs/parsers/generic.hpp"
+#include "pfs/parsers/number.hpp"
 #include "pfs/block_queue.hpp"
 
 namespace pfs {

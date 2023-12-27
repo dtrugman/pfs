@@ -27,7 +27,7 @@
 #include "pfs/parsers/loadavg.hpp"
 #include "pfs/parsers/uptime.hpp"
 #include "pfs/parsers/modules.hpp"
-#include "pfs/parsers/generic.hpp"
+#include "pfs/parsers/lines.hpp"
 #include "pfs/parsers/proc_stat.hpp"
 #include "pfs/procfs.hpp"
 #include "pfs/utils.hpp"

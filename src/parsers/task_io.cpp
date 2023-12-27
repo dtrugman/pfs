@@ -15,7 +15,7 @@
  */
 
 
-#include "pfs/parsers/generic.hpp"
+#include "pfs/parsers/number.hpp"
 #include "pfs/parsers/task_io.hpp"
 #include "pfs/utils.hpp"
 
