@@ -65,6 +65,8 @@ public: // Getters
 
     std::unordered_map<int, fd> get_fds() const;
 
+    std::set<ino_t> get_fds_inodes() const;
+
     std::vector<mem_region> get_maps() const;
 
     mem get_mem() const;

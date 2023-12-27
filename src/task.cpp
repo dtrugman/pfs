@@ -387,7 +387,20 @@ std::unordered_map<int, fd> task::get_fds() const
     {
         fds.emplace(num, fd(path, num));
     }
+
     return fds;
+}
+
+std::set<ino_t> task::get_fds_inodes() const
+{
+    std::set<ino_t> inodes;
+
+    for (auto& fd : get_fds())
+    {
+        inodes.insert(fd.second.get_target_stat().st_ino);
+    }
+
+    return inodes;
 }
 
 net task::get_net() const
