@@ -50,7 +50,7 @@ TEST_CASE("Parse lines move()-s", "[parsers]")
     pfs::impl::defer unlink_temp_file([&file] { unlink(file.c_str()); });
 
     std::vector<obj> output;
-    parse_lines(file, std::back_inserter(output), parser);
+    parse_file_lines(file, std::back_inserter(output), parser);
 
     REQUIRE(output.size() == content.size());
     for (size_t i = 0; i < output.size(); ++i)
@@ -105,6 +105,6 @@ TEST_CASE("Parse lines functionality", "[parsers]")
     }
 
     file = create_temp_file(content);
-    parse_and_filter_lines(file, std::back_inserter(output), parser, filter, skipped);
+    parse_file_lines(file, std::back_inserter(output), parser, filter, skipped);
     REQUIRE(output == expected);
 }

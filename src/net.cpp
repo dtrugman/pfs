@@ -44,8 +44,9 @@ std::vector<net_device> net::get_dev(net_device_filter filter) const
     static const size_t HEADER_LINES = 2;
 
     std::vector<net_device> output;
-    parsers::parse_and_filter_lines(path, std::back_inserter(output),
-		         parsers::parse_net_device_line, filter, HEADER_LINES);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+		                      parsers::parse_net_device_line,
+                              filter, HEADER_LINES);
     return output;
 }
 
@@ -117,9 +118,9 @@ std::vector<netlink_socket> net::get_netlink(netlink_socket_filter filter) const
     static const size_t HEADER_LINES = 1;
 
     std::vector<netlink_socket> output;
-    parsers::parse_and_filter_lines(path, std::back_inserter(output),
-                                    parsers::parse_netlink_socket_line,
-                                    filter, HEADER_LINES);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_netlink_socket_line,
+                              filter, HEADER_LINES);
     return output;
 }
 
@@ -131,9 +132,9 @@ std::vector<unix_socket> net::get_unix(unix_socket_filter filter) const
     static const size_t HEADER_LINES = 1;
 
     std::vector<unix_socket> output;
-    parsers::parse_and_filter_lines(path, std::back_inserter(output),
-                                    parsers::parse_unix_socket_line,
-                                    filter, HEADER_LINES);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_unix_socket_line,
+                              filter, HEADER_LINES);
     return output;
 }
 
@@ -145,23 +146,23 @@ std::vector<net_socket> net::get_net_sockets(const std::string& file,
     static const size_t HEADER_LINES = 1;
 
     std::vector<net_socket> output;
-    parsers::parse_and_filter_lines(path, std::back_inserter(output),
-                                    parsers::parse_net_socket_line,
-                                    filter, HEADER_LINES);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_net_socket_line,
+                              filter, HEADER_LINES);
     return output;
 }
 
 std::vector<net_route> net::get_route(net_route_filter filter) const
 {
-    static const size_t HEADER_LINES = 1;
-
     static const std::string ROUTES_FILE("route");
     auto path = _net_root + ROUTES_FILE;
 
+    static const size_t HEADER_LINES = 1;
+
     std::vector<net_route> output;
-    parsers::parse_and_filter_lines(path, std::back_inserter(output),
-                                    parsers::parse_net_route_line,
-                                    filter, HEADER_LINES);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_net_route_line,
+                              filter, HEADER_LINES);
     return output;
 }
 

@@ -92,21 +92,22 @@ std::vector<zone> procfs::get_buddyinfo() const
     auto path = _root + BUDDYINFO_FILE;
 
     std::vector<zone> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_buddyinfo_line);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_buddyinfo_line);
     return output;
 }
 
 std::vector<cgroup_controller> procfs::get_cgroups() const
 {
-    static const size_t HEADER_LINES = 1;
-
     static const std::string CGROUPS_FILE("cgroups");
     auto path = _root + CGROUPS_FILE;
 
+    static const size_t HEADER_LINES = 1;
+
     std::vector<cgroup_controller> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_cgroup_controller_line, HEADER_LINES);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_cgroup_controller_line,
+                              /* filter = */ nullptr, HEADER_LINES);
     return output;
 }
 
@@ -124,8 +125,8 @@ std::unordered_map<std::string, bool> procfs::get_filesystems() const
     auto path = _root + FILESYSTEMS_FILE;
 
     std::unordered_map<std::string, bool> output;
-    parsers::parse_lines(path, std::inserter(output, output.begin()),
-                         parsers::parse_filesystems_line);
+    parsers::parse_file_lines(path, std::inserter(output, output.begin()),
+                              parsers::parse_filesystems_line);
     return output;
 }
 
@@ -135,8 +136,8 @@ std::unordered_map<std::string, size_t> procfs::get_meminfo() const
     auto path = _root + MEMINFO_FILE;
 
     std::unordered_map<std::string, size_t> output;
-    parsers::parse_lines(path, std::inserter(output, output.begin()),
-                         parsers::parse_meminfo_line);
+    parsers::parse_file_lines(path, std::inserter(output, output.begin()),
+                              parsers::parse_meminfo_line);
     return output;
 }
 
@@ -172,8 +173,8 @@ std::vector<module> procfs::get_modules() const
     auto path = _root + MODULES_FILE;
 
     std::vector<module> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_modules_line);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_modules_line);
     return output;
 }
 
