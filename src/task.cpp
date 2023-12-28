@@ -80,8 +80,8 @@ std::vector<cgroup> task::get_cgroups() const
     auto path = _task_root + CGROUP_FILE;
 
     std::vector<cgroup> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_cgroup_line);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                             parsers::parse_cgroup_line);
     return output;
 }
 
@@ -345,8 +345,8 @@ std::vector<mem_region> task::get_maps() const
     auto path = _task_root + MAPS_FILE;
 
     std::vector<mem_region> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_maps_line);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_maps_line);
     return output;
 }
 
@@ -364,8 +364,8 @@ std::vector<mount> task::get_mountinfo() const
     auto path = _task_root + MOUNTINFO_FILE;
 
     std::vector<mount> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_mountinfo_line);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_mountinfo_line);
     return output;
 }
 
@@ -473,8 +473,8 @@ std::vector<id_map> task::get_uid_map() const
     auto path = _task_root + UID_MAP_FILE;
 
     std::vector<id_map> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_id_map_line);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_id_map_line);
     return output;
 }
 
@@ -484,8 +484,8 @@ std::vector<id_map> task::get_gid_map() const
     auto path = _task_root + GID_MAP_FILE;
 
     std::vector<id_map> output;
-    parsers::parse_lines(path, std::back_inserter(output),
-                         parsers::parse_id_map_line);
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_id_map_line);
     return output;
 }
 
