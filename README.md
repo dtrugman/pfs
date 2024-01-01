@@ -1,6 +1,9 @@
 ![pfs](./img/pfs.png "Logo")
 
-Very easy to use, procfs parsing library in C++.
+Production grade, very easy to use, procfs parsing library in C++.
+Used in production by S&P 500 tech companies and startups!
+
+**NEW** Basic parsing of sysfs (Additional `sysfs` feature requests are welcome!)
 
 ## Build
 
@@ -53,6 +56,7 @@ CMake generates an `install_manifest.txt` file to track all the created files, t
 - Parsing system-wide information from files directly under `/procfs`. See `procfs.hpp` for all the supported files.
 - Parsing per-task (processes and threads) information from files under `/procfs/[task-id]/`. See `task.hpp` for all the supported files.
 - Parsing network information from files under `/procfs/net` (which is an alias to `/procfs/self/net` nowadays)
+- **NEW** Parsing of basic disk information from `sysfs/block` (Additional `sysfs` feature requests are welcome!)
 
 ## Requirements
 
@@ -72,7 +76,7 @@ CMake generates an `install_manifest.txt` file to track all the created files, t
 
 If you call `procfs().get_task(<id>)` and that task doesn't really exist, the constructor will succeed.
 
-Since tasks can die any time, instead of adding some extra validation during construction, that might be confusing, the current design assumes the first call after the tasks died will fail.
+Since tasks can die any time, instead of adding extra validation during construction, which might be confusing, the current design assumes the first call after the tasks died will fail.
 
 ### Collecting thread information
 
@@ -91,24 +95,43 @@ How does that affect `pfs`?
 
 The directory `sample` contains a full blown application that calls all(!) the supported APIs and prints all the information gathered. When compiling the library, the sample applications is compiled as well.
 
-You can find a basic implementation of `netstat` (see `sample/tool_netstat.cpp`) and `lsmod` (see `sample/tool_lsmod.cpp`) that you can easily reuse in your projects.
+You can find a basic implementations of `netstat` (see `sample/tool_netstat.cpp`) and `lsmod` (see `sample/tool_lsmod.cpp`) that you can easily reuse in your projects.
 
 Anyway, here are some cool (and concise) examples:
 
-**Example 1:** Iterater over all the loaded unsigned or out-of-tree kernel modules
+**Example 1:** Find all the process that hold an open file descriptor to a specific file:
 ```
+auto file = "/path/to/file";
 auto pfs = pfs::procfs();
-auto modules = pfs.get_modules();
-for (const auto& module : modules)
+for (const auto& process : pfs.get_processes())
 {
-    if (module.is_out_of_tree || module.is_unsigned)
+    for (const auto& thread : process.get_tasks())
     {
-        ... do your work ...
+        for (const auto& fd : thread.get_fds())
+        {
+            if (fd.get_target() == file)
+            {
+                ... do something ...
+            }
+        }
     }
 }
 ```
+_Note: This is pedantic implementation that takes into account the fact that a threads might not share the file descriptor with the process, see CLONE_FILES in [clone(2)](https://man7.org/linux/man-pages/man2/clone.2.html)_
 
-**Example 2:** Find all the memory maps for task 1234 (This can be both a process or a thread) that start with an ELFs header
+**Example 2:** Iterate over all the IPv4 TCP sockets currently in listening state (in my current network namespace) and print their local port:
+```
+auto filter_listening = [](const net_socket& socket){
+    return socket.socket_net_state == pfs::net_socket::net_state::listen;
+}
+
+for (auto& socket : pfs::procfs().get_net().get_tcp(filter_listening))
+{
+    std::cout << socket.local_port << std::endl;
+}
+```
+
+**Example 3:** Find all the memory maps for task 1234 (This can be both a process or a thread) that start with an ELFs header
 ```
 auto task = pfs::procfs().get_task(1234);
 auto mem = task.get_mem();
@@ -122,38 +145,9 @@ for (auto& map : task.get_maps())
     static const std::vector<uint8_t> ELF_HEADER = { 0x7F, 0x45, 0x4C, 0x46 };
     if (mem.read(map.start_address, ELF_HEADER.size()) == ELF_HEADER)
     {
-        ... do your work ...
+        ... do something ...
     }
 }
 ```
-_(You can either create `pfs` every time or once and keep it, the overhead is really small)_
+_(You can either create `pfs::procfs()` every time or once and keep it, the overhead is really small)_
 
-**Example 3:** Iterate over all the IPv4 TCP sockets currently in listening state (in my current network namespace):
-```
-// Same as pfs::procfs().get_task().get_net().get_tcp()
-for (auto& socket : pfs::procfs().get_net().get_tcp())
-{
-    if (socket.socket_net_state == pfs::net_socket::net_state::listen)
-    {
-        ... do your work ...
-    }
-}
-```
-_(API behaves similar to the `procfs`, where `/proc/net` is a soft link to `/proc/self/net`)_
-
-**Example 4:** Get all the IPv6 UDP sockets in the root network namespace belonging to a specific user ID:
-```
-for (auto& socket : pfs::procfs().get_task(1).get_net().get_udp6())
-{
-    if (socket.uid == <some-uid-value>)
-    {
-        ... do your work ...
-    }
-}
-```
-
-**Example 5:** Check if the process catches SIGSTOP signals
-```
-auto status = pfs::procfs().get_task(1234).get_status();
-bool handles_sigstop = status.sig_cgt.is_set(pfs::signal::sigstop);
-```

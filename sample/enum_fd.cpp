@@ -64,12 +64,10 @@ void enum_task_fds(const pfs::task& task)
             auto num = iter.first;
             auto& fd = iter.second;
 
-            auto st    = fd.get_target_stat();
-            auto inode = st.st_ino;
-
             std::ostringstream out;
             out << "target[" << fd.get_target() << "] ";
 
+            auto inode = fd.get_target_stat().st_ino;
             auto socket = sockets.find(inode);
             if (socket != sockets.end())
             {
