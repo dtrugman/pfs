@@ -31,7 +31,9 @@ void task_netstat(const pfs::task& task, const std::string& type)
 
     auto inodes = task.get_fds_inodes();
     pfs::net::net_socket_filter filter = [&inodes](const pfs::net_socket& sock){
-        return inodes.find(sock.inode) == inodes.end();
+        return inodes.find(sock.inode) != inodes.end()
+            ? pfs::filter::action::keep
+            : pfs::filter::action::drop;
     };
 
     auto net = task.get_net();

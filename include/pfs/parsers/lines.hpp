@@ -22,6 +22,7 @@
 
 #include "pfs/parser_error.hpp"
 #include "pfs/utils.hpp"
+#include "pfs/filter.hpp"
 
 namespace pfs {
 namespace impl {
@@ -35,7 +36,7 @@ void parse_file_lines(
     const std::string& path,
     Inserter inserter,
     std::function<inserted_type<Inserter>(const std::string&)> parser,
-    std::function<bool(const inserted_type<Inserter>&)> filter = nullptr,
+    std::function<filter::action(const inserted_type<Inserter>&)> filter = nullptr,
     size_t lines_to_skip = 0)
 {
     std::ifstream in(path);
@@ -59,7 +60,7 @@ void parse_file_lines(
 
         auto inserted = parser(line);
 
-        if (filter && filter(inserted))
+        if (filter && filter(inserted) != filter::action::keep)
         {
             continue;
         }

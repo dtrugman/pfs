@@ -70,7 +70,7 @@ TEST_CASE("Parse lines functionality", "[parsers]")
     std::vector<std::string> content;
     std::vector<std::string> expected;
     std::vector<std::string> output;
-    std::function<bool(const std::string&)> filter = nullptr;
+    std::function<pfs::filter::action(const std::string&)> filter = nullptr;
     size_t skipped = 0;
 
     std::string file;
@@ -101,7 +101,9 @@ TEST_CASE("Parse lines functionality", "[parsers]")
     {
         content  = {"a", "x", "x", "b", "x", "c"};
         expected = {"a", "b", "c"};
-        filter = [](const std::string& entry) { return entry == "x"; };
+        filter = [](const std::string& entry) {
+            return entry == "x" ? pfs::filter::action::drop : pfs::filter::action::keep;
+        };
     }
 
     file = create_temp_file(content);

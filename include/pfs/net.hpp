@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "types.hpp"
+#include "filter.hpp"
 
 namespace pfs {
 
@@ -42,11 +43,11 @@ public:
     net& operator=(net&&) = delete;
 
 public:
-    using net_device_filter = std::function<bool(const net_device&)>;
-    using net_socket_filter = std::function<bool(const net_socket&)>;
-    using netlink_socket_filter = std::function<bool(const netlink_socket&)>;
-    using unix_socket_filter = std::function<bool(const unix_socket&)>;
-    using net_route_filter = std::function<bool(const net_route&)>;
+    using net_device_filter = std::function<filter::action(const net_device&)>;
+    using net_socket_filter = std::function<filter::action(const net_socket&)>;
+    using netlink_socket_filter = std::function<filter::action(const netlink_socket&)>;
+    using unix_socket_filter = std::function<filter::action(const unix_socket&)>;
+    using net_route_filter = std::function<filter::action(const net_route&)>;
 
 public:
     std::vector<net_device> get_dev(net_device_filter filter = nullptr) const;
