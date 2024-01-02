@@ -1,0 +1,11 @@
+FROM debian:bookworm
+
+WORKDIR /pfs
+
+RUN apt-get update && \
+    apt-get install -y cmake g++ build-essential
+
+ENV CXX=g++
+ENV CC=gcc
+
+CMD /bin/bash
