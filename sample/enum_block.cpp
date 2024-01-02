@@ -15,8 +15,8 @@
  */
 
 #include "enum.hpp"
-#include "log.hpp"
 #include "format.hpp"
+#include "log.hpp"
 
 #include "pfs/sysfs.hpp"
 
