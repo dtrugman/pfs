@@ -620,6 +620,16 @@ struct net_route
     unsigned int irtt;
 };
 
+struct net_arp
+{
+    std::string ip_address;
+    unsigned int type;
+    unsigned int flags;
+    std::string hw_address;
+    std::string mask;
+    std::string device;
+};
+
 // Hint: See 'https://docs.kernel.org/block/stat.html'
 struct block_stat
 {

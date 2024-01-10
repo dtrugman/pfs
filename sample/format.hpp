@@ -728,6 +728,18 @@ inline std::ostream& operator<<(std::ostream& out, const pfs::net_route& route)
     return out;
 }
 
+inline std::ostream& operator<<(std::ostream& out, const pfs::net_arp& arp)
+{
+    out << "ip_address[" << arp.ip_address << "] ";
+    out << "type[" << arp.type << "] ";
+    out << "flags[" << arp.flags << "] ";
+    out << "hw_address[" << arp.hw_address << "] ";
+    out << "mask[" << arp.mask << "] ";
+    out << "device[" << arp.device << "] ";
+
+    return out;
+}
+
 inline std::ostream& operator<<(std::ostream& out,
                                 const pfs::block_stat& stat)
 {

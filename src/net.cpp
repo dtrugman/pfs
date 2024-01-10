@@ -16,6 +16,7 @@
 
 #include "pfs/net.hpp"
 #include "pfs/parsers/net_route.hpp"
+#include "pfs/parsers/net_arp.hpp"
 #include "pfs/parsers/net_device.hpp"
 #include "pfs/parsers/net_socket.hpp"
 #include "pfs/parsers/unix_socket.hpp"
@@ -165,5 +166,20 @@ std::vector<net_route> net::get_route(net_route_filter filter) const
                               filter, HEADER_LINES);
     return output;
 }
+
+std::vector<net_arp> net::get_arp(net_arp_filter filter) const
+{
+    static const std::string ARP_FILE("arp");
+    auto path = _net_root + ARP_FILE;
+
+    static const size_t HEADER_LINES = 1;
+
+    std::vector<net_arp> output;
+    parsers::parse_file_lines(path, std::back_inserter(output),
+                              parsers::parse_net_arp_line,
+                              filter, HEADER_LINES);
+    return output;
+}
+
 
 } // namespace pfs

@@ -74,6 +74,9 @@ int enum_net(std::vector<std::string>&& args)
 
         auto routes = net.get_route();
         print(routes);
+
+        auto arp = net.get_arp();
+        print(arp);
     }
     catch (const std::runtime_error& ex)
     {
