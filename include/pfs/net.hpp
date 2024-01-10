@@ -48,6 +48,7 @@ public:
     using netlink_socket_filter = std::function<filter::action(const netlink_socket&)>;
     using unix_socket_filter = std::function<filter::action(const unix_socket&)>;
     using net_route_filter = std::function<filter::action(const net_route&)>;
+    using net_arp_filter = std::function<filter::action(const net_arp&)>;
 
 public:
     std::vector<net_device> get_dev(net_device_filter filter = nullptr) const;
@@ -68,6 +69,8 @@ public:
     std::vector<unix_socket> get_unix(unix_socket_filter filter = nullptr) const;
 
     std::vector<net_route> get_route(net_route_filter filter = nullptr) const;
+
+    std::vector<net_arp> get_arp(net_arp_filter filter = nullptr) const;
 
 private:
     friend class task;
