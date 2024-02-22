@@ -84,13 +84,13 @@ endif ()
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs) # Sets a default value for CMAKE_INSTALL_LIBDIR
 
-set (pfs_PACKAGE_CONFIG ${CMAKE_PROJECT_NAME}-config.cmake)
+set (pfs_PACKAGE_CONFIG ${PROJECT_NAME}-config.cmake)
 set (pfs_PACKAGE_CONFIG_IN ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${pfs_PACKAGE_CONFIG}.in)
 set (pfs_PACKAGE_CONFIG_OUT ${CMAKE_CURRENT_BINARY_DIR}/${pfs_PACKAGE_CONFIG})
 
-set (pfs_PACKAGE_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+set (pfs_PACKAGE_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
-set (pfs_EXPORT_NAME ${CMAKE_PROJECT_NAME}Targets)
+set (pfs_EXPORT_NAME ${PROJECT_NAME}Targets)
 
 configure_package_config_file(
     ${pfs_PACKAGE_CONFIG_IN}
@@ -99,7 +99,7 @@ configure_package_config_file(
 )
 
 install(
-    TARGETS ${CMAKE_PROJECT_NAME}
+    TARGETS ${PROJECT_NAME}
     EXPORT ${pfs_EXPORT_NAME}
 )
 
