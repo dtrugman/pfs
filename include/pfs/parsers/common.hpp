@@ -20,12 +20,13 @@
 #include <string>
 
 #include "pfs/types.hpp"
+#include "pfs/utils.hpp"
 
 namespace pfs {
 namespace impl {
 namespace parsers {
 
-dev_t parse_device(const std::string& device_str);
+dev_t parse_device(const std::string& device_str, utils::base base);
 
 task_state parse_task_state(char state_char);
 

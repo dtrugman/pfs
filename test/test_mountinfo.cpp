@@ -18,7 +18,7 @@ TEST_CASE("Parse mountinfo", "[task][mountinfo]")
 
         expected.id              = 27;
         expected.parent_id       = 0;
-        expected.device          = MKDEV(0x253, 0x00);
+        expected.device          = MKDEV(253, 0);
         expected.root            = "/";
         expected.point           = "/";
         expected.options         = {"rw", "relatime"};
@@ -37,7 +37,7 @@ TEST_CASE("Parse mountinfo", "[task][mountinfo]")
 
         expected.id              = 46;
         expected.parent_id       = 22;
-        expected.device          = MKDEV(0x00, 0x41);
+        expected.device          = MKDEV(0, 41);
         expected.root            = "/";
         expected.point           = "/proc/sys/fs/binfmt_misc";
         expected.options         = {"rw", "relatime"};

@@ -173,7 +173,7 @@ TEST_CASE("Parse maps", "[task][maps]")
     out << (is_private ? 'p' : 's');
     out << " ";
     out << std::setfill('0') << std::setw(8) << offset << " ";
-    out << build_device_string(dev_major, dev_minor) << " ";
+    out << build_hex_device_string(dev_major, dev_minor) << " ";
     out << inode << " ";
     while (out.tellp() == 73)
         out << " ";

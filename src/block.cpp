@@ -71,7 +71,7 @@ dev_t block::get_dev() const
     auto path = _block_root + DEV_FILE;
 
     auto line = utils::readline(path);
-    return parsers::parse_device(line);
+    return parsers::parse_device(line, utils::base::decimal);
 }
 
 block_stat block::get_stat() const

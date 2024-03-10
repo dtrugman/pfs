@@ -30,16 +30,18 @@ inline T generate_random()
     return dist(rd);
 }
 
-inline std::string build_device_string(dev_t dev_major, dev_t dev_minor)
+inline std::string build_hex_device_string(dev_t dev_major, dev_t dev_minor)
 {
     std::ostringstream out;
     out << std::hex << dev_major << ":" << dev_minor;
     return out.str();
 }
 
-inline std::string build_device_string(dev_t dev)
+inline std::string build_dec_device_string(dev_t dev_major, dev_t dev_minor)
 {
-    return build_device_string(MAJOR(dev), MINOR(dev));
+    std::ostringstream out;
+    out << dev_major << ":" << dev_minor;
+    return out.str();
 }
 
 inline std::string create_temp_file(const std::vector<std::string>& lines)

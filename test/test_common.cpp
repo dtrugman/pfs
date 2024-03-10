@@ -1,6 +1,9 @@
+#include <sys/sysmacros.h>
+
 #include "catch.hpp"
 #include "test_utils.hpp"
 
+#include "pfs/utils.hpp"
 #include "pfs/parser_error.hpp"
 #include "pfs/parsers/common.hpp"
 
@@ -25,16 +28,21 @@ TEST_CASE("Parse task state", "[common][state]")
 
 TEST_CASE("Parse device", "[common][device]")
 {
+    using base = pfs::impl::utils::base;
+
     dev_t dev;
 
     SECTION("Zero") { dev = 0x00; }
 
     SECTION("Random") { dev = generate_random<uint16_t>(); }
 
-    auto device_str = build_device_string(dev);
-    INFO(device_str);
+    auto device_hex_str = build_hex_device_string(major(dev), minor(dev));
+    INFO("Device (hexadecimal representation): " << device_hex_str);
+    REQUIRE(parse_device(device_hex_str, base::hex) == dev);
 
-    REQUIRE(parse_device(device_str) == dev);
+    auto device_dec_str = build_dec_device_string(major(dev), minor(dev));
+    INFO("Device (decimal representation): " << device_dec_str);
+    REQUIRE(parse_device(device_dec_str, base::decimal) == dev);
 }
 
 TEST_CASE("Parse uid_map", "[common][uid_map]")
