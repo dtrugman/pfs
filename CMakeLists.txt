@@ -33,8 +33,6 @@ option (pfs_BUILD_TESTS "Build tests" ON)
 
 add_compile_options (-std=c++11 -Wall -Wextra -pedantic -Werror)
 
-include_directories (include)
-
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -45,6 +43,11 @@ aux_source_directory (${pfs_ROOT_SOURCE_DIR}/parsers pfs_PARSERS_SOURCES)
 set (SOURCES ${pfs_ROOT_SOURCES} ${pfs_PARSERS_SOURCES})
 
 add_library (pfs ${pfs_SHARED_OR_STATIC} ${SOURCES})
+target_include_directories(
+    pfs PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
 if (pfs_BUILD_COVERAGE)
     set (pfs_BUILD_COVERAGE_FLAGS -O0 --coverage)
