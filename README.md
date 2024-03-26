@@ -44,7 +44,6 @@ After building the project, you can install it locally using `make install`.
 In your project's CMake file, you can then add the following snippet, and CMake will handle the rest:
 ```
 find_package(pfs)
-include_directories (${pfs_INCLUDE_DIRS})
 ...
 target_link_libraries (<your-target> pfs)
 ```
