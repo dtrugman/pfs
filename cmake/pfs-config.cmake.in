@@ -1,2 +1,13 @@
 @PACKAGE_INIT@
 check_required_components(pfs)
+
+set(pfs_FOUND TRUE)
+
+set(pfs_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/include")
+
+set(pfs_LIBRARIES pfs)
+set(pfs_LIBRARY_DIR "${CMAKE_CURRENT_LIST_DIR}/lib")
+
+set(pfs_INCLUDE_DIRS "${pfs_INCLUDE_DIRS}" CACHE STRING "pfs include directories" FORCE)
+set(pfs_LIBRARIES "${pfs_LIBRARIES}" CACHE STRING "pfs libraries" FORCE)
+set(pfs_LIBRARY_DIR "${pfs_LIBRARY_DIR}" CACHE STRING "pfs library dirs" FORCE)

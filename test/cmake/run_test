@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -eu
+
+main() {
+    if [[ "$#" -ne 1 ]]; then
+        echo "Usage: $0 <test_name>"
+        return 2
+    fi
+    declare -r test_name="$1"
+
+    declare -r project_name="find_package"
+
+    declare -r pfs_dir="/pfs"
+    declare -r cmake_tests_dir="$pfs_dir/test/cmake"
+
+    declare -r source_file="$cmake_tests_dir/$project_name.cpp"
+    if [[ ! -f "$source_file" ]]; then
+        echo "[!] Cannot find test source file [$source_file]"
+        return 1
+    fi
+
+    declare -r test_dir="$cmake_tests_dir/${project_name}_${test_name}"
+    if [[ ! -d "$test_dir" ]]; then
+        echo "[!] Cannot find test [$test_dir]"
+        return 1
+    fi
+
+    declare -r target_dir="/$project_name"
+    echo "[=] Deleting target dir [$target_dir]"
+    rm -rf "$target_dir"
+
+    echo "[=] Copying test and source file to target dir"
+    cp -R "$test_dir" "$target_dir"
+    cp "$source_file" "$target_dir/."
+
+    echo "[=] Building..."
+    (cd "$target_dir"; cmake .; make; "./$project_name" "/dev/pts/0")
+}
+
+main "$@"
