@@ -40,16 +40,34 @@ That's it, you are good to go.
 
 ### Use CMake's [`find_package()`](https://cmake.org/cmake/help/latest/command/find_package.html)
 
+#### Option #1: `make install` (Preferred way)
+
 After building the project, you can install it locally using `make install`.
 In your project's CMake file, you can then add the following snippet, and CMake will handle the rest:
 ```
-find_package(pfs)
-include_directories (${pfs_INCLUDE_DIRS})
+find_package (pfs REQUIRED)
+...
+# Somewhere along the file you define your target
+add_<library|executable> (<your-target> ...)
 ...
 target_link_libraries (<your-target> pfs)
 ```
 
-CMake generates an `install_manifest.txt` file to track all the created files, this will help you uninstall the library if you need to do so.
+NOTE: CMake generates an `install_manifest.txt` file to track all the created files, this will help you uninstall the library if you need to do so.
+
+#### Option #2: Without `make install`
+
+Build the `pfs` project. No need to call `make install`.
+In your project's CMake file, you can then add the following snippet:
+```
+find_package (pfs REQUIRED)
+...
+# Somewhere along the file you define your target
+add_<library|executable> (<your-target> ...)
+...
+target_link_libraries (<your-target> -L${pfs_LIBRARY_DIR} ${pfs_LIBRARIES})
+target_include_directories (<your-target> [PUBLIC|PRIVATE] ${pfs_INCLUDE_DIRS})
+```
 
 ## Features
 
