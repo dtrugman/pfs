@@ -109,7 +109,7 @@ for (const auto& process : pfs.get_processes())
     {
         for (const auto& fd : thread.get_fds())
         {
-            if (fd.get_target() == file)
+            if (fd.second.get_target() == file)
             {
                 ... do something ...
             }
