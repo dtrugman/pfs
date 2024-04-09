@@ -7,6 +7,7 @@ int main(int argc, char **argv)
     if (argc != 2)
     {
         std::cout << "Usage: " << argv[0] << " <filename>" << std::endl;
+        return 2;
     }
     auto file = std::string(argv[1]);
 
@@ -17,11 +18,20 @@ int main(int argc, char **argv)
         {
             for (const auto& fd : thread.get_fds())
             {
-                if (fd.second.get_target() == file)
+                try
+                {
+                    if (fd.second.get_target() == file)
+                    {
+                        std::cout <<  "tid[" << thread.id()
+                                  << "] fd[" << fd.second.num()
+                                  << "]" << std::endl;
+                    }
+                }
+                catch (const std::exception& ex)
                 {
                     std::cout <<  "tid[" << thread.id()
                               << "] fd[" << fd.second.num()
-                              << "]" << std::endl;
+                              << "] resolution failed" << std::endl;
                 }
             }
         }
