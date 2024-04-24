@@ -51,7 +51,7 @@ std::vector<uint8_t> mem::read(loff_t offset, size_t bytes)
 
     struct iovec iov = {&buffer[0], buffer.size()};
 
-    ssize_t bytes_read = preadv64(_fd, &iov, 1, offset);
+    ssize_t bytes_read = preadv(_fd, &iov, 1, offset);
     if (bytes_read == -1)
     {
         throw std::system_error(errno, std::system_category(),
