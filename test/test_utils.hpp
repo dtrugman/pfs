@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 #include <linux/kdev_t.h>
 
