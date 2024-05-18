@@ -48,60 +48,67 @@ enum class task_state
     idle,
 };
 
+// Note: Stat member types changed throughout history.
+// The library currently uses types that match the latest kernel version,
+// and can contain all past ones. For example, session is a 'long long'
+// in kernel 6.9, and past values, such as the 'int' type used by 2.6.32,
+// can easily be supported without recompilation.
+// Since most types are 64-bit integers, these are both backward and forward
+// compatible.
 struct task_stat
 {
-    pid_t pid = INVALID_PID;
+    pid_t pid                      = INVALID_PID;
     std::string comm;
-    task_state state             = task_state::idle;
-    pid_t ppid                   = INVALID_PID;
-    pid_t pgrp                   = INVALID_PID;
-    int session                  = 0;
-    int tty_nr                   = 0;
-    pid_t tgpid                  = INVALID_PID;
-    unsigned flags               = 0;
-    unsigned long minflt         = 0;
-    unsigned long cminflt        = 0;
-    unsigned long majflt         = 0;
-    unsigned long cmajflt        = 0;
-    unsigned long utime          = 0;
-    unsigned long stime          = 0;
-    long cutime                  = 0;
-    long cstime                  = 0;
-    long priority                = 0;
-    long nice                    = 0;
-    long num_threads             = 0;
-    long itrealvalue             = 0;
-    unsigned long long starttime = 0;
-    unsigned long vsize          = 0; // In bytes
-    long rss                     = 0; // In pages
-    unsigned long rsslim         = 0;
-    unsigned long startcode      = 0; // Affected by ptrace access mode
-    unsigned long endcode        = 0; // Affected by ptrace access mode
-    unsigned long startstack     = 0; // Affected by ptrace access mode
-    unsigned long kstkesp        = 0; // Affected by ptrace access mode
-    unsigned long kstkeip        = 0; // Affected by ptrace access mode
-    unsigned long signal         = 0;
-    unsigned long blocked        = 0;
-    unsigned long sigignore      = 0;
-    unsigned long sigcatch       = 0;
-    unsigned long wchan          = 0; // Affected by ptrace access mode
-    unsigned long nswap          = 0;
-    unsigned long cnswap         = 0;
-    int exit_signal              = 0;             // Since 2.1.22
-    int processor                = 0;             // Since 2.2.8
-    unsigned rt_priority         = 0;             // Since 2.5.19
-    unsigned policy              = 0;             // Since 2.5.19
+    task_state state               = task_state::idle;
+    pid_t ppid                     = INVALID_PID;
+    pid_t pgrp                     = INVALID_PID;
+    long long session              = 0;
+    long long tty_nr               = 0;
+    pid_t tgpid                    = INVALID_PID;
+    unsigned long long flags       = 0;
+    unsigned long long minflt      = 0;
+    unsigned long long cminflt     = 0;
+    unsigned long long majflt      = 0;
+    unsigned long long cmajflt     = 0;
+    unsigned long long utime       = 0;
+    unsigned long long stime       = 0;
+    long long cutime               = 0;
+    long long cstime               = 0;
+    long long priority             = 0;
+    long long nice                 = 0;
+    long long num_threads          = 0;
+    unsigned long long itrealvalue = 0;
+    unsigned long long starttime   = 0;
+    unsigned long long vsize       = 0; // In bytes
+    unsigned long long rss         = 0; // In pages
+    unsigned long long rsslim      = 0;
+    unsigned long long startcode   = 0; // Affected by ptrace access mode
+    unsigned long long endcode     = 0; // Affected by ptrace access mode
+    unsigned long long startstack  = 0; // Affected by ptrace access mode
+    unsigned long long kstkesp     = 0; // Affected by ptrace access mode
+    unsigned long long kstkeip     = 0; // Affected by ptrace access mode
+    unsigned long long signal      = 0;
+    unsigned long long blocked     = 0;
+    unsigned long long sigignore   = 0;
+    unsigned long long sigcatch    = 0;
+    unsigned long long wchan       = 0; // Affected by ptrace access mode
+    unsigned long long nswap       = 0;
+    unsigned long long cnswap      = 0;
+    long long exit_signal          = 0; // Since 2.1.22
+    long long processor            = 0; // Since 2.2.8
+    unsigned long long rt_priority = 0; // Since 2.5.19
+    unsigned long long policy      = 0; // Since 2.5.19
     unsigned long long delayacct_blkio_ticks = 0; // Since 2.6.18
-    unsigned long guest_time                 = 0; // Since 2.6.24
-    long cguest_time                         = 0; // Since 2.6.24
-    unsigned long start_data = 0; // Since 3.3, Affected by ptrace access mode
-    unsigned long end_data   = 0; // Since 3.3, Affected by ptrace access mode
-    unsigned long start_brk  = 0; // Since 3.3, Affected by ptrace access mode
-    unsigned long arg_start  = 0; // Since 3.5, Affected by ptrace access mode
-    unsigned long arg_end    = 0; // Since 3.5, Affected by ptrace access mode
-    unsigned long env_start  = 0; // Since 3.5, Affected by ptrace access mode
-    unsigned long env_end    = 0; // Since 3.5, Affected by ptrace access mode
-    unsigned long exit_code  = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long long guest_time  = 0; // Since 2.6.24
+    long long cguest_time          = 0; // Since 2.6.24
+    unsigned long long start_data  = 0; // Since 3.3, Affected by ptrace access mode
+    unsigned long long end_data    = 0; // Since 3.3, Affected by ptrace access mode
+    unsigned long long start_brk   = 0; // Since 3.3, Affected by ptrace access mode
+    unsigned long long arg_start   = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long long arg_end     = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long long env_start   = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long long env_end     = 0; // Since 3.5, Affected by ptrace access mode
+    unsigned long long exit_code   = 0; // Since 3.5, Affected by ptrace access mode
 };
 
 struct io_stats {

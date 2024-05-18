@@ -213,53 +213,53 @@ task_stat task::get_stat() const
         "%c "   // state
         "%d "   // ppid
         "%d "   // pgrp
-        "%d "   // session
-        "%d "   // tty_nr
+        "%lld " // session
+        "%lld " // tty_nr
         "%d "   // tgpid
-        "%u "   // flags
-        "%lu "  // minflt
-        "%lu "  // cminflt
-        "%lu "  // majflt
-        "%lu "  // cmajflt
-        "%lu "  // utime
-        "%lu "  // stime
-        "%ld "  // cutime
-        "%ld "  // cstime
-        "%ld "  // priority
-        "%ld "  // nice
-        "%ld "  // num_threads
-        "%ld "  // itrealvalue
+        "%llu " // flags
+        "%llu " // minflt
+        "%llu " // cminflt
+        "%llu " // majflt
+        "%llu " // cmajflt
+        "%llu " // utime
+        "%llu " // stime
+        "%lld " // cutime
+        "%lld " // cstime
+        "%lld " // priority
+        "%lld " // nice
+        "%lld " // num_threads
+        "%llu " // itrealvalue
         "%llu " // starttime
-        "%lu "  // vsize
-        "%ld "  // rss
-        "%lu "  // rsslim
-        "%lu "  // startcode
-        "%lu "  // endcode
-        "%lu "  // startstack
-        "%lu "  // kstkesp
-        "%lu "  // kstkeip
-        "%lu "  // signal
-        "%lu "  // blocked
-        "%lu "  // sigignore
-        "%lu "  // sigcatch
-        "%lu "  // wchan
-        "%lu "  // nswap
-        "%lu "  // cnswap
-        "%d "   // exit_signal
-        "%d "   // processor
-        "%u "   // rt_priority
-        "%u "   // policy
+        "%llu " // vsize
+        "%llu " // rss
+        "%llu " // rsslim
+        "%llu " // startcode
+        "%llu " // endcode
+        "%llu " // startstack
+        "%llu " // kstkesp
+        "%llu " // kstkeip
+        "%llu " // signal
+        "%llu " // blocked
+        "%llu " // sigignore
+        "%llu " // sigcatch
+        "%llu " // wchan
+        "%llu " // nswap
+        "%llu " // cnswap
+        "%lld " // exit_signal
+        "%lld " // processor
+        "%llu " // rt_priority
+        "%llu " // policy
         "%llu " // delayacct_blkio_ticks
-        "%lu "  // guest_time
-        "%ld "  // cguest_time
-        "%lu "  // start_data
-        "%lu "  // end_data
-        "%lu "  // start_brk
-        "%lu "  // arg_start
-        "%lu "  // arg_end
-        "%lu "  // env_start
-        "%lu "  // env_end
-        "%lu ", // exit_code
+        "%llu " // guest_time
+        "%lld " // cguest_time
+        "%llu " // start_data
+        "%llu " // end_data
+        "%llu " // start_brk
+        "%llu " // arg_start
+        "%llu " // arg_end
+        "%llu " // env_start
+        "%llu " // env_end
+        "%llu ",// exit_code
         &state, &st.ppid, &st.pgrp, &st.session, &st.tty_nr, &st.tgpid,
         &st.flags, &st.minflt, &st.cminflt, &st.majflt, &st.cmajflt, &st.utime,
         &st.stime, &st.cutime, &st.cstime, &st.priority, &st.nice,
