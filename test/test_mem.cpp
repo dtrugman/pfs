@@ -1,5 +1,4 @@
 #include "catch.hpp"
-#include <iostream>
 
 #include "pfs/procfs.hpp"
 
