@@ -18,6 +18,7 @@
 #define SAMPLE_LOG_HPP
 
 #include <iostream>
+#include <cstdint>
 
 #define TAB "\t"
 #define ENDL "\n"
