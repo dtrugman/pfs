@@ -20,74 +20,115 @@
 
 #include "pfs/procfs.hpp"
 
-static void enum_task(const pfs::task& task)
+static void safe(const std::string& what, const std::function<void(void)>& func)
 {
     try
     {
-        LOG("=========================================================");
-        LOG("Task ID[" << task.id() << "]");
-        LOG("=========================================================");
-
-        auto status = task.get_status();
-        print(status);
-
-        auto stat = task.get_stat();
-        print(stat);
-
-        auto mem_stat = task.get_statm();
-        print(mem_stat);
-
-        auto io_stat = task.get_io();
-        print(io_stat);
-
-        auto comm = task.get_comm();
-        print(comm);
-
-        if (!task.is_kernel_thread(stat))
-        {
-            auto exe = task.get_exe();
-            print(exe);
-        }
-
-        auto cmdline = task.get_cmdline();
-        print(cmdline);
-
-        auto cwd = task.get_cwd();
-        print(cwd);
-
-        auto environ = task.get_environ();
-        print(environ);
-
-        auto maps = task.get_maps();
-        print(maps);
-
-        if (!maps.empty())
-        {
-            static const size_t BYTES = 8;
-            auto mem                  = task.get_mem();
-            auto first_map            = *maps.begin();
-            auto header_bytes = mem.read(first_map.start_address, BYTES);
-            auto header       = hexlify(header_bytes);
-            print(header);
-        }
-
-        auto mountinfo = task.get_mountinfo();
-        print(mountinfo);
-
-        auto cgroups = task.get_cgroups();
-        print(cgroups);
-
-        auto ns = task.get_ns();
-        print(ns);
-
-        auto fds = task.get_fds();
-        print(fds);
+        func();
     }
     catch (const std::runtime_error& ex)
     {
-        LOG("Error when printing task[" << task.id() << "]:");
+        LOG("Error getting [" << what << "]:");
         LOG(TAB << ex.what());
     }
+}
+
+static void enum_task(const pfs::task& task)
+{
+    LOG("=========================================================");
+    LOG("Task ID[" << task.id() << "]");
+    LOG("=========================================================");
+
+    safe("status", [&]{
+        auto status = task.get_status();
+        print(status);
+    });
+
+    bool is_kernel_thread = false;
+
+    safe("stat", [&]{
+        auto stat = task.get_stat();
+        print(stat);
+
+        is_kernel_thread = task.is_kernel_thread(stat);
+    });
+
+    safe("statm", [&]{
+        auto mem_stat = task.get_statm();
+        print(mem_stat);
+    });
+
+    safe("io", [&]{
+        auto io_stat = task.get_io();
+        print(io_stat);
+    });
+
+    safe("comm", [&]{
+        auto comm = task.get_comm();
+        print(comm);
+    });
+
+    if (!is_kernel_thread)
+    {
+        safe("exe", [&]{
+            auto exe = task.get_exe();
+            print(exe);
+        });
+    }
+
+    safe("cmdline", [&]{
+        auto cmdline = task.get_cmdline();
+        print(cmdline);
+    });
+
+    safe("cwd", [&]{
+        auto cwd = task.get_cwd();
+        print(cwd);
+    });
+
+    safe("environ", [&]{
+        auto environ = task.get_environ();
+        print(environ);
+    });
+
+    std::vector<pfs::mem_region> maps;
+
+    safe("maps", [&]{
+        maps = task.get_maps();
+        print(maps);
+    });
+
+    if (!maps.empty())
+    {
+        safe("mem", [&]{
+            static const size_t BYTES = 8;
+            auto mem          = task.get_mem();
+            auto first_map    = *maps.begin();
+            auto header_bytes = mem.read(first_map.start_address, BYTES);
+            auto header       = hexlify(header_bytes);
+            print(header);
+        });
+    }
+
+    safe("mountinfo", [&]{
+        auto mountinfo = task.get_mountinfo();
+        print(mountinfo);
+    });
+
+    safe("cgroups", [&]{
+        auto cgroups = task.get_cgroups();
+        print(cgroups);
+    });
+
+    safe("ns", [&]{
+        auto ns = task.get_ns();
+        print(ns);
+    });
+
+    safe("fds", [&]{
+        auto fds = task.get_fds();
+        print(fds);
+    });
 }
 
 int enum_tasks(std::vector<std::string>&& args)

@@ -688,7 +688,8 @@ inline std::ostream& operator<<(std::ostream& out, const pfs::zone& zone)
 
 inline std::ostream& operator<<(std::ostream& out, const pfs::fd& fd)
 {
-    out << "target[" << fd.get_target() << "] ";
+    std::string target = fd.get_target();
+    out << "target[" << target << "] ";
     return out;
 }
 
