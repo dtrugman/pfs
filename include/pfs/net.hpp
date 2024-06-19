@@ -17,6 +17,8 @@
 #ifndef PFS_NET_HPP
 #define PFS_NET_HPP
 
+#include <fcntl.h>
+
 #include <functional>
 #include <string>
 #include <vector>
@@ -74,18 +76,16 @@ public:
 
 private:
     friend class task;
-    net(const std::string& parent_root);
+    // Net has a "parent root", and not a "procfs root", because we could
+    // be looking at a net namespace of a specific process.
+    net(const std::string& parent_root, int procfs_fd = AT_FDCWD);
 
 private:
     std::vector<net_socket> get_net_sockets(const std::string& file,
             net_socket_filter filter = nullptr) const;
 
-    static std::string build_net_root(const std::string& parent_root);
-
 private:
-    // Net has a "parent root", and not a "procfs root", because we could
-    // be looking at a net namespace of a specific process.
-    const std::string _parent_root;
+    const int _procfs_fd;
     const std::string _net_root;
 };
 

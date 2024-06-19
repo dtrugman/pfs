@@ -71,7 +71,7 @@ target_include_directories (<your-target> [PUBLIC|PRIVATE] ${pfs_INCLUDE_DIRS})
 
 ## Features
 
-- Parsing system-wide information from files directly under `/procfs`. See `procfs.hpp` for all the supported files.
+- Parsing system-wide information from files directly under `/procfs` (or under a fd pointing to procfs). See `procfs.hpp` for all the supported files.
 - Parsing per-task (processes and threads) information from files under `/procfs/[task-id]/`. See `task.hpp` for all the supported files.
 - Parsing network information from files under `/procfs/net` (which is an alias to `/procfs/self/net` nowadays)
 - **NEW** Parsing of basic disk information from `sysfs/block` (Additional `sysfs` feature requests are welcome!)

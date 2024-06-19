@@ -34,14 +34,24 @@ namespace pfs {
 namespace impl {
 namespace utils {
 
+static const char NEWLINE('\n');
+
 size_t iterate_files(const std::string& dir, bool include_dots,
-                     std::function<void(const char*)> handle)
+                     std::function<void(const char*)> handle, int dirfd)
 {
     static const char DOTFILE_PREFIX = '.';
 
+    int fd = openat(dirfd, dir.c_str(), O_RDONLY);
+    if (fd < 0)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't open dir");
+    }
+    defer close_fd([fd] { close(fd); });
+
     size_t count = 0;
 
-    DIR* dp = opendir(dir.c_str());
+    DIR* dp = fdopendir(fd);
     if (!dp)
     {
         throw std::system_error(errno, std::system_category(),
@@ -70,21 +80,21 @@ size_t iterate_files(const std::string& dir, bool include_dots,
     return count;
 }
 
-size_t count_files(const std::string& dir, bool include_dots)
+size_t count_files(const std::string& dir, bool include_dots, int dirfd)
 {
-    return iterate_files(dir, include_dots, nullptr);
+    return iterate_files(dir, include_dots, nullptr, dirfd);
 }
 
-std::set<std::string> enumerate_files(const std::string& dir, bool include_dots)
+std::set<std::string> enumerate_files(const std::string& dir, bool include_dots, int dirfd)
 {
     std::set<std::string> files;
     auto handle = [&files](const char* name) { files.emplace(name); };
 
-    (void)iterate_files(dir, include_dots, handle);
+    (void)iterate_files(dir, include_dots, handle, dirfd);
     return files;
 }
 
-std::set<int> enumerate_numeric_files(const std::string& dir)
+std::set<int> enumerate_numeric_files(const std::string& dir, int dirfd)
 {
     std::set<int> files;
     auto handle = [&files](const char* name) {
@@ -98,7 +108,7 @@ std::set<int> enumerate_numeric_files(const std::string& dir)
         }
     };
 
-    (void)iterate_files(dir, false /* include_dots */, handle);
+    (void)iterate_files(dir, false /* include_dots */, handle, dirfd);
     return files;
 }
 
@@ -133,9 +143,9 @@ std::string readlink(const std::string& link, int dirfd)
 }
 
 std::string readfile(const std::string& file, size_t max_bytes,
-                     bool trim_newline)
+                     bool trim_newline, int dirfd)
 {
-    int fd = open(file.c_str(), O_RDONLY);
+    int fd = openat(dirfd, file.c_str(), O_RDONLY);
     if (fd < 0)
     {
         throw std::system_error(errno, std::system_category(),
@@ -154,7 +164,6 @@ std::string readfile(const std::string& file, size_t max_bytes,
     }
     buffer.resize(bytes_read);
 
-    static const char NEWLINE('\n');
     while (trim_newline && !buffer.empty() && buffer.back() == NEWLINE)
     {
         buffer.pop_back();
@@ -163,21 +172,39 @@ std::string readfile(const std::string& file, size_t max_bytes,
     return buffer;
 }
 
-std::string readline(const std::string& file)
+std::string readline(const std::string& file, int dirfd)
 {
-    std::ifstream in(file);
-    if (!in)
+    int fd = openat(dirfd, file.c_str(), O_RDONLY);
+    if (fd < 0)
     {
-        throw std::runtime_error("Couldn't open file");
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't open file");
     }
+    defer close_fd([fd] { close(fd); });
 
-    std::string line;
-    if (!std::getline(in, line))
+    FILE* fp = fdopen(fd, "r");
+    if (!fp)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't open file");
+    }
+    defer close_fp([fp] { fclose(fp); });
+
+    char* line = NULL;
+    size_t n = 0;
+    ssize_t len = getline(&line, &n, fp);
+    defer free_line([line] { free(line); });
+    if (len == -1)
     {
         throw std::runtime_error("Couldn't read line from file");
     }
 
-    return line;
+    while (len > 0 && line[len - 1] == NEWLINE)
+    {
+        len--;
+    }
+
+    return std::string(line, len);
 }
 
 std::vector<std::string> split(const std::string& buffer, char delim,

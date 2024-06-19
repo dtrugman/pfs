@@ -44,7 +44,7 @@ public: // API
 
 private:
     friend class task;
-    mem(const std::string& path);
+    mem(const std::string& path, int procfs_fd = AT_FDCWD);
 
 private:
     const std::string _path;

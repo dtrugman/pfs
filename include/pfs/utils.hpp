@@ -92,21 +92,21 @@ stot(const std::string& str, T& out, base b = base::decimal)
 // Note: 'handle' can be nullptr. Use this to count the number of files in a
 // directory. Returns the number of files found.
 size_t iterate_files(const std::string& dir, bool include_dots,
-                     std::function<void(const char*)> handle);
+                     std::function<void(const char*)> handle, int dirfd = AT_FDCWD);
 
 // Count all the files under the specified directory.
 // File can be any unix file type, i.e. regular file, directory, link, etc.
-size_t count_files(const std::string& dir, bool include_dots = false);
+size_t count_files(const std::string& dir, bool include_dots = false, int dirfd = AT_FDCWD);
 
 // Get a set of all the files under the specified directory.
 // File can be any unix file type, i.e. regular file, directory, link, etc.
 std::set<std::string> enumerate_files(const std::string& dir,
-                                      bool include_dots = false);
+                                      bool include_dots = false, int dirfd = AT_FDCWD);
 
 // Get a set of all the files under the specified directory whose name is a
 // number. File can be any unix file type, i.e. regular file, directory, link,
 // etc.
-std::set<int> enumerate_numeric_files(const std::string& dir);
+std::set<int> enumerate_numeric_files(const std::string& dir, int dirfd = AT_FDCWD);
 
 // Get the inode number of the file.
 // If the linkname is relative, then it is interpreted relative to the directory
@@ -124,11 +124,11 @@ std::string readlink(const std::string& link, int dirfd = AT_FDCWD);
 // If requested to trim newline terminators, removes all of the from the
 // end of the string.
 std::string readfile(const std::string& file, size_t max_size,
-                     bool trim_newline = true);
+                     bool trim_newline = true, int dirfd = AT_FDCWD);
 
 // Return a string containing the first line of the specified file.
 // The returned string doesn't contain the line terminator.
-std::string readline(const std::string& file);
+std::string readline(const std::string& file, int dirfd = AT_FDCWD);
 
 // Split a buffer into multiple parts.
 // The delimiters themselves are dropped.
