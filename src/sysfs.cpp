@@ -21,6 +21,7 @@
 #include <system_error>
 
 #include "pfs/sysfs.hpp"
+#include "pfs/defer.hpp"
 #include "pfs/utils.hpp"
 
 namespace pfs {
@@ -29,21 +30,16 @@ using namespace impl;
 
 const std::string sysfs::DEFAULT_ROOT("/sys/");
 
-sysfs::sysfs(const std::string& root) : _root(build_root(root))
-{
-    validate_root(root);
-}
-
-std::string sysfs::build_root(std::string root)
+static std::string build_root(std::string root)
 {
     utils::ensure_dir_terminator(root);
     return root;
 }
 
-void sysfs::validate_root(const std::string& root)
+static void validate_root_fd(int fd)
 {
     struct stat st;
-    int rv = stat(root.c_str(), &st);
+    int rv = fstat(fd, &st);
     if (rv != 0)
     {
         throw std::system_error(errno, std::system_category(),
@@ -56,9 +52,32 @@ void sysfs::validate_root(const std::string& root)
     }
 }
 
+static void validate_root(const std::string& root)
+{
+    int fd = open(root.c_str(), O_RDONLY);
+    if (fd < 0)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't open root");
+    }
+    defer close_fd([fd] { close(fd); });
+
+    validate_root_fd(fd);
+}
+
+sysfs::sysfs(const std::string& root) : _root(build_root(root))
+{
+    validate_root(root);
+}
+
+sysfs::sysfs(int root_fd) : _root_fd(root_fd), _root("")
+{
+    validate_root_fd(root_fd);
+}
+
 block sysfs::get_block(const std::string& block_name) const
 {
-    return block(_root, block_name);
+    return block(_root, block_name, _root_fd);
 }
 
 std::set<block> sysfs::get_blocks() const

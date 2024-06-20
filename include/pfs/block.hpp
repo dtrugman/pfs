@@ -17,6 +17,8 @@
 #ifndef PFS_BLOCK_HPP
 #define PFS_BLOCK_HPP
 
+#include <fcntl.h>
+
 #include "types.hpp"
 #include "block_queue.hpp"
 
@@ -24,6 +26,9 @@ namespace pfs {
 
 class block final
 {
+public:
+    static const std::string BLOCK_DIR;
+
 public:
     block(const block&) = default;
     block(block&&)      = default;
@@ -43,21 +48,13 @@ public: // Properties
     block_stat get_stat() const;
     block_queue get_queue() const;
 
-public: // Getters
-
 private:
     friend class sysfs;
-    block(const std::string& sysfs_root, const std::string& name);
+    block(const std::string& sysfs_root, const std::string& name, int sysfs_fd = AT_FDCWD);
 
 private:
-    static std::string build_block_root(const std::string& sysfs_root, const std::string& name);
-
-private:
-    static const std::string BLOCK_DIR;
-
-private:
+    const int _sysfs_fd;
     const std::string _name;
-    const std::string _sysfs_root;
     const std::string _block_root;
 };
 

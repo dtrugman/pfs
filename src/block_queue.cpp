@@ -16,8 +16,6 @@
 
 #include <string>
 
-#include "pfs/defer.hpp"
-#include "pfs/parsers/common.hpp"
 #include "pfs/parsers/number.hpp"
 #include "pfs/block_queue.hpp"
 
@@ -25,16 +23,16 @@ namespace pfs {
 
 using namespace impl;
 
-const std::string block_queue::QUEUE_DIR("queue/");
 
-block_queue::block_queue(const std::string& block_root)
-    : _block_queue_root(build_block_queue_root(block_root))
-{}
-
-std::string block_queue::build_block_queue_root(const std::string& block_root)
+std::string build_block_queue_root(const std::string& block_root)
 {
+    const std::string QUEUE_DIR("queue/");
     return block_root + QUEUE_DIR;
 }
+
+block_queue::block_queue(const std::string& block_root, int sysfs_fd)
+    : _sysfs_fd(sysfs_fd), _block_queue_root(build_block_queue_root(block_root))
+{}
 
 const std::string& block_queue::dir() const
 {
@@ -46,7 +44,7 @@ bool block_queue::get_rotational() const
     static const std::string SIZE_FILE("rotational");
     auto path = _block_queue_root + SIZE_FILE;
 
-    auto value = utils::readline(path);
+    auto value = utils::readline(path, _sysfs_fd);
 
     int number;
     parsers::to_number(value, number, utils::base::decimal);

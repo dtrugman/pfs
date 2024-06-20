@@ -17,15 +17,13 @@
 #ifndef PFS_SYSFS_HPP
 #define PFS_SYSFS_HPP
 
+#include <fcntl.h>
 #include <unistd.h>
 
 #include <set>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 #include "block.hpp"
-#include "types.hpp"
 
 namespace pfs {
 
@@ -36,6 +34,7 @@ public:
 
 public:
     sysfs(const std::string& root = DEFAULT_ROOT);
+    sysfs(int root_fd);
 
     sysfs(const sysfs&) = default;
     sysfs(sysfs&&)      = default;
@@ -47,11 +46,8 @@ public: // Block API
     block get_block(const std::string& block_name) const;
     std::set<block> get_blocks() const;
 
-private: // Private utilities
-    static std::string build_root(std::string root);
-    static void validate_root(const std::string& root);
-
 private:
+    const int _root_fd = AT_FDCWD;
     const std::string _root;
 };
 
