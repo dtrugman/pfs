@@ -17,6 +17,8 @@
 #ifndef PFS_TASK_HPP
 #define PFS_TASK_HPP
 
+#include <fcntl.h>
+
 #include <set>
 #include <stddef.h>
 #include <string>
@@ -59,7 +61,7 @@ public: // Getters
     std::unordered_map<std::string, std::string>
     get_environ(size_t max_size = 65536) const;
 
-    std::string get_exe() const;
+    std::string get_exe(bool resolve = true) const;
 
     size_t count_fds() const;
 
@@ -98,13 +100,11 @@ public: // Getters
 
 private:
     friend class procfs;
-    task(const std::string& procfs_root, int id);
-
-private:
-    static std::string build_task_root(const std::string& procfs_root, int id);
+    task(const std::string& procfs_root, int id, int procfs_fd = AT_FDCWD);
 
 private:
     const int _id;
+    const int _procfs_fd;
     const std::string _procfs_root;
     const std::string _task_root;
 };

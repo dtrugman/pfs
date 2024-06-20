@@ -31,7 +31,7 @@ option (pfs_BUILD_TESTS "Build tests" ON)
 # Actual configuration
 # ------------------------------------------------------------------------
 
-add_compile_options (-std=c++11 -Wall -Wextra -pedantic -Werror)
+add_compile_options (-Wall -Wextra -pedantic -Werror)
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -43,6 +43,7 @@ aux_source_directory (${pfs_ROOT_SOURCE_DIR}/parsers pfs_PARSERS_SOURCES)
 set (SOURCES ${pfs_ROOT_SOURCES} ${pfs_PARSERS_SOURCES})
 
 add_library (pfs ${pfs_SHARED_OR_STATIC} ${SOURCES})
+target_compile_features(pfs PUBLIC cxx_std_11)
 target_include_directories(
     pfs PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -64,6 +65,7 @@ endif ()
 if (pfs_BUILD_SAMPLES)
     aux_source_directory (sample pfs_SAMPLE_SOURCES)
     add_executable (sample ${pfs_SAMPLE_SOURCES})
+    target_compile_features(sample PUBLIC cxx_std_11)
     target_link_libraries (sample PRIVATE pfs)
 endif()
 
@@ -71,6 +73,7 @@ if (pfs_BUILD_TESTS)
     set (pfs_UNITTEST_SOURCE_DIR test)
     aux_source_directory (${pfs_UNITTEST_SOURCE_DIR} pfs_UNITTEST_SOURCES)
     add_executable (unittest ${pfs_UNITTEST_SOURCES})
+    target_compile_features(unittest PUBLIC cxx_std_11)
     target_link_libraries (unittest PRIVATE pfs)
 endif()
 

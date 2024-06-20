@@ -17,12 +17,15 @@
 #ifndef PFS_PARSERS_FILE_PARSER_HPP
 #define PFS_PARSERS_FILE_PARSER_HPP
 
-#include <fstream>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <set>
 #include <string>
 #include <unordered_map>
 
 #include "pfs/parser_error.hpp"
+#include "pfs/defer.hpp"
 #include "pfs/utils.hpp"
 
 namespace pfs {
@@ -38,20 +41,40 @@ template <typename Output>
 class file_parser
 {
 public:
-    Output parse(const std::string& path,
+    Output parse(int dirfd, const std::string& path,
                  const std::set<std::string>& keys = {})
     {
-        std::ifstream in(path);
-        if (!in)
+        static const char NEWLINE('\n');
+
+        int fd = openat(dirfd, path.c_str(), O_RDONLY);
+        if (fd < 0)
         {
             throw parser_error("Couldn't open file", path);
         }
+        defer close_fd([fd] { close(fd); });
+
+        FILE* fp = fdopen(fd, "r");
+        if (!fp)
+        {
+            throw parser_error("Couldn't open file", path);
+        }
+        defer close_fp([fp] { fclose(fp); });
 
         Output output;
+        ssize_t len = 0;
+        size_t n = 0;
+        char* linebuf = NULL;
 
-        std::string line;
-        while (std::getline(in, line))
+        // free linebuf even if getline() fails
+        defer free_line([linebuf] { free(linebuf); });
+        while ((len = getline(&linebuf, &n, fp)) != -1)
         {
+            while (len > 0 && linebuf[len - 1] == NEWLINE)
+            {
+                len--;
+            }
+
+            std::string line(linebuf, len);
             std::string key;
             std::string value;
             std::tie(key, value) = utils::split_once(line, _delim);
@@ -85,6 +108,12 @@ public:
         }
 
         return output;
+    }
+
+    Output parse(const std::string& path,
+                 const std::set<std::string>& keys = {})
+    {
+        return parse(AT_FDCWD, path, keys);
     }
 
 protected:

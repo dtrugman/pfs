@@ -16,15 +16,12 @@
 
 #include <dirent.h>
 #include <fcntl.h>
-#include <inttypes.h>
 #include <linux/limits.h>
 #include <stddef.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <fstream>
-#include <iostream>
 #include <system_error>
 
 #include "pfs/defer.hpp"
@@ -42,15 +39,15 @@ namespace pfs {
 
 using namespace impl;
 
-task::task(const std::string& procfs_root, int id)
-    : _id(id), _procfs_root(procfs_root),
-      _task_root(build_task_root(procfs_root, id))
-{}
-
-std::string task::build_task_root(const std::string& procfs_root, int id)
+static std::string build_task_root(const std::string& procfs_root, int id)
 {
     return procfs_root + std::to_string(id) + '/';
 }
+
+task::task(const std::string& procfs_root, int id, int procfs_fd)
+    : _id(id), _procfs_fd(procfs_fd),
+      _task_root(build_task_root(procfs_root, id))
+{}
 
 bool task::operator<(const task& rhs) const
 {
@@ -80,17 +77,17 @@ std::vector<cgroup> task::get_cgroups() const
     auto path = _task_root + CGROUP_FILE;
 
     std::vector<cgroup> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
-                             parsers::parse_cgroup_line);
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
+                              parsers::parse_cgroup_line);
     return output;
 }
 
-std::string task::get_exe() const
+std::string task::get_exe(bool resolve) const
 {
     static const std::string EXE_FILE("exe");
     auto path = _task_root + EXE_FILE;
 
-    return utils::readlink(path);
+    return resolve ? utils::readlink(path, _procfs_fd) : path;
 }
 
 std::string task::get_cwd() const
@@ -98,7 +95,7 @@ std::string task::get_cwd() const
     static const std::string CWD_FILE("cwd");
     auto path = _task_root + CWD_FILE;
 
-    return utils::readlink(path);
+    return utils::readlink(path, _procfs_fd);
 }
 
 std::string task::get_root() const
@@ -106,7 +103,7 @@ std::string task::get_root() const
     static const std::string ROOT_FILE("root");
     auto path = _task_root + ROOT_FILE;
 
-    return utils::readlink(path);
+    return utils::readlink(path, _procfs_fd);
 }
 
 std::string task::get_comm() const
@@ -114,7 +111,7 @@ std::string task::get_comm() const
     static const std::string COMM_FILE("comm");
     auto path = _task_root + COMM_FILE;
 
-    return utils::readline(path);
+    return utils::readline(path, _procfs_fd);
 }
 
 std::vector<std::string> task::get_cmdline(size_t max_size) const
@@ -122,7 +119,7 @@ std::vector<std::string> task::get_cmdline(size_t max_size) const
     static const std::string CMDLINE_FILE("cmdline");
     auto path = _task_root + CMDLINE_FILE;
 
-    auto raw = utils::readfile(path, max_size);
+    auto raw = utils::readfile(path, max_size, true, _procfs_fd);
     return utils::split(raw, '\0', true /* keep_empty */);
 }
 
@@ -132,7 +129,7 @@ task::get_environ(size_t max_size) const
     static const std::string ENVIRON_FILE("environ");
     auto path = _task_root + ENVIRON_FILE;
 
-    auto raw    = utils::readfile(path, max_size);
+    auto raw    = utils::readfile(path, max_size, true, _procfs_fd);
     auto tokens = utils::split(raw, '\0');
 
     std::unordered_map<std::string, std::string> environ;
@@ -152,7 +149,7 @@ io_stats task::get_io() const {
     static const std::string IO_FILE("io");
     auto path = _task_root + IO_FILE;
 
-    return parsers::task_io_parser().parse(path);
+    return parsers::task_io_parser().parse(_procfs_fd, path);
 }
 
 task_stat task::get_stat() const
@@ -160,7 +157,15 @@ task_stat task::get_stat() const
     static const std::string STAT_FILE("stat");
     auto path = _task_root + STAT_FILE;
 
-    FILE* fp = fopen(path.c_str(), "r");
+    int fd = openat(_procfs_fd, path.c_str(), O_RDONLY);
+    if (fd < 0)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Couldn't open dir");
+    }
+    defer close_fd([fd] { close(fd); });
+
+    FILE* fp = fdopen(fd, "r");
     if (!fp)
     {
         throw std::system_error(errno, std::system_category(),
@@ -300,7 +305,7 @@ mem_stats task::get_statm() const
     static const std::string STATM_FILE("statm");
     auto path = _task_root + STATM_FILE;
 
-    auto line   = utils::readline(path);
+    auto line   = utils::readline(path, _procfs_fd);
     auto tokens = utils::split(line);
     if (tokens.size() != COUNT)
     {
@@ -336,7 +341,7 @@ task_status task::get_status(const std::set<std::string>& keys) const
     static const std::string STATUS_FILE("status");
     auto path = _task_root + STATUS_FILE;
 
-    return parsers::task_status_parser().parse(path, keys);
+    return parsers::task_status_parser().parse(_procfs_fd, path, keys);
 }
 
 std::vector<mem_region> task::get_maps() const
@@ -345,7 +350,7 @@ std::vector<mem_region> task::get_maps() const
     auto path = _task_root + MAPS_FILE;
 
     std::vector<mem_region> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_maps_line);
     return output;
 }
@@ -355,7 +360,7 @@ mem task::get_mem() const
     static const std::string MEM_FILE("mem");
     auto path = _task_root + MEM_FILE;
 
-    return mem(path);
+    return mem(path, _procfs_fd);
 }
 
 std::vector<mount> task::get_mountinfo() const
@@ -364,7 +369,7 @@ std::vector<mount> task::get_mountinfo() const
     auto path = _task_root + MOUNTINFO_FILE;
 
     std::vector<mount> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_mountinfo_line);
     return output;
 }
@@ -374,7 +379,7 @@ size_t task::count_fds() const
     static const std::string FDS_DIR("fd/");
     auto path = _task_root + FDS_DIR;
 
-    return utils::count_files(path);
+    return utils::count_files(path, false, _procfs_fd);
 }
 
 std::unordered_map<int, fd> task::get_fds() const
@@ -383,7 +388,7 @@ std::unordered_map<int, fd> task::get_fds() const
     auto path = _task_root + FDS_DIR;
 
     std::unordered_map<int, fd> fds;
-    for (const auto& num : utils::enumerate_numeric_files(path))
+    for (const auto& num : utils::enumerate_numeric_files(path, _procfs_fd))
     {
         fds.emplace(num, fd(path, num));
     }
@@ -405,7 +410,7 @@ std::set<ino_t> task::get_fds_inodes() const
 
 net task::get_net() const
 {
-    return net(_task_root);
+    return net(_task_root, _procfs_fd);
 }
 
 ino_t task::get_ns(const std::string& ns) const
@@ -413,7 +418,7 @@ ino_t task::get_ns(const std::string& ns) const
     static const std::string NS_DIR("ns/");
     auto path = _task_root + NS_DIR + ns;
 
-    return utils::get_inode(path);
+    return utils::get_inode(path, _procfs_fd);
 }
 
 std::unordered_map<std::string, ino_t> task::get_ns() const
@@ -421,7 +426,7 @@ std::unordered_map<std::string, ino_t> task::get_ns() const
     static const std::string NS_DIR("ns/");
     auto path = _task_root + NS_DIR;
 
-    int dirfd = open(path.c_str(), O_DIRECTORY);
+    int dirfd = openat(_procfs_fd, path.c_str(), O_DIRECTORY);
     if (dirfd == -1)
     {
         throw std::system_error(errno, std::system_category(),
@@ -447,7 +452,7 @@ task task::get_task(int id) const
 
     // Important, see README note about collecting information
     // about threads to understand why we pass 'path' as the root dir.
-    return task(path, id);
+    return task(path, id, _procfs_fd);
 }
 
 std::set<task> task::get_tasks() const
@@ -457,11 +462,11 @@ std::set<task> task::get_tasks() const
 
     std::set<task> threads;
 
-    for (auto thread_id : utils::enumerate_numeric_files(path))
+    for (auto thread_id : utils::enumerate_numeric_files(path, _procfs_fd))
     {
         // Important, see README note about collecting information
         // about threads to understand why we pass 'path' as the root dir.
-        threads.emplace(task(path, thread_id));
+        threads.emplace(task(path, thread_id, _procfs_fd));
     }
 
     return threads;
@@ -473,7 +478,7 @@ std::vector<id_map> task::get_uid_map() const
     auto path = _task_root + UID_MAP_FILE;
 
     std::vector<id_map> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_id_map_line);
     return output;
 }
@@ -484,7 +489,7 @@ std::vector<id_map> task::get_gid_map() const
     auto path = _task_root + GID_MAP_FILE;
 
     std::vector<id_map> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_id_map_line);
     return output;
 }

@@ -17,6 +17,7 @@
 #ifndef PFS_PROCFS_HPP
 #define PFS_PROCFS_HPP
 
+#include <fcntl.h>
 #include <unistd.h>
 
 #include <set>
@@ -36,6 +37,7 @@ public:
 
 public:
     procfs(const std::string& root = DEFAULT_ROOT);
+    procfs(int root_fd);
 
     procfs(const procfs&) = default;
     procfs(procfs&&)      = default;
@@ -73,11 +75,8 @@ public: // System API
 
     std::string get_version_signature() const;
 
-private: // Private utilities
-    static std::string build_root(std::string root);
-    static void validate_root(const std::string& root);
-
 private:
+    const int _root_fd = AT_FDCWD;
     const std::string _root;
 };
 

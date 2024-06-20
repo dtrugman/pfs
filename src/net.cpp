@@ -27,15 +27,15 @@ namespace pfs {
 
 using namespace impl;
 
-net::net(const std::string& parent_root)
-    : _parent_root(parent_root), _net_root(build_net_root(parent_root))
-{}
-
-std::string net::build_net_root(const std::string& parent_root)
+static std::string build_net_root(const std::string& parent_root)
 {
     static const std::string NET_DIR("net/");
     return parent_root + NET_DIR;
 }
+
+net::net(const std::string& parent_root, int procfs_fd)
+    : _procfs_fd(procfs_fd), _net_root(build_net_root(parent_root))
+{}
 
 std::vector<net_device> net::get_dev(net_device_filter filter) const
 {
@@ -45,7 +45,7 @@ std::vector<net_device> net::get_dev(net_device_filter filter) const
     static const size_t HEADER_LINES = 2;
 
     std::vector<net_device> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
 		                      parsers::parse_net_device_line,
                               filter, HEADER_LINES);
     return output;
@@ -119,7 +119,7 @@ std::vector<netlink_socket> net::get_netlink(netlink_socket_filter filter) const
     static const size_t HEADER_LINES = 1;
 
     std::vector<netlink_socket> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_netlink_socket_line,
                               filter, HEADER_LINES);
     return output;
@@ -133,7 +133,7 @@ std::vector<unix_socket> net::get_unix(unix_socket_filter filter) const
     static const size_t HEADER_LINES = 1;
 
     std::vector<unix_socket> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_unix_socket_line,
                               filter, HEADER_LINES);
     return output;
@@ -147,7 +147,7 @@ std::vector<net_socket> net::get_net_sockets(const std::string& file,
     static const size_t HEADER_LINES = 1;
 
     std::vector<net_socket> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_net_socket_line,
                               filter, HEADER_LINES);
     return output;
@@ -161,7 +161,7 @@ std::vector<net_route> net::get_route(net_route_filter filter) const
     static const size_t HEADER_LINES = 1;
 
     std::vector<net_route> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_net_route_line,
                               filter, HEADER_LINES);
     return output;
@@ -175,7 +175,7 @@ std::vector<net_arp> net::get_arp(net_arp_filter filter) const
     static const size_t HEADER_LINES = 1;
 
     std::vector<net_arp> output;
-    parsers::parse_file_lines(path, std::back_inserter(output),
+    parsers::parse_file_lines(_procfs_fd, path, std::back_inserter(output),
                               parsers::parse_net_arp_line,
                               filter, HEADER_LINES);
     return output;

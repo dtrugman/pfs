@@ -17,7 +17,9 @@
 #ifndef PFS_BLOCK_QUEUE_HPP
 #define PFS_BLOCK_QUEUE_HPP
 
-#include "types.hpp"
+#include <fcntl.h>
+
+#include <string>
 
 namespace pfs {
 
@@ -39,15 +41,10 @@ public: // Getters
 
 private:
     friend class block;
-    block_queue(const std::string& block_root);
+    block_queue(const std::string& block_root, int sysfs_fd = AT_FDCWD);
 
 private:
-    static std::string build_block_queue_root(const std::string& block_root);
-
-private:
-    static const std::string QUEUE_DIR;
-
-private:
+    const int _sysfs_fd;
     const std::string _block_queue_root;
 };
 

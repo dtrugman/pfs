@@ -16,7 +16,6 @@
 
 #include <string>
 
-#include "pfs/defer.hpp"
 #include "pfs/parsers/block_stat.hpp"
 #include "pfs/parsers/common.hpp"
 #include "pfs/parsers/number.hpp"
@@ -29,15 +28,16 @@ using namespace impl;
 
 const std::string block::BLOCK_DIR("block/");
 
-block::block(const std::string& sysfs_root, const std::string& name)
-    : _name(name), _sysfs_root(sysfs_root),
+static std::string build_block_root(const std::string& sysfs_root, const std::string& name)
+{
+    return sysfs_root + block::BLOCK_DIR + name + '/';
+}
+
+block::block(const std::string& sysfs_root, const std::string& name, int sysfs_fd)
+    : _sysfs_fd(sysfs_fd), _name(name),
       _block_root(build_block_root(sysfs_root, name))
 {}
 
-std::string block::build_block_root(const std::string& procfs_root, const std::string& name)
-{
-    return procfs_root + BLOCK_DIR + name + '/';
-}
 
 bool block::operator<(const block& rhs) const
 {
@@ -60,7 +60,7 @@ size_t block::get_size() const
     auto path = _block_root + SIZE_FILE;
 
     size_t size;
-    auto line = utils::readline(path);
+    auto line = utils::readline(path, _sysfs_fd);
     parsers::to_number(line, size);
     return size;
 }
@@ -70,7 +70,7 @@ dev_t block::get_dev() const
     static const std::string DEV_FILE("dev");
     auto path = _block_root + DEV_FILE;
 
-    auto line = utils::readline(path);
+    auto line = utils::readline(path, _sysfs_fd);
     return parsers::parse_device(line, utils::base::decimal);
 }
 
@@ -79,13 +79,13 @@ block_stat block::get_stat() const
     static const std::string STAT_FILE("stat");
     auto path = _block_root + STAT_FILE;
 
-    auto line = utils::readline(path);
+    auto line = utils::readline(path, _sysfs_fd);
     return parsers::parse_block_stat_line(line);
 }
 
 block_queue block::get_queue() const
 {
-    return block_queue(_block_root);
+    return block_queue(_block_root, _sysfs_fd);
 }
 
 } // namespace pfs
