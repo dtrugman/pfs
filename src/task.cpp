@@ -85,12 +85,12 @@ std::vector<cgroup> task::get_cgroups() const
     return output;
 }
 
-std::string task::get_exe() const
+std::string task::get_exe(bool resolve) const
 {
     static const std::string EXE_FILE("exe");
     auto path = _task_root + EXE_FILE;
 
-    return utils::readlink(path);
+    return resolve ? utils::readlink(path) : path;
 }
 
 std::string task::get_cwd() const
