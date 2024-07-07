@@ -59,7 +59,7 @@ public: // Getters
     std::unordered_map<std::string, std::string>
     get_environ(size_t max_size = 65536) const;
 
-    std::string get_exe() const;
+    std::string get_exe(bool resolve = true) const;
 
     size_t count_fds() const;
 
