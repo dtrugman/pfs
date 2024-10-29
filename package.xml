@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>pfs</name>
+  <version>0.0.0</version>
+  <description>Production grade, very easy to use, procfs parsing library in C++. Used in production by S&amp;P 500 tech companies and startups!</description>
+  <maintainer email="dtrugman@gmail.com">Daniel Trugman</maintainer>
+  <author email="dtrugman@gmail.com">Daniel Trugman</author>
+  <license>Apache-2.0</license>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
