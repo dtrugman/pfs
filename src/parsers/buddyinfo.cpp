@@ -37,15 +37,16 @@ zone parse_buddyinfo_line(const std::string& line)
         NODE_ID      = 1,
         ZONE_KEYWORD = 2,
         ZONE_NAME    = 3,
-        FIRST_CHUNK  = 4,
-        LAST_CHUNK   = 14,
-        COUNT
+        FIRST_CHUNK  = 4
     };
 
     static const char NODE_DELIM = ',';
 
     auto tokens = utils::split(line);
-    if (tokens.size() != COUNT)
+
+    // The number of chunks is variable, but we should always have at least the
+    // first four columns.
+    if (tokens.size() < FIRST_CHUNK)
     {
         throw parser_error("Corrupted buddyinfo - Unexpected tokens count",
                            line);
@@ -66,7 +67,15 @@ zone parse_buddyinfo_line(const std::string& line)
 
         zn.name = tokens[ZONE_NAME];
 
-        for (size_t i = 0; i < zn.chunks.size(); ++i)
+        // std::distance can be negative, but the conditional on line 46
+        // and the nature of the begin() and end() iterators means num_chunks
+        // should never be less than 0.
+        size_t num_chunks =
+            std::distance(tokens.begin() + FIRST_CHUNK, tokens.end());
+
+        zn.chunks.resize(num_chunks);
+
+        for (size_t i = 0; i < num_chunks; ++i)
         {
             utils::stot(tokens[FIRST_CHUNK + i], zn.chunks[i]);
         }
