@@ -431,8 +431,7 @@ struct zone
     size_t node_id;
     std::string name;
 
-    static constexpr size_t CHUNKS_COUNT = 11;
-    std::array<size_t, CHUNKS_COUNT> chunks;
+    std::vector<size_t> chunks;
 
     bool operator<(const zone& rhs) const
     {

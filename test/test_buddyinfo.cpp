@@ -29,6 +29,17 @@ TEST_CASE("Parse buddyinfo", "[procfs][buddyinfo]")
         expected.chunks  = {1, 1, 1, 0, 2, 1, 1, 0, 1, 1, 3};
     }
 
+    // 9 chunks instead of the default of 11
+    SECTION("Sample 3")
+    {
+        line = "Node 0, zone  Normal   189  101   84   38   37  "
+               " 27    5    3  587";
+
+        expected.node_id = 0;
+        expected.name    = "Normal";
+        expected.chunks  = {189, 101, 84, 38, 37, 27, 5, 3, 587};
+    }
+
     auto zone = parse_buddyinfo_line(line);
     REQUIRE(zone.node_id == expected.node_id);
     REQUIRE(zone.name == expected.name);
