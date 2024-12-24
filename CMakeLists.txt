@@ -119,3 +119,8 @@ install(
     DIRECTORY include/
     DESTINATION include
 )
+
+install(
+    FILES package.xml
+    DESTINATION share/${PROJECT_NAME}
+)
