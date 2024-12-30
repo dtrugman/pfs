@@ -67,11 +67,9 @@ zone parse_buddyinfo_line(const std::string& line)
 
         zn.name = tokens[ZONE_NAME];
 
-        // std::distance can be negative, but the conditional on line 46
-        // and the nature of the begin() and end() iterators means num_chunks
-        // should never be less than 0.
-        size_t num_chunks =
-            std::distance(tokens.begin() + FIRST_CHUNK, tokens.end());
+        // This line is protected from underflow thanks to the tokens size
+        // conditional above.
+        size_t num_chunks = tokens.size() - FIRST_CHUNK;
 
         zn.chunks.resize(num_chunks);
 

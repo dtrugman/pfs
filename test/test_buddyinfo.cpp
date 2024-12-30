@@ -9,7 +9,7 @@ TEST_CASE("Parse buddyinfo", "[procfs][buddyinfo]")
     pfs::zone expected;
     std::string line;
 
-    SECTION("Sample 1")
+    SECTION("Default size - Sample 1")
     {
         line = "Node 0, zone  Normal   216   55  189  101   84   38   37  "
                " 27    5    3  587";
@@ -19,7 +19,7 @@ TEST_CASE("Parse buddyinfo", "[procfs][buddyinfo]")
         expected.chunks  = {216, 55, 189, 101, 84, 38, 37, 27, 5, 3, 587};
     }
 
-    SECTION("Sample 2")
+    SECTION("Default size - Sample 2")
     {
         line = "Node 1, zone     DMA     1    1    1    0    2    1    1  "
                "  0    1    1    3";
@@ -29,8 +29,7 @@ TEST_CASE("Parse buddyinfo", "[procfs][buddyinfo]")
         expected.chunks  = {1, 1, 1, 0, 2, 1, 1, 0, 1, 1, 3};
     }
 
-    // 9 chunks instead of the default of 11
-    SECTION("Sample 3")
+    SECTION("Custom size - Smaller than default")
     {
         line = "Node 0, zone  Normal   189  101   84   38   37  "
                " 27    5    3  587";
