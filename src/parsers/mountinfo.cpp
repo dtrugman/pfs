@@ -62,7 +62,7 @@ mount parse_mountinfo_line(const std::string& line)
     static const char OPTIONS_DELIM = ',';
 
     auto tokens = utils::split(line);
-    if (tokens.size() < PRE_COUNT + POST_COUNT)
+    if (tokens.size() < static_cast<int>(PRE_COUNT) + static_cast<int>(POST_COUNT))
     {
         throw parser_error("Corrupted mountinfo - Unexpected tokens count",
                            line);
