@@ -28,9 +28,9 @@
 
 namespace pfs {
 
-static const uid_t INVALID_UID   = (uid_t)-1;
-static const pid_t INVALID_PID   = (pid_t)-1;
-static const ino_t INVALID_INODE = (ino_t)0;
+constexpr uid_t INVALID_UID   = (uid_t)-1;
+constexpr pid_t INVALID_PID   = (pid_t)-1;
+constexpr ino_t INVALID_INODE = (ino_t)0;
 
 // Note: We only support values that exist post 2.6.32.
 enum class task_state
