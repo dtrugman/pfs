@@ -541,7 +541,11 @@ struct unix_socket
     {
         stream    = 1,
         datagram  = 2,
+        raw       = 3,
+        rdm       = 4,
         seqpacket = 5,
+        dccp      = 6,
+        packet    = 10,
     };
 
     // See the Kerne's 'socket_state' enum for more information
