@@ -18,6 +18,9 @@
 #include "pfs/parser_error.hpp"
 #include "pfs/utils.hpp"
 
+#include <iostream>
+using namespace std;
+
 namespace pfs {
 namespace impl {
 namespace parsers {
@@ -66,6 +69,7 @@ unix_socket parse_unix_socket_line(const std::string& line)
     // ffff8db2fd23a000: 00000003 00000000 00000000 0001 03 17031 /run/systemd/journal/stdout
     // ffff8db2f696e000: 00000003 00000000 00000000 0001 03 15699 /run/systemd/journal/stdout
     // ffff8db2f3e09400: 00000002 00000000 00000000 0002 01 21401
+    // cad3ab00:         00000003 00000000 00000000 0001 03 7242 /var/qmux_client_socket    401
     // clang-format on
 
     enum token
@@ -83,7 +87,7 @@ unix_socket parse_unix_socket_line(const std::string& line)
     };
 
     auto tokens = utils::split(line);
-    if (tokens.size() < MIN_COUNT || tokens.size() > COUNT)
+    if (tokens.size() < MIN_COUNT)
     {
         throw parser_error(
             "Corrupted unix socket line - Unexpected token count", line);
@@ -107,9 +111,9 @@ unix_socket parse_unix_socket_line(const std::string& line)
 
         utils::stot(tokens[INODE], sock.inode);
 
-        if (tokens.size() > PATH)
-        {
-            sock.path = tokens[PATH];
+        if (tokens.size() > PATH) {
+            size_t path_start = line.find(tokens[PATH]);
+            sock.path = line.substr(path_start);
         }
 
         return sock;

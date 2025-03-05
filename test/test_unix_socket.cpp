@@ -87,6 +87,23 @@ TEST_CASE("Parse unix socket", "[net][unix_socket]")
         expected.path         = "@/org/kernel/udev/udevd";
     }
 
+    SECTION("Qmux socket")
+    {
+        size_t skbuff = 0xcad3ab00;
+
+        line << skbuff << ":         00000003 00000000 00000000 0001 03 "
+                "7242 /var/qmux_client_socket    401";
+
+        expected.skbuff       = skbuff;
+        expected.ref_count    = 0x00000003;
+        expected.protocol     = 0x00000000;
+        expected.flags        = 0x00000000;
+        expected.socket_type  = pfs::unix_socket::type::stream;
+        expected.socket_state = pfs::unix_socket::state::connected;
+        expected.inode        = 7242;
+        expected.path         = "/var/qmux_client_socket    401";
+    }
+
     auto socket = parse_unix_socket_line(line.str());
     REQUIRE(socket.skbuff == expected.skbuff);
     REQUIRE(socket.ref_count == expected.ref_count);
