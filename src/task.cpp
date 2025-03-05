@@ -33,6 +33,7 @@
 #include "pfs/parsers/mountinfo.hpp"
 #include "pfs/parsers/lines.hpp"
 #include "pfs/parsers/common.hpp"
+#include "pfs/parsers/number.hpp"
 #include "pfs/parsers/task_io.hpp"
 #include "pfs/parsers/task_status.hpp"
 #include "pfs/task.hpp"
@@ -487,6 +488,17 @@ std::vector<id_map> task::get_gid_map() const
     parsers::parse_file_lines(path, std::back_inserter(output),
                               parsers::parse_id_map_line);
     return output;
+}
+
+uint32_t task::get_sessionid() const
+{
+    static const std::string SESSION_ID_FILE("sessionid");
+    auto path = _task_root + SESSION_ID_FILE;
+
+    auto line = utils::readline(path);
+    uint32_t session_id;
+    parsers::to_number(line, session_id);
+    return session_id;
 }
 
 } // namespace pfs
