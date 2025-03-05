@@ -18,6 +18,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <iterator>
 #include <system_error>
 
 #include "pfs/parsers/filesystems.hpp"
