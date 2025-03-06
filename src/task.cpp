@@ -23,8 +23,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <fstream>
-#include <iostream>
 #include <system_error>
 
 #include "pfs/defer.hpp"
