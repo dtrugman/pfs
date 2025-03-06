@@ -17,7 +17,6 @@
 #ifndef PFS_PARSERS_MEMINFO_HPP
 #define PFS_PARSERS_MEMINFO_HPP
 
-#include <functional>
 #include <string>
 
 namespace pfs {
