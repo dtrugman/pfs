@@ -325,6 +325,36 @@ std::pair<ip, uint16_t> parse_address(const std::string& address_str)
     return std::make_pair(addr, port);
 }
 
+void parse_memory_size(const std::string& value, size_t& out)
+{
+    enum token
+    {
+        SIZE  = 0,
+        UNITS = 1,
+        COUNT
+    };
+
+    auto tokens = utils::split(value);
+    if (tokens.size() != COUNT)
+    {
+        throw parser_error("Corrupted memory size - Unexpected tokens count",
+                           value);
+    }
+
+    try
+    {
+        utils::stot(tokens[SIZE], out);
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        throw parser_error("Corrupted memory size - Invalid argument", value);
+    }
+    catch (const std::out_of_range& ex)
+    {
+        throw parser_error("Corrupted memory size - Out of range", value);
+    }
+}
+
 } // namespace utils
 } // namespace impl
 } // namespace pfs
