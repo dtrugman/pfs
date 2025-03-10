@@ -164,6 +164,9 @@ ip parse_ipv6_address(const std::string& ip_address_hex);
 // Figure out ip version (IPv4/IPv6), parse it and return it as a ip struct
 std::pair<ip, uint16_t> parse_address(const std::string& address_str);
 
+// Parses a memory size line (e.g. VmRSS:      4488 kB)
+void parse_memory_size(const std::string& value, size_t& out);
+
 } // namespace utils
 } // namespace impl
 } // namespace pfs

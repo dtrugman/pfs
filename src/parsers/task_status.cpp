@@ -223,114 +223,84 @@ void parse_ns_sid(const std::string& value, task_status& out)
     to_ns_ids_vector(value, out.ns_sid);
 }
 
-void to_memory_size(const std::string& value, size_t& out)
-{
-    enum token
-    {
-        SIZE  = 0,
-        UNITS = 1,
-        COUNT
-    };
-
-    auto tokens = utils::split(value);
-    if (tokens.size() != COUNT)
-    {
-        throw parser_error("Corrupted memory size - Unexpected tokens count",
-                           value);
-    }
-
-    try
-    {
-        utils::stot(tokens[SIZE], out);
-    }
-    catch (const std::invalid_argument& ex)
-    {
-        throw parser_error("Corrupted memory size - Invalid argument", value);
-    }
-    catch (const std::out_of_range& ex)
-    {
-        throw parser_error("Corrupted memory size - Out of range", value);
-    }
-}
-
 void parse_vm_peak(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_peak);
+    utils::parse_memory_size(value, out.vm_peak);
 }
 
 void parse_vm_size(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_size);
+    utils::parse_memory_size(value, out.vm_size);
 }
 
 void parse_vm_lck(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_lck);
+    utils::parse_memory_size(value, out.vm_lck);
 }
 
 void parse_vm_pin(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_pin);
+    utils::parse_memory_size(value, out.vm_pin);
 }
 
 void parse_vm_hwm(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_hwm);
+    utils::parse_memory_size(value, out.vm_hwm);
 }
 
 void parse_vm_rss(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_rss);
+    utils::parse_memory_size(value, out.vm_rss);
 }
 
 void parse_rss_anon(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.rss_anon);
+    utils::parse_memory_size(value, out.rss_anon);
 }
 
 void parse_rss_file(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.rss_file);
+    utils::parse_memory_size(value, out.rss_file);
 }
 
 void parse_rss_shmem(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.rss_shmem);
+    utils::parse_memory_size(value, out.rss_shmem);
 }
 
 void parse_vm_data(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_data);
+    utils::parse_memory_size(value, out.vm_data);
 }
 
 void parse_vm_stk(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_stk);
+    utils::parse_memory_size(value, out.vm_stk);
 }
 
 void parse_vm_exe(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_exe);
+    utils::parse_memory_size(value, out.vm_exe);
 }
 
 void parse_vm_lib(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_lib);
+    utils::parse_memory_size(value, out.vm_lib);
 }
 
 void parse_vm_pte(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_pte);
+    utils::parse_memory_size(value, out.vm_pte);
 }
 
 void parse_vm_swap(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.vm_swap);
+    utils::parse_memory_size(value, out.vm_swap);
 }
 
 void parse_huge_tlb_pages(const std::string& value, task_status& out)
 {
-    to_memory_size(value, out.huge_tlb_pages);
+    utils::parse_memory_size(value, out.huge_tlb_pages);
 }
 
 void to_boolean(const std::string& value, bool& out)
