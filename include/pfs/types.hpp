@@ -23,7 +23,6 @@
 #include <chrono>
 #include <set>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace pfs {
@@ -338,6 +337,37 @@ struct mem_region
     {
         return start_address < rhs.start_address;
     }
+};
+
+struct mem_map
+{
+    mem_region region;
+
+    size_t size             = 0; // In kB
+    size_t kernel_page_size = 0; // In kB
+    size_t mmu_page_size    = 0; // In kB
+    size_t rss              = 0; // In kB
+    size_t pss              = 0; // In kB
+    size_t pss_dirty        = 0; // In kB
+    size_t shared_clean     = 0; // In kB
+    size_t shared_dirty     = 0; // In kB
+    size_t private_clean    = 0; // In kB
+    size_t private_dirty    = 0; // In kB
+    size_t referenced       = 0; // In kB
+    size_t anonymous        = 0; // In kB
+    size_t ksm              = 0; // In kB
+    size_t lazy_free        = 0; // In kB
+    size_t anon_huge_pages  = 0; // In kB
+    size_t shmem_pmd_mapped = 0; // In kB
+    size_t file_pmd_mapped  = 0; // In kB
+    size_t shared_hugetlb   = 0; // In kB
+    size_t private_hugetlb  = 0; // In kB
+    size_t swap             = 0; // In kB
+    size_t swap_pss         = 0; // In kB
+    size_t locked           = 0; // In kB
+
+    bool thp_eligible       = false;
+    std::string vm_flags;
 };
 
 struct module

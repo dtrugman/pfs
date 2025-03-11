@@ -69,6 +69,8 @@ public: // Getters
 
     std::vector<mem_region> get_maps() const;
 
+    std::vector<mem_map> get_smaps() const;
+
     mem get_mem() const;
 
     std::vector<mount> get_mountinfo() const;

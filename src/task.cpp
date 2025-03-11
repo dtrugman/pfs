@@ -23,8 +23,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <fstream>
-#include <iostream>
 #include <system_error>
 
 #include "pfs/defer.hpp"
@@ -34,6 +32,7 @@
 #include "pfs/parsers/lines.hpp"
 #include "pfs/parsers/common.hpp"
 #include "pfs/parsers/number.hpp"
+#include "pfs/parsers/mem_map.hpp"
 #include "pfs/parsers/task_io.hpp"
 #include "pfs/parsers/task_status.hpp"
 #include "pfs/task.hpp"
@@ -349,6 +348,14 @@ std::vector<mem_region> task::get_maps() const
     parsers::parse_file_lines(path, std::back_inserter(output),
                               parsers::parse_maps_line);
     return output;
+}
+
+std::vector<mem_map> task::get_smaps() const
+{
+    static const std::string MAPS_FILE("smaps");
+    auto path = _task_root + MAPS_FILE;
+
+    return parsers::parse_mem_map(path);
 }
 
 mem task::get_mem() const

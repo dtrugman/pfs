@@ -14,19 +14,22 @@
  *  limitations under the License.
  */
 
-#ifndef PFS_PARSERS_MEMINFO_HPP
-#define PFS_PARSERS_MEMINFO_HPP
+#ifndef PFS_PARSERS_MEM_MAP_HPP
+#define PFS_PARSERS_MEM_MAP_HPP
 
 #include <string>
+#include <vector>
+
+#include "pfs/types.hpp"
 
 namespace pfs {
 namespace impl {
 namespace parsers {
 
-std::pair<std::string, size_t> parse_meminfo_line(const std::string& line);
+std::vector<mem_map> parse_mem_map(const std::string& path);
 
 } // namespace parsers
 } // namespace impl
 } // namespace pfs
 
-#endif // PFS_PARSERS_MEMINFO_HPP
+#endif // PFS_PARSERS_MEM_MAP_HPP
