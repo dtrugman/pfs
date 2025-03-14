@@ -392,9 +392,9 @@ std::unordered_map<int, fd> task::get_fds() const
     return fds;
 }
 
-std::set<ino_t> task::get_fds_inodes() const
+std::set<pfs_ino_t> task::get_fds_inodes() const
 {
-    std::set<ino_t> inodes;
+    std::set<pfs_ino_t> inodes;
 
     for (auto& fd : get_fds())
     {
@@ -409,7 +409,7 @@ net task::get_net() const
     return net(_task_root);
 }
 
-ino_t task::get_ns(const std::string& ns) const
+pfs_ino_t task::get_ns(const std::string& ns) const
 {
     static const std::string NS_DIR("ns/");
     auto path = _task_root + NS_DIR + ns;
@@ -417,7 +417,7 @@ ino_t task::get_ns(const std::string& ns) const
     return utils::get_inode(path);
 }
 
-std::unordered_map<std::string, ino_t> task::get_ns() const
+std::unordered_map<std::string, pfs_ino_t> task::get_ns() const
 {
     static const std::string NS_DIR("ns/");
     auto path = _task_root + NS_DIR;
@@ -430,7 +430,7 @@ std::unordered_map<std::string, ino_t> task::get_ns() const
     }
     defer close_dirfd([dirfd] { close(dirfd); });
 
-    std::unordered_map<std::string, ino_t> ns;
+    std::unordered_map<std::string, pfs_ino_t> ns;
 
     for (const auto& file :
          utils::enumerate_files(path, /* include_dots */ false))
