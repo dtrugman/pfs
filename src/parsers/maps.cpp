@@ -114,11 +114,11 @@ size_t parse_mem_region_offset(const std::string& offset_str)
     }
 }
 
-ino_t parse_mem_region_inode(const std::string& inode_str)
+pfs_ino_t parse_mem_region_inode(const std::string& inode_str)
 {
     try
     {
-        ino_t inode;
+        pfs_ino_t inode;
         utils::stot(inode_str, inode);
         return inode;
     }
