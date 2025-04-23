@@ -24,7 +24,7 @@ TEST_CASE("Parse block stat", "[block][stat]")
     pfs::block_stat expected;
 
     std::string line =
-            "12735     9101   833156     2926    58398   181703  8929392    38810      "
+            "12735     9101   833156     2926    58398   181703  4538620698    38810      "
             "0    25238    47489     3213        0 102155080      337    23765     5414";
 
     expected.read_ios = 12735;
@@ -33,7 +33,7 @@ TEST_CASE("Parse block stat", "[block][stat]")
     expected.read_ticks = 2926;
     expected.write_ios = 58398;
     expected.write_merges = 181703;
-    expected.write_sectors = 8929392;
+    expected.write_sectors = 4538620698;
     expected.write_ticks = 38810;
     expected.in_flight = 0;
     expected.io_ticks = 25238;
