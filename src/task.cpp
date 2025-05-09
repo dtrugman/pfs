@@ -501,4 +501,16 @@ uint32_t task::get_sessionid() const
     return session_id;
 }
 
+syscall task::get_syscall() const
+{
+  static const std::string SYSCALL_FILE("syscall");
+  auto path = _task_root + SYSCALL_FILE;
+  
+  struct syscall output{}; // utils::readline(path);
+
+//  parsers::parser_file_lines(path, std::back_inserter(output), parser:);
+ return output; 
+}
+
+
 } // namespace pfs

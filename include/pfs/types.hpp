@@ -658,6 +658,15 @@ struct block_stat
     unsigned int flush_ticks;     // total wait time for flush requests [unit: ms]
 };
 
+struct syscall 
+{
+  unsigned int number_of_syscall;
+  std::vector<size_t> argument_registers; //six argument registers, these are used by the system call
+  size_t stack_pointer;
+  size_t program_counter;
+};
+
+
 } // namespace pfs
 
 #endif // PFS_TYPES_HPP

@@ -95,9 +95,10 @@ public: // Getters
 
     std::vector<id_map> get_uid_map() const;
     std::vector<id_map> get_gid_map() const;
-
+    
     uint32_t get_sessionid() const;
 
+    syscall get_syscall() const;
 private:
     friend class procfs;
     task(const std::string& procfs_root, int id);
