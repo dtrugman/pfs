@@ -64,6 +64,9 @@ int enum_system(std::vector<std::string>&& args)
 
         auto controllers = pfs.get_cgroups();
         print(controllers);
+
+        auto syscall = pfs.get_syscall();
+        print(syscall);
     }
     catch (const std::runtime_error& ex)
     {

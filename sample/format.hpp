@@ -619,6 +619,12 @@ inline std::ostream& operator<<(std::ostream& out,
     return out;
 }
 
+inline std::ostream& operator<<(std::ostream& out, const pfs::syscall& syscall)
+{
+    out << "number of syscall[" << syscall.number_of_syscall <<", " << syscall.arguments[0] << ", "
+    <<syscall.program_counter<< ", " << syscall.stack_pointer << "]";
+    return out;
+}
 inline std::ostream& operator<<(std::ostream& out, const pfs::uptime& uptime)
 {
     auto system_time_seconds =
