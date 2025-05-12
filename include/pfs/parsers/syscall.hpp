@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> b761195af717466719077f9b7ae1f6c29c4aefd1
 /*
  *  Copyright 2020-present Daniel Trugman
  *
@@ -14,32 +18,21 @@
  *  limitations under the License.
  */
 
- #ifndef PFS_PARSERS_SYSCALL_HPP
- #define PFS_PARSERS_SYSCALL_HPP
- 
- #include "file_parser.hpp"
- #include "pfs/types.hpp"
- 
- namespace pfs {
- namespace impl {
- namespace parsers {
- 
- class task_syscall_parser : public file_parser<io_stats>
- {
- public:
-    task_syscall_parser() : file_parser<io_stats>(DELIM, PARSERS) {}
- 
- private:
-     static value_parsers make_value_parsers(); 
- 
- private:
-     static const char DELIM;
-     static const value_parsers PARSERS;
- };
- 
- } // namespace parsers
- } // namespace impl
- } // namespace pfs
- 
- #endif // PFS_PARSERS_SYSCALL_HPP
- 
+#ifndef PFS_PARSERS_SYSCALL_HPP
+#define PFS_PARSERS_SYSCALL_HPP
+
+#include <string>
+
+#include "pfs/types.hpp"
+
+namespace pfs {
+namespace impl {
+namespace parsers {
+
+syscall parse_syscall_line(const std::string& line);
+
+} // namespace parsers
+} // namespace impl
+} // namespace pfs
+
+#endif // PFS_PARSERS_SYSCALL_HPP
