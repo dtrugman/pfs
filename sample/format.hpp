@@ -621,8 +621,13 @@ inline std::ostream& operator<<(std::ostream& out,
 
 inline std::ostream& operator<<(std::ostream& out, const pfs::syscall& syscall)
 {
-    out << "number of syscall[" << syscall.number_of_syscall <<", " << syscall.arguments[0] << ", "
-    <<syscall.program_counter<< ", " << syscall.stack_pointer << "]";
+    out << "num of syscall [" << syscall.number_of_syscall <<"]" << std::endl;
+    for (size_t i = 0; i < syscall.arguments.size(); i++)
+    {
+        out << "argument["<< i <<"]: ["<< syscall.arguments[i] << "]" <<std::endl;
+    }
+    out <<"pc: [" <<syscall.program_counter << "]" <<std::endl;
+    out << "sp: [" << syscall.stack_pointer << "]";
     return out;
 }
 inline std::ostream& operator<<(std::ostream& out, const pfs::uptime& uptime)

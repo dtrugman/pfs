@@ -132,8 +132,8 @@ static void enum_task(const pfs::task& task)
 
 
     safe("syscall", [&]{
-        auto syscall = task.get_syscall();
-        print(syscall);
+        auto sc = task.get_syscall();
+        print(sc);
     });
 }
 

@@ -36,6 +36,7 @@
 #include "pfs/parsers/number.hpp"
 #include "pfs/parsers/task_io.hpp"
 #include "pfs/parsers/task_status.hpp"
+#include "pfs/parsers/syscall.hpp"
 #include "pfs/task.hpp"
 #include "pfs/utils.hpp"
 
@@ -506,10 +507,7 @@ syscall task::get_syscall() const
   static const std::string SYSCALL_FILE("syscall");
   auto path = _task_root + SYSCALL_FILE;
   
-  struct syscall output{}; // utils::readline(path);
-
-//  parsers::parser_file_lines(path, std::back_inserter(output), parser:);
- return output; 
+  return parsers::parse_syscall(path); 
 }
 
 

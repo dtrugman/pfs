@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> b761195af717466719077f9b7ae1f6c29c4aefd1
 /*
  *  Copyright 2020-present Daniel Trugman
  *
@@ -29,7 +25,7 @@ namespace pfs {
 namespace impl {
 namespace parsers {
 
-syscall parse_syscall_line(const std::string& line);
+syscall parse_syscall(const std::string& line);
 
 } // namespace parsers
 } // namespace impl

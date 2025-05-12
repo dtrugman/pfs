@@ -31,7 +31,7 @@ option (pfs_BUILD_TESTS "Build tests" ON)
 # Actual configuration
 # ------------------------------------------------------------------------
 
-add_compile_options (-Wall -Wextra -pedantic -Werror)
+add_compile_options (-Wall -Wextra -pedantic -Werror -ggdb)
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> b761195af717466719077f9b7ae1f6c29c4aefd1
 /*
  *  Copyright 2020-present Daniel Trugman
  *
@@ -18,6 +14,9 @@
  *  limitations under the License.
  */
 
+ #include <system_error>
+
+
 #include "pfs/parsers/syscall.hpp"
 #include "pfs/parser_error.hpp"
 #include "pfs/utils.hpp"
@@ -26,25 +25,27 @@ namespace pfs {
 namespace impl {
 namespace parsers {
 
-syscall parse_syscall_line(const std::string& line)
+syscall parse_syscall(const std::string& path)
 {
+
+    std::string line = utils::readline(path);
 
     static const char DELIM = ' ';
     static const int COUNT  = 9;
-    auto tokens             = utils::split(line, DELIM);
+    auto tokens = utils::split(line, DELIM);
     if (tokens.size() != COUNT)
     {
-        throw parser_error("Corrupted loadavg - Unexpected tokens count", line);
+        throw parser_error("Corrupted syscall - Unexpected tokens count", line);
     }
 
     try
     {
         syscall output;
 
-        output.number_of_syscall = std::atoi(tokens[1].c_str());
+        output.number_of_syscall = std::atoi(tokens[0].c_str());
         for (int i = 1; i < 7; i++)
         {
-            output.arguments[i - 1] = std::strtoull(tokens[i].c_str(), NULL, 0);
+            output.arguments.push_back(std::strtoull(tokens[i].c_str(), NULL, 0));
         }
         output.stack_pointer   = std::strtoull(tokens[7].c_str(), NULL, 0);
         output.program_counter = std::strtoull(tokens[8].c_str(), NULL, 0);
@@ -53,11 +54,11 @@ syscall parse_syscall_line(const std::string& line)
     }
     catch (const std::invalid_argument& ex)
     {
-        throw parser_error("Corrupted loadavg - Invalid argument", line);
+        throw parser_error("Corrupted syscall - Invalid argument", line);
     }
     catch (const std::out_of_range& ex)
     {
-        throw parser_error("Corrupted loadavg - Out of range", line);
+        throw parser_error("Corrupted syscall - Out of range", line);
     }
 }
 

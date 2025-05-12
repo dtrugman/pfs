@@ -100,7 +100,6 @@ public: // Getters
     
     uint32_t get_sessionid() const;
 
-    syscall get_syscall() const;
 private:
     friend class procfs;
     task(const std::string& procfs_root, int id);

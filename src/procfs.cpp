@@ -201,7 +201,7 @@ syscall procfs::get_syscall() const
     static const std::string SYSCALL_FILE("syscall");
     auto path = _root + SYSCALL_FILE;
 
-    return parsers::parse_syscall_line(utils::readline(path));
+    return parsers::parse_syscall(path);
 }
 
 } // namespace pfs
