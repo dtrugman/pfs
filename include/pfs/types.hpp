@@ -27,9 +27,9 @@
 
 namespace pfs {
 
-constexpr uid_t INVALID_UID   = (uid_t)-1;
-constexpr pid_t INVALID_PID   = (pid_t)-1;
-constexpr ino_t INVALID_INODE = (ino_t)0;
+constexpr uid_t   INVALID_UID   = (uid_t)-1;
+constexpr pid_t   INVALID_PID   = (pid_t)-1;
+constexpr ino64_t INVALID_INODE = (ino64_t)0;
 
 // Note: We only support values that exist post 2.6.32.
 enum class task_state
@@ -330,7 +330,7 @@ struct mem_region
     mem_perm perm;
     size_t offset = 0;
     dev_t device  = 0;
-    ino_t inode   = INVALID_INODE;
+    ino64_t inode = INVALID_INODE;
     std::string pathname;
 
     bool operator<(const mem_region& rhs) const
@@ -552,7 +552,7 @@ struct net_socket
     size_t retransmits;
     uid_t uid;
     size_t timeouts;
-    ino_t inode;
+    ino64_t inode;
     int ref_count;
     size_t skbuff;
 
@@ -594,7 +594,7 @@ struct unix_socket
     int flags;
     type socket_type;
     state socket_state;
-    ino_t inode;
+    ino64_t inode;
     std::string path;
 
     bool operator<(const unix_socket& rhs) const
@@ -614,7 +614,7 @@ struct netlink_socket
     bool dumping     = false;
     int ref_count    = 0;
     unsigned drops   = 0;
-    ino_t inode      = INVALID_INODE;
+    ino64_t inode    = INVALID_INODE;
 
     bool operator<(const unix_socket& rhs) const
     {
