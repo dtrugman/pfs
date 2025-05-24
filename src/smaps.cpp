@@ -181,6 +181,8 @@ const value_parsers parsers = {{"Size", parse_size},
 
 std::vector<mem_map> parse_smaps(const std::string& path)
 {
+    static const char MEM_REGION_DELIM = '-';
+
     std::ifstream in(path);
     if (!in)
     {
@@ -192,10 +194,9 @@ std::vector<mem_map> parse_smaps(const std::string& path)
     std::string line;
     while (std::getline(in, line))
     {
-        auto tokens = utils::split(line);
-        if (tokens.size() >= 5 && tokens[0] != "VmFlags:")
+        if (line.find(MEM_REGION_DELIM) != std::string::npos)
         {
-            // Header line
+            // Memory region line (mapping header)
             if (current)
             {
                 smaps.push_back(std::move(*current));
