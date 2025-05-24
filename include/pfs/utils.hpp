@@ -111,7 +111,7 @@ std::set<int> enumerate_numeric_files(const std::string& dir);
 // Get the inode number of the file.
 // If the linkname is relative, then it is interpreted relative to the directory
 // referred to by the file descriptor dirfd.
-ino_t get_inode(const std::string& path, int dirfd = AT_FDCWD);
+ino64_t get_inode(const std::string& path, int dirfd = AT_FDCWD);
 
 // Return the path to which the specified link points.
 // If the linkname is relative, then it is interpreted relative to the directory
