@@ -65,7 +65,7 @@ public: // Getters
 
     std::unordered_map<int, fd> get_fds() const;
 
-    std::set<ino_t> get_fds_inodes() const;
+    std::set<ino64_t> get_fds_inodes() const;
 
     std::vector<mem_region> get_maps() const;
 
@@ -77,9 +77,9 @@ public: // Getters
 
     net get_net() const;
 
-    ino_t get_ns(const std::string& ns) const;
+    ino64_t get_ns(const std::string& ns) const;
 
-    std::unordered_map<std::string, ino_t> get_ns() const;
+    std::unordered_map<std::string, ino64_t> get_ns() const;
 
     std::string get_root() const;
 

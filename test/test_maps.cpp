@@ -36,7 +36,7 @@ TEST_CASE("Parse maps", "[task][maps]")
     dev_t dev_major;
     dev_t dev_minor;
 
-    ino_t inode;
+    ino64_t inode;
 
     std::string pathname;
 

@@ -111,7 +111,7 @@ std::set<int> enumerate_numeric_files(const std::string& dir);
 // Get the inode number of the file.
 // If the linkname is relative, then it is interpreted relative to the directory
 // referred to by the file descriptor dirfd.
-ino_t get_inode(const std::string& path, int dirfd = AT_FDCWD);
+ino64_t get_inode(const std::string& path, int dirfd = AT_FDCWD);
 
 // Return the path to which the specified link points.
 // If the linkname is relative, then it is interpreted relative to the directory
@@ -165,7 +165,7 @@ ip parse_ipv6_address(const std::string& ip_address_hex);
 std::pair<ip, uint16_t> parse_address(const std::string& address_str);
 
 // Parses a memory size line (e.g. VmRSS:      4488 kB)
-void parse_memory_size(const std::string& value, size_t& out);
+void parse_memory_size(const std::string& value, uint64_t& out);
 
 } // namespace utils
 } // namespace impl

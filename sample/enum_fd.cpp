@@ -22,7 +22,7 @@
 
 template <typename T>
 void add_sockets(const std::vector<T>& sockets,
-                 std::unordered_map<ino_t, std::string>& output)
+                 std::unordered_map<ino64_t, std::string>& output)
 {
     for (auto& socket : sockets)
     {
@@ -32,9 +32,9 @@ void add_sockets(const std::vector<T>& sockets,
     }
 }
 
-std::unordered_map<ino_t, std::string> enum_sockets(const pfs::net& net)
+std::unordered_map<ino64_t, std::string> enum_sockets(const pfs::net& net)
 {
-    std::unordered_map<ino_t, std::string> sockets;
+    std::unordered_map<ino64_t, std::string> sockets;
     add_sockets(net.get_icmp(), sockets);
     add_sockets(net.get_icmp6(), sockets);
     add_sockets(net.get_raw(), sockets);

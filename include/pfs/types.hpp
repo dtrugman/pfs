@@ -27,9 +27,9 @@
 
 namespace pfs {
 
-constexpr uid_t INVALID_UID   = (uid_t)-1;
-constexpr pid_t INVALID_PID   = (pid_t)-1;
-constexpr ino_t INVALID_INODE = (ino_t)0;
+constexpr uid_t   INVALID_UID   = (uid_t)-1;
+constexpr pid_t   INVALID_PID   = (pid_t)-1;
+constexpr ino64_t INVALID_INODE = (ino64_t)0;
 
 // Note: We only support values that exist post 2.6.32.
 enum class task_state
@@ -265,22 +265,22 @@ struct task_status
     std::vector<pid_t> ns_pid;
     std::vector<pid_t> ns_pgid;
     std::vector<pid_t> ns_sid;
-    size_t vm_peak                  = 0; // In kB
-    size_t vm_size                  = 0; // In kB
-    size_t vm_lck                   = 0; // In kB
-    size_t vm_pin                   = 0; // In kB
-    size_t vm_hwm                   = 0; // In kB
-    size_t vm_rss                   = 0; // In kB
-    size_t rss_anon                 = 0; // In kB
-    size_t rss_file                 = 0; // In kB
-    size_t rss_shmem                = 0; // In kB
-    size_t vm_data                  = 0; // In kB
-    size_t vm_stk                   = 0; // In kB
-    size_t vm_exe                   = 0; // In kB
-    size_t vm_lib                   = 0; // In kB
-    size_t vm_pte                   = 0; // In kB
-    size_t vm_swap                  = 0; // In kB
-    size_t huge_tlb_pages           = 0; // In kB
+    uint64_t vm_peak                  = 0; // In kB
+    uint64_t vm_size                  = 0; // In kB
+    uint64_t vm_lck                   = 0; // In kB
+    uint64_t vm_pin                   = 0; // In kB
+    uint64_t vm_hwm                   = 0; // In kB
+    uint64_t vm_rss                   = 0; // In kB
+    uint64_t rss_anon                 = 0; // In kB
+    uint64_t rss_file                 = 0; // In kB
+    uint64_t rss_shmem                = 0; // In kB
+    uint64_t vm_data                  = 0; // In kB
+    uint64_t vm_stk                   = 0; // In kB
+    uint64_t vm_exe                   = 0; // In kB
+    uint64_t vm_lib                   = 0; // In kB
+    uint64_t vm_pte                   = 0; // In kB
+    uint64_t vm_swap                  = 0; // In kB
+    uint64_t huge_tlb_pages           = 0; // In kB
     bool core_dumping               = false;
     size_t threads                  = 1;
     std::pair<size_t, size_t> sig_q = {0, 0};
@@ -325,12 +325,12 @@ struct mem_perm
 
 struct mem_region
 {
-    size_t start_address = 0;
-    size_t end_address   = 0;
+    uint64_t start_address = 0;
+    uint64_t end_address   = 0;
     mem_perm perm;
     size_t offset = 0;
     dev_t device  = 0;
-    ino_t inode   = INVALID_INODE;
+    ino64_t inode = INVALID_INODE;
     std::string pathname;
 
     bool operator<(const mem_region& rhs) const
@@ -343,28 +343,28 @@ struct mem_map
 {
     mem_region region;
 
-    size_t size             = 0; // In kB
-    size_t kernel_page_size = 0; // In kB
-    size_t mmu_page_size    = 0; // In kB
-    size_t rss              = 0; // In kB
-    size_t pss              = 0; // In kB
-    size_t pss_dirty        = 0; // In kB
-    size_t shared_clean     = 0; // In kB
-    size_t shared_dirty     = 0; // In kB
-    size_t private_clean    = 0; // In kB
-    size_t private_dirty    = 0; // In kB
-    size_t referenced       = 0; // In kB
-    size_t anonymous        = 0; // In kB
-    size_t ksm              = 0; // In kB
-    size_t lazy_free        = 0; // In kB
-    size_t anon_huge_pages  = 0; // In kB
-    size_t shmem_pmd_mapped = 0; // In kB
-    size_t file_pmd_mapped  = 0; // In kB
-    size_t shared_hugetlb   = 0; // In kB
-    size_t private_hugetlb  = 0; // In kB
-    size_t swap             = 0; // In kB
-    size_t swap_pss         = 0; // In kB
-    size_t locked           = 0; // In kB
+    uint64_t size             = 0; // In kB
+    uint64_t kernel_page_size = 0; // In kB
+    uint64_t mmu_page_size    = 0; // In kB
+    uint64_t rss              = 0; // In kB
+    uint64_t pss              = 0; // In kB
+    uint64_t pss_dirty        = 0; // In kB
+    uint64_t shared_clean     = 0; // In kB
+    uint64_t shared_dirty     = 0; // In kB
+    uint64_t private_clean    = 0; // In kB
+    uint64_t private_dirty    = 0; // In kB
+    uint64_t referenced       = 0; // In kB
+    uint64_t anonymous        = 0; // In kB
+    uint64_t ksm              = 0; // In kB
+    uint64_t lazy_free        = 0; // In kB
+    uint64_t anon_huge_pages  = 0; // In kB
+    uint64_t shmem_pmd_mapped = 0; // In kB
+    uint64_t file_pmd_mapped  = 0; // In kB
+    uint64_t shared_hugetlb   = 0; // In kB
+    uint64_t private_hugetlb  = 0; // In kB
+    uint64_t swap             = 0; // In kB
+    uint64_t swap_pss         = 0; // In kB
+    uint64_t locked           = 0; // In kB
 
     bool thp_eligible       = false;
     std::vector<std::string> vm_flags;
@@ -552,7 +552,7 @@ struct net_socket
     size_t retransmits;
     uid_t uid;
     size_t timeouts;
-    ino_t inode;
+    ino64_t inode;
     int ref_count;
     size_t skbuff;
 
@@ -594,7 +594,7 @@ struct unix_socket
     int flags;
     type socket_type;
     state socket_state;
-    ino_t inode;
+    ino64_t inode;
     std::string path;
 
     bool operator<(const unix_socket& rhs) const
@@ -614,7 +614,7 @@ struct netlink_socket
     bool dumping     = false;
     int ref_count    = 0;
     unsigned drops   = 0;
-    ino_t inode      = INVALID_INODE;
+    ino64_t inode    = INVALID_INODE;
 
     bool operator<(const unix_socket& rhs) const
     {

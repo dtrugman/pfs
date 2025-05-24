@@ -102,7 +102,7 @@ std::set<int> enumerate_numeric_files(const std::string& dir)
     return files;
 }
 
-ino_t get_inode(const std::string& path, int dirfd)
+ino64_t get_inode(const std::string& path, int dirfd)
 {
     struct stat st;
     int err = fstatat(dirfd, path.c_str(), &st, 0);
@@ -325,7 +325,7 @@ std::pair<ip, uint16_t> parse_address(const std::string& address_str)
     return std::make_pair(addr, port);
 }
 
-void parse_memory_size(const std::string& value, size_t& out)
+void parse_memory_size(const std::string& value, uint64_t& out)
 {
     enum token
     {

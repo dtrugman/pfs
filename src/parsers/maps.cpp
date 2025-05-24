@@ -25,7 +25,7 @@ namespace parsers {
 
 namespace {
 
-std::pair<size_t, size_t>
+std::pair<uint64_t, uint64_t>
 parse_mem_region_address(const std::string& address_str)
 {
     // Address must be a range '<start>-<end>'
@@ -47,10 +47,10 @@ parse_mem_region_address(const std::string& address_str)
 
     try
     {
-        size_t start;
+        uint64_t start;
         utils::stot(tokens[START], start, utils::base::hex);
 
-        size_t end;
+        uint64_t end;
         utils::stot(tokens[END], end, utils::base::hex);
 
         return std::make_pair(start, end);
@@ -96,11 +96,11 @@ mem_perm parse_mem_region_permissions(const std::string& perm_str)
     return perm;
 }
 
-size_t parse_mem_region_offset(const std::string& offset_str)
+uint64_t parse_mem_region_offset(const std::string& offset_str)
 {
     try
     {
-        size_t offset;
+        uint64_t offset;
         utils::stot(offset_str, offset, utils::base::hex);
         return offset;
     }
@@ -114,11 +114,11 @@ size_t parse_mem_region_offset(const std::string& offset_str)
     }
 }
 
-ino_t parse_mem_region_inode(const std::string& inode_str)
+ino64_t parse_mem_region_inode(const std::string& inode_str)
 {
     try
     {
-        ino_t inode;
+        ino64_t inode;
         utils::stot(inode_str, inode);
         return inode;
     }
