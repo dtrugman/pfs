@@ -367,7 +367,7 @@ struct mem_map
     size_t locked           = 0; // In kB
 
     bool thp_eligible       = false;
-    std::string vm_flags;
+    std::vector<std::string> vm_flags;
 };
 
 struct module

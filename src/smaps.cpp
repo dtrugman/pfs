@@ -149,6 +149,11 @@ void parse_thp_eligible(const std::string& value, mem_map& out)
     out.thp_eligible = thp_eligible != 0;
 }
 
+void parse_vm_flags(const std::string& value, mem_map& out)
+{
+    out.vm_flags = utils::split(value);
+}
+
 using value_parser =
     std::function<void(const std::string& value, mem_map& out)>;
 using value_parsers = std::unordered_map<std::string, value_parser>;
@@ -175,7 +180,8 @@ const value_parsers parsers = {{"Size", parse_size},
                                {"Swap", parse_swap},
                                {"SwapPss", parse_swap_pss},
                                {"Locked", parse_locked},
-                               {"THPeligible", parse_thp_eligible}};
+                               {"THPeligible", parse_thp_eligible},
+                               {"VmFlags", parse_vm_flags}};
 
 } // namespace
 
@@ -221,12 +227,6 @@ std::vector<mem_map> parse_smaps(const std::string& path)
 
         utils::rtrim(key);
         utils::ltrim(value);
-        if (key == "VmFlags")
-        {
-            // TODO: Split this into tokens and parse them?
-            current->vm_flags = value;
-            continue;
-        }
 
         auto iter = parsers.find(key);
         if (iter != parsers.end())

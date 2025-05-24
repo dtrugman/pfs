@@ -99,7 +99,7 @@ TEST_CASE("Parse smaps", "[task][smaps]")
         REQUIRE(smaps[0].swap_pss == 65);
         REQUIRE(smaps[0].locked == 70);
         REQUIRE(smaps[0].thp_eligible == true);
-        REQUIRE(smaps[0].vm_flags == "rd ex mr mw");
+        REQUIRE(smaps[0].vm_flags == std::vector<std::string>{"rd", "ex", "mr", "mw"});
 
         REQUIRE(smaps[1].region.start_address == 0xfdef41c40000);
         REQUIRE(smaps[1].region.end_address == 0xfdef41c64000);
@@ -129,6 +129,6 @@ TEST_CASE("Parse smaps", "[task][smaps]")
         REQUIRE(smaps[1].swap_pss == 70);
         REQUIRE(smaps[1].locked == 75);
         REQUIRE(smaps[1].thp_eligible == false);
-        REQUIRE(smaps[1].vm_flags == "rd ex mr mw me");
+        REQUIRE(smaps[1].vm_flags == std::vector<std::string>{"rd", "ex", "mr", "mw", "me"});
     }
 }
