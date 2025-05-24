@@ -265,22 +265,22 @@ struct task_status
     std::vector<pid_t> ns_pid;
     std::vector<pid_t> ns_pgid;
     std::vector<pid_t> ns_sid;
-    size_t vm_peak                  = 0; // In kB
-    size_t vm_size                  = 0; // In kB
-    size_t vm_lck                   = 0; // In kB
-    size_t vm_pin                   = 0; // In kB
-    size_t vm_hwm                   = 0; // In kB
-    size_t vm_rss                   = 0; // In kB
-    size_t rss_anon                 = 0; // In kB
-    size_t rss_file                 = 0; // In kB
-    size_t rss_shmem                = 0; // In kB
-    size_t vm_data                  = 0; // In kB
-    size_t vm_stk                   = 0; // In kB
-    size_t vm_exe                   = 0; // In kB
-    size_t vm_lib                   = 0; // In kB
-    size_t vm_pte                   = 0; // In kB
-    size_t vm_swap                  = 0; // In kB
-    size_t huge_tlb_pages           = 0; // In kB
+    uint64_t vm_peak                  = 0; // In kB
+    uint64_t vm_size                  = 0; // In kB
+    uint64_t vm_lck                   = 0; // In kB
+    uint64_t vm_pin                   = 0; // In kB
+    uint64_t vm_hwm                   = 0; // In kB
+    uint64_t vm_rss                   = 0; // In kB
+    uint64_t rss_anon                 = 0; // In kB
+    uint64_t rss_file                 = 0; // In kB
+    uint64_t rss_shmem                = 0; // In kB
+    uint64_t vm_data                  = 0; // In kB
+    uint64_t vm_stk                   = 0; // In kB
+    uint64_t vm_exe                   = 0; // In kB
+    uint64_t vm_lib                   = 0; // In kB
+    uint64_t vm_pte                   = 0; // In kB
+    uint64_t vm_swap                  = 0; // In kB
+    uint64_t huge_tlb_pages           = 0; // In kB
     bool core_dumping               = false;
     size_t threads                  = 1;
     std::pair<size_t, size_t> sig_q = {0, 0};
@@ -325,8 +325,8 @@ struct mem_perm
 
 struct mem_region
 {
-    size_t start_address = 0;
-    size_t end_address   = 0;
+    uint64_t start_address = 0;
+    uint64_t end_address   = 0;
     mem_perm perm;
     size_t offset = 0;
     dev_t device  = 0;
@@ -343,28 +343,28 @@ struct mem_map
 {
     mem_region region;
 
-    size_t size             = 0; // In kB
-    size_t kernel_page_size = 0; // In kB
-    size_t mmu_page_size    = 0; // In kB
-    size_t rss              = 0; // In kB
-    size_t pss              = 0; // In kB
-    size_t pss_dirty        = 0; // In kB
-    size_t shared_clean     = 0; // In kB
-    size_t shared_dirty     = 0; // In kB
-    size_t private_clean    = 0; // In kB
-    size_t private_dirty    = 0; // In kB
-    size_t referenced       = 0; // In kB
-    size_t anonymous        = 0; // In kB
-    size_t ksm              = 0; // In kB
-    size_t lazy_free        = 0; // In kB
-    size_t anon_huge_pages  = 0; // In kB
-    size_t shmem_pmd_mapped = 0; // In kB
-    size_t file_pmd_mapped  = 0; // In kB
-    size_t shared_hugetlb   = 0; // In kB
-    size_t private_hugetlb  = 0; // In kB
-    size_t swap             = 0; // In kB
-    size_t swap_pss         = 0; // In kB
-    size_t locked           = 0; // In kB
+    uint64_t size             = 0; // In kB
+    uint64_t kernel_page_size = 0; // In kB
+    uint64_t mmu_page_size    = 0; // In kB
+    uint64_t rss              = 0; // In kB
+    uint64_t pss              = 0; // In kB
+    uint64_t pss_dirty        = 0; // In kB
+    uint64_t shared_clean     = 0; // In kB
+    uint64_t shared_dirty     = 0; // In kB
+    uint64_t private_clean    = 0; // In kB
+    uint64_t private_dirty    = 0; // In kB
+    uint64_t referenced       = 0; // In kB
+    uint64_t anonymous        = 0; // In kB
+    uint64_t ksm              = 0; // In kB
+    uint64_t lazy_free        = 0; // In kB
+    uint64_t anon_huge_pages  = 0; // In kB
+    uint64_t shmem_pmd_mapped = 0; // In kB
+    uint64_t file_pmd_mapped  = 0; // In kB
+    uint64_t shared_hugetlb   = 0; // In kB
+    uint64_t private_hugetlb  = 0; // In kB
+    uint64_t swap             = 0; // In kB
+    uint64_t swap_pss         = 0; // In kB
+    uint64_t locked           = 0; // In kB
 
     bool thp_eligible       = false;
     std::vector<std::string> vm_flags;
