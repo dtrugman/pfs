@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "test_utils.hpp"
 
-#include "pfs/parsers/mem_map.hpp"
+#include "pfs/parsers/smaps.hpp"
 
 using namespace pfs::impl::parsers;
 
@@ -69,7 +69,7 @@ TEST_CASE("Parse smaps", "[task][smaps]")
 
     SECTION("Parse all maps")
     {
-        auto smaps = parse_mem_map(file);
+        auto smaps = parse_smaps(file);
         REQUIRE(smaps.size() == 2);
 
         REQUIRE(smaps[0].region.start_address == 0xc0fbeffd0000);

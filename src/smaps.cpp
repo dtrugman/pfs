@@ -22,7 +22,7 @@
 
 #include "pfs/parser_error.hpp"
 #include "pfs/parsers/maps.hpp"
-#include "pfs/parsers/mem_map.hpp"
+#include "pfs/parsers/smaps.hpp"
 #include "pfs/types.hpp"
 #include "pfs/utils.hpp"
 
@@ -179,7 +179,7 @@ const value_parsers parsers = {{"Size", parse_size},
 
 } // namespace
 
-std::vector<mem_map> parse_mem_map(const std::string& path)
+std::vector<mem_map> parse_smaps(const std::string& path)
 {
     std::ifstream in(path);
     if (!in)
@@ -187,7 +187,7 @@ std::vector<mem_map> parse_mem_map(const std::string& path)
         throw parser_error("Couldn't open file", path);
     }
 
-    std::vector<mem_map> mem_maps;
+    std::vector<mem_map> smaps;
     std::optional<mem_map> current;
     std::string line;
     while (std::getline(in, line))
@@ -198,7 +198,7 @@ std::vector<mem_map> parse_mem_map(const std::string& path)
             // Header line
             if (current)
             {
-                mem_maps.push_back(std::move(*current));
+                smaps.push_back(std::move(*current));
             }
 
             current.emplace();
@@ -237,10 +237,10 @@ std::vector<mem_map> parse_mem_map(const std::string& path)
 
     if (current)
     {
-        mem_maps.push_back(std::move(*current));
+        smaps.push_back(std::move(*current));
     }
 
-    return mem_maps;
+    return smaps;
 }
 
 } // namespace parsers
