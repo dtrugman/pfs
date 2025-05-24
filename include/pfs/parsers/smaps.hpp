@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-#ifndef PFS_PARSERS_MEM_MAP_HPP
-#define PFS_PARSERS_MEM_MAP_HPP
+#ifndef PFS_PARSERS_SMAPS_HPP
+#define PFS_PARSERS_SMAPS_HPP
 
 #include <string>
 #include <vector>
@@ -26,10 +26,10 @@ namespace pfs {
 namespace impl {
 namespace parsers {
 
-std::vector<mem_map> parse_mem_map(const std::string& path);
+std::vector<mem_map> parse_smaps(const std::string& path);
 
 } // namespace parsers
 } // namespace impl
 } // namespace pfs
 
-#endif // PFS_PARSERS_MEM_MAP_HPP
+#endif // PFS_PARSERS_SMAPS_HPP
