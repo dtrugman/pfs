@@ -25,7 +25,7 @@ namespace pfs {
 namespace impl {
 namespace parsers {
 
-syscall parse_syscall(const std::string& line);
+syscall parse_syscall(const std::string& path);
 
 } // namespace parsers
 } // namespace impl
