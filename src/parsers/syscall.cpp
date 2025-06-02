@@ -43,12 +43,15 @@ syscall parse_syscall(const std::string& path)
         syscall output;
 
         output.number_of_syscall = std::atoi(tokens[0].c_str());
+        size_t tmp;
+
         for (int i = 1; i < 7; i++)
         {
-            output.arguments.push_back(std::strtoull(tokens[i].c_str(), NULL, 0));
+            pfs::impl::utils::stot(tokens[i].c_str(), tmp, utils::base::hex);    
+            output.arguments.push_back(tmp);
         }
-        output.stack_pointer   = std::strtoull(tokens[7].c_str(), NULL, 0);
-        output.program_counter = std::strtoull(tokens[8].c_str(), NULL, 0);
+        pfs::impl::utils::stot(tokens[7].c_str(), output.stack_pointer, utils::base::hex);
+        pfs::impl::utils::stot(tokens[8].c_str(), output.program_counter, utils::base::hex);
 
         return output;
     }
