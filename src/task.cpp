@@ -35,6 +35,7 @@
 #include "pfs/parsers/smaps.hpp"
 #include "pfs/parsers/task_io.hpp"
 #include "pfs/parsers/task_status.hpp"
+#include "pfs/parsers/syscall.hpp"
 #include "pfs/task.hpp"
 #include "pfs/utils.hpp"
 
@@ -507,5 +508,14 @@ uint32_t task::get_sessionid() const
     parsers::to_number(line, session_id);
     return session_id;
 }
+
+syscall task::get_syscall() const
+{
+  static const std::string SYSCALL_FILE("syscall");
+  auto path = _task_root + SYSCALL_FILE;
+  
+  return parsers::parse_syscall(path); 
+}
+
 
 } // namespace pfs

@@ -30,6 +30,7 @@
 #include "pfs/parsers/modules.hpp"
 #include "pfs/parsers/lines.hpp"
 #include "pfs/parsers/proc_stat.hpp"
+#include "pfs/parsers/syscall.hpp"
 #include "pfs/procfs.hpp"
 #include "pfs/utils.hpp"
 
@@ -193,6 +194,14 @@ std::string procfs::get_version_signature() const
     auto path = _root + VERSION_SIGNATURE_FILE;
 
     return utils::readline(path);
+}
+
+syscall procfs::get_syscall() const
+{
+    static const std::string SYSCALL_FILE("syscall");
+    auto path = _root + SYSCALL_FILE;
+
+    return parsers::parse_syscall(path);
 }
 
 } // namespace pfs

@@ -129,6 +129,12 @@ static void enum_task(const pfs::task& task)
         auto fds = task.get_fds();
         print(fds);
     });
+
+
+    safe("syscall", [&]{
+        auto sc = task.get_syscall();
+        print(sc);
+    });
 }
 
 int enum_tasks(std::vector<std::string>&& args)

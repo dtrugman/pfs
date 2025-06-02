@@ -91,13 +91,15 @@ public: // Getters
 
     task_status get_status(const std::set<std::string>& keys = {}) const;
 
+    syscall get_syscall() const;
+
     task get_task(int id) const;
 
     std::set<task> get_tasks() const;
 
     std::vector<id_map> get_uid_map() const;
     std::vector<id_map> get_gid_map() const;
-
+    
     uint32_t get_sessionid() const;
 
 private:

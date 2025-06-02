@@ -73,6 +73,8 @@ public: // System API
 
     std::string get_version_signature() const;
 
+    syscall get_syscall() const;
+
 private: // Private utilities
     static std::string build_root(std::string root);
     static void validate_root(const std::string& root);

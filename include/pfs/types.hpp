@@ -692,6 +692,24 @@ struct block_stat
     unsigned long long flush_ticks;     // total wait time for flush requests [unit: ms]
 };
 
+struct syscall
+{
+  unsigned int number_of_syscall; //
+  std::vector<size_t> arguments;  //
+  size_t stack_pointer;           //
+  size_t program_counter;         //
+
+  std::string toString()
+  {
+    std::string args;
+    for (auto i : arguments)
+    {
+        args.append(i + " ");
+    }
+    return std::to_string(number_of_syscall) + args + std::to_string(stack_pointer) + " " + std::to_string(program_counter); 
+  }
+};
+
 } // namespace pfs
 
 #endif // PFS_TYPES_HPP
