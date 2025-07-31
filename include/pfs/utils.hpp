@@ -138,6 +138,12 @@ std::string readline(const std::string& file);
 std::vector<std::string> split(const std::string& buffer, char delim = ' ',
                                bool keep_empty = false);
 
+// Split a buffer into substrings. The number of resulting substrings is either
+// the number of occurences of `delim` + 1 or `times` + 1, whichever is smaller.
+// The delimiters themselves are dropped. Empty tokens are kept.
+std::vector<std::string> split_times(const std::string& buffer,
+                                     char delim = ' ', size_t times = 1);
+
 // Split a buffer into two: Before and after the first occurence of the
 // delimiter. The delimiter itself is dropped.
 std::pair<std::string, std::string> split_once(const std::string& buffer,

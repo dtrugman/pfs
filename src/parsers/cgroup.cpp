@@ -52,8 +52,8 @@ cgroup parse_cgroup_line(const std::string& line)
     static const char DELIM             = ':';
     static const char CONTROLLERS_DELIM = ',';
 
-    auto tokens = utils::split(line, DELIM, /* keep_empty = */ true);
-    if (tokens.size() != COUNT)
+    auto tokens = utils::split_times(line, DELIM, COUNT - 1);
+    if (tokens.size() < COUNT)
     {
         throw parser_error("Corrupted cgroup line - Unexpected tokens count",
                            line);

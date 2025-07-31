@@ -9,6 +9,7 @@
 #include <linux/kdev_t.h>
 
 #include <fstream>
+#include <random>
 #include <sstream>
 
 #include "pfs/defer.hpp"

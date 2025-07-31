@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <string>
 #include <system_error>
 
 #include "pfs/defer.hpp"
@@ -205,6 +206,34 @@ std::vector<std::string> split(const std::string& buffer, char delim,
     if (last < curr)
     {
         out.emplace_back(buffer.substr(last, curr - last));
+    }
+
+    return out;
+}
+
+std::vector<std::string> split_times(const std::string& buffer, char delim,
+                                     size_t times)
+{
+    std::vector<std::string> out;
+    out.reserve(times + 1);
+
+    size_t curr = 0;
+    for (size_t split_count = 0; split_count < times; ++split_count)
+    {
+        size_t index = buffer.find(delim, curr);
+        if (index == std::string::npos)
+        {
+            out.emplace_back(buffer.substr(curr));
+            return out;
+        }
+
+        out.emplace_back(buffer.substr(curr, index - curr));
+        curr = index + 1;
+    }
+
+    if (curr < buffer.size())
+    {
+        out.emplace_back(buffer.substr(curr));
     }
 
     return out;

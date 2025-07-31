@@ -48,6 +48,13 @@ TEST_CASE("Parse cgroup", "[procfs][cgroup]")
         expected.pathname    = "/user.slice/user-1000.slice/session-174.scope";
     }
 
+    SECTION("V2 controller with colons in the path")
+    {
+        expected.hierarchy   = 0;
+        expected.controllers = {};
+        expected.pathname    = "/user.slice/user-1000.slice/user@1000.service/app.slice/app-dbus\\x2d:1.21\\x2dorg.a11y.atspi.Registry.slice/dbus-:1.21-org.a11y.atspi.Registry@0.service";
+    }
+
     std::ostringstream line;
     line << expected.hierarchy << ':';
     line << join(expected.controllers) << ':';
