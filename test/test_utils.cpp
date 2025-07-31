@@ -78,6 +78,52 @@ TEST_CASE("Trimming", "[utils]")
     REQUIRE(original == expected);
 }
 
+TEST_CASE("Split times", "[utils]")
+{
+    std::string input;
+    std::vector<std::string> tokens;
+    char delim   = ' ';
+    size_t times = 1;
+
+    SECTION("Single word tokens")
+    {
+        input  = "raid456,async_raid6_recov,async_memcpy,async_pq,";
+        tokens = {"raid456", "async_raid6_recov", "async_memcpy", "async_pq"};
+        delim  = ',';
+        times  = 4;
+    }
+
+    SECTION("Multi word token")
+    {
+        input  = "first! second third !fourth";
+        tokens = {"first", " second third ", "fourth"};
+        delim  = '!';
+        times  = 3;
+    }
+
+    SECTION("Limit number of tokens")
+    {
+        input  = "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
+                 "app-dbus\\x2d:1.21\\x2dorg.a11y.atspi.Registry.slice/"
+                 "dbus-:1.21-org.a11y.atspi.Registry@0.service";
+        tokens = {"0", "",
+                  "/user.slice/user-1000.slice/user@1000.service/app.slice/"
+                  "app-dbus\\x2d:1.21\\x2dorg.a11y.atspi.Registry.slice/"
+                  "dbus-:1.21-org.a11y.atspi.Registry@0.service"};
+        delim  = ':';
+        times  = 2;
+    }
+
+    SECTION("No delim")
+    {
+        input  = "Groups";
+        tokens = {"Groups"};
+        times  = 1;
+    }
+
+    REQUIRE(split_times(input, delim, times) == tokens);
+}
+
 TEST_CASE("Split once", "[utils]")
 {
     std::string input;
