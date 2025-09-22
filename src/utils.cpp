@@ -27,9 +27,9 @@
 #include <system_error>
 
 #include "pfs/defer.hpp"
-#include "pfs/utils.hpp"
-#include "pfs/types.hpp"
 #include "pfs/parser_error.hpp"
+#include "pfs/types.hpp"
+#include "pfs/utils.hpp"
 
 namespace pfs {
 namespace impl {
@@ -223,7 +223,7 @@ std::vector<std::string> split_times(const std::string& buffer, char delim,
         size_t index = buffer.find(delim, curr);
         if (index == std::string::npos)
         {
-            out.emplace_back(buffer.substr(curr));
+            out.emplace_back(buffer.begin() + curr, buffer.end());
             return out;
         }
 
