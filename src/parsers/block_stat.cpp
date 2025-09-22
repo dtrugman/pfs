@@ -16,14 +16,14 @@
 
 #include "pfs/parsers/block_stat.hpp"
 #include "pfs/parser_error.hpp"
-#include "pfs/utils.hpp"
 #include "pfs/types.hpp"
+#include "pfs/utils.hpp"
 
 namespace pfs {
 namespace impl {
 namespace parsers {
 
-block_stat parse_block_stat_line(const std::string &line)
+block_stat parse_block_stat_line(const std::string& line)
 {
     // Some examples:
     // clang-format off
@@ -79,9 +79,18 @@ block_stat parse_block_stat_line(const std::string &line)
         utils::stot(tokens[DISCARD_IOS], stat.discard_ios, utils::base::decimal);
         utils::stot(tokens[DISCARD_MERGES], stat.discard_merges, utils::base::decimal);
         utils::stot(tokens[DISCARD_SECTORS], stat.discard_sectors, utils::base::decimal);
-        utils::stot(tokens[DISCARD_TICKS], stat.discard_ticks, utils::base::decimal);
-        utils::stot(tokens[FLUSH_IOS], stat.flush_ios, utils::base::decimal);
-        utils::stot(tokens[FLUSH_TICKS], stat.flush_ticks, utils::base::decimal);
+        if (tokens.size() >= (DISCARD_TICKS + 1))
+        {
+            utils::stot(tokens[DISCARD_TICKS], stat.discard_ticks, utils::base::decimal);
+        }
+        if (tokens.size() >= (FLUSH_IOS + 1))
+        {
+            utils::stot(tokens[FLUSH_IOS], stat.flush_ios, utils::base::decimal);
+        }
+        if (tokens.size() >= (FLUSH_TICKS + 1))
+        {
+            utils::stot(tokens[FLUSH_TICKS], stat.flush_ticks, utils::base::decimal);
+        }
     }
     catch (const std::invalid_argument& ex)
     {

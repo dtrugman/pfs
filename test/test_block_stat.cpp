@@ -1,7 +1,4 @@
-#include <sstream>
-
 #include "catch.hpp"
-#include "test_utils.hpp"
 
 #include "pfs/parsers/block_stat.hpp"
 #include "pfs/parser_error.hpp"
@@ -21,7 +18,7 @@ TEST_CASE("Parse corrupted block stat", "[block][stat]")
 
 TEST_CASE("Parse block stat", "[block][stat]")
 {
-    pfs::block_stat expected;
+    pfs::block_stat expected{};
 
     std::string line =
             "12735     9101   833156     2926    58398   181703  4538620698    38810      "
@@ -44,6 +41,53 @@ TEST_CASE("Parse block stat", "[block][stat]")
     expected.discard_ticks = 337;
     expected.flush_ios = 23765;
     expected.flush_ticks = 5414;
+
+    auto stat = parse_block_stat_line(line);
+
+    REQUIRE(stat.read_ios == expected.read_ios);
+    REQUIRE(stat.read_merges == expected.read_merges);
+    REQUIRE(stat.read_sectors == expected.read_sectors);
+    REQUIRE(stat.read_ticks == expected.read_ticks);
+    REQUIRE(stat.write_ios == expected.write_ios);
+    REQUIRE(stat.write_merges == expected.write_merges);
+    REQUIRE(stat.write_sectors == expected.write_sectors);
+    REQUIRE(stat.write_ticks == expected.write_ticks);
+    REQUIRE(stat.in_flight == expected.in_flight);
+    REQUIRE(stat.io_ticks == expected.io_ticks);
+    REQUIRE(stat.time_in_queue == expected.time_in_queue);
+    REQUIRE(stat.discard_ios == expected.discard_ios);
+    REQUIRE(stat.discard_merges == expected.discard_merges);
+    REQUIRE(stat.discard_sectors == expected.discard_sectors);
+    REQUIRE(stat.discard_ticks == expected.discard_ticks);
+    REQUIRE(stat.flush_ios == expected.flush_ios);
+    REQUIRE(stat.flush_ticks == expected.flush_ticks);
+}
+
+TEST_CASE("Parse block stat with fewer elemets", "[block][stat]")
+{
+    pfs::block_stat expected{};
+
+    std::string line =
+        "80300      177  3649039    44528     8312    11568  1934589    13946  "
+        "      0    13791    58474        3213        0        102155080";
+    expected.read_ios        = 80300;
+    expected.read_merges     = 177;
+    expected.read_sectors    = 3649039;
+    expected.read_ticks      = 44528;
+    expected.write_ios       = 8312;
+    expected.write_merges    = 11568;
+    expected.write_sectors   = 1934589;
+    expected.write_ticks     = 13946;
+    expected.in_flight       = 0;
+    expected.io_ticks        = 13791;
+    expected.time_in_queue   = 58474;
+    expected.discard_ios     = 3213;
+    expected.discard_merges  = 0;
+    expected.discard_sectors = 102155080;
+
+    expected.discard_ticks   = 0;
+    expected.flush_ios       = 0;
+    expected.flush_ticks     = 0;
 
     auto stat = parse_block_stat_line(line);
 
