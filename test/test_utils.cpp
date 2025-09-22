@@ -1,5 +1,5 @@
-#include "catch.hpp"
 #include "test_utils.hpp"
+#include "catch.hpp"
 
 #include "pfs/defer.hpp"
 #include "pfs/utils.hpp"
@@ -81,47 +81,49 @@ TEST_CASE("Trimming", "[utils]")
 TEST_CASE("Split times", "[utils]")
 {
     std::string input;
-    std::vector<std::string> tokens;
+    std::vector<std::string> expected;
     char delim   = ' ';
     size_t times = 1;
 
     SECTION("Single word tokens")
     {
-        input  = "raid456,async_raid6_recov,async_memcpy,async_pq,";
-        tokens = {"raid456", "async_raid6_recov", "async_memcpy", "async_pq"};
-        delim  = ',';
-        times  = 4;
+        input    = "raid456,async_raid6_recov,async_memcpy,async_pq,";
+        expected = {"raid456", "async_raid6_recov", "async_memcpy", "async_pq"};
+        delim    = ',';
+        times    = 4;
     }
 
     SECTION("Multi word token")
     {
-        input  = "first! second third !fourth";
-        tokens = {"first", " second third ", "fourth"};
-        delim  = '!';
-        times  = 3;
+        input    = "first! second third !fourth";
+        expected = {"first", " second third ", "fourth"};
+        delim    = '!';
+        times    = 3;
     }
 
     SECTION("Limit number of tokens")
     {
-        input  = "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
-                 "app-dbus\\x2d:1.21\\x2dorg.a11y.atspi.Registry.slice/"
-                 "dbus-:1.21-org.a11y.atspi.Registry@0.service";
-        tokens = {"0", "",
-                  "/user.slice/user-1000.slice/user@1000.service/app.slice/"
-                  "app-dbus\\x2d:1.21\\x2dorg.a11y.atspi.Registry.slice/"
-                  "dbus-:1.21-org.a11y.atspi.Registry@0.service"};
-        delim  = ':';
-        times  = 2;
+        input    = "0::/user.slice/user-1000.slice/user@1000.service/app.slice/"
+                   "app-dbus\\x2d:1.21\\x2dorg.a11y.atspi.Registry.slice/"
+                   "dbus-:1.21-org.a11y.atspi.Registry@0.service";
+        expected = {"0", "",
+                    "/user.slice/user-1000.slice/user@1000.service/app.slice/"
+                    "app-dbus\\x2d:1.21\\x2dorg.a11y.atspi.Registry.slice/"
+                    "dbus-:1.21-org.a11y.atspi.Registry@0.service"};
+        delim    = ':';
+        times    = 2;
     }
 
     SECTION("No delim")
     {
-        input  = "Groups";
-        tokens = {"Groups"};
-        times  = 1;
+        input    = "Groups";
+        expected = {"Groups"};
+        times    = 1;
+        delim    = ' ';
     }
 
-    REQUIRE(split_times(input, delim, times) == tokens);
+    auto actual = split_times(input, delim, times);
+    REQUIRE(actual == expected);
 }
 
 TEST_CASE("Split once", "[utils]")

@@ -39,6 +39,7 @@ cgroup parse_cgroup_line(const std::string& line)
     // 2:net_cls,net_prio:/
     // 1:name=systemd:/user.slice/user-1000.slice/session-174.scope
     // 0::/user.slice/user-1000.slice/session-174.scope
+    // 0::/user.slice/user-1000.slice/user@1000.service/app.slice/app-dbus\x2d:1.2\x2dorg.gnome.OnlineAccounts.slice/dbus-:1.2-org.gnome.OnlineAccounts@0.service
     // clang-format on
 
     enum token
@@ -52,6 +53,9 @@ cgroup parse_cgroup_line(const std::string& line)
     static const char DELIM             = ':';
     static const char CONTROLLERS_DELIM = ',';
 
+    // The cgroup path component can contain colons (which are used as the
+    // delimiter), so we must split exactly COUNT-1 times and cannot use the
+    // regular `split` function here
     auto tokens = utils::split_times(line, DELIM, COUNT - 1);
     if (tokens.size() < COUNT)
     {
