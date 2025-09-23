@@ -65,31 +65,31 @@ block_stat parse_block_stat_line(const std::string& line)
 
     try
     {
-        utils::stot(tokens[READ_IOS], stat.read_ios, utils::base::decimal);
-        utils::stot(tokens[READ_MERGES], stat.read_merges, utils::base::decimal);
-        utils::stot(tokens[READ_SECTORS], stat.read_sectors, utils::base::decimal);
-        utils::stot(tokens[READ_TICKS], stat.read_ticks, utils::base::decimal);
-        utils::stot(tokens[WRITE_IOS], stat.write_ios, utils::base::decimal);
-        utils::stot(tokens[WRITE_MERGES], stat.write_merges, utils::base::decimal);
-        utils::stot(tokens[WRITE_SECTORS], stat.write_sectors, utils::base::decimal);
-        utils::stot(tokens[WRITE_TICKS], stat.write_ticks, utils::base::decimal);
-        utils::stot(tokens[IN_FLIGHT], stat.in_flight, utils::base::decimal);
-        utils::stot(tokens[IO_TICKS], stat.io_ticks, utils::base::decimal);
-        utils::stot(tokens[TIME_IN_QUEUE], stat.time_in_queue, utils::base::decimal);
-        utils::stot(tokens[DISCARD_IOS], stat.discard_ios, utils::base::decimal);
-        utils::stot(tokens[DISCARD_MERGES], stat.discard_merges, utils::base::decimal);
-        utils::stot(tokens[DISCARD_SECTORS], stat.discard_sectors, utils::base::decimal);
+        utils::stot(tokens.at(READ_IOS), stat.read_ios, utils::base::decimal);
+        utils::stot(tokens.at(READ_MERGES), stat.read_merges, utils::base::decimal);
+        utils::stot(tokens.at(READ_SECTORS), stat.read_sectors, utils::base::decimal);
+        utils::stot(tokens.at(READ_TICKS), stat.read_ticks, utils::base::decimal);
+        utils::stot(tokens.at(WRITE_IOS), stat.write_ios, utils::base::decimal);
+        utils::stot(tokens.at(WRITE_MERGES), stat.write_merges, utils::base::decimal);
+        utils::stot(tokens.at(WRITE_SECTORS), stat.write_sectors, utils::base::decimal);
+        utils::stot(tokens.at(WRITE_TICKS), stat.write_ticks, utils::base::decimal);
+        utils::stot(tokens.at(IN_FLIGHT), stat.in_flight, utils::base::decimal);
+        utils::stot(tokens.at(IO_TICKS), stat.io_ticks, utils::base::decimal);
+        utils::stot(tokens.at(TIME_IN_QUEUE), stat.time_in_queue, utils::base::decimal);
+        utils::stot(tokens.at(DISCARD_IOS), stat.discard_ios, utils::base::decimal);
+        utils::stot(tokens.at(DISCARD_MERGES), stat.discard_merges, utils::base::decimal);
+        utils::stot(tokens.at(DISCARD_SECTORS), stat.discard_sectors, utils::base::decimal);
         if (tokens.size() >= (DISCARD_TICKS + 1))
         {
-            utils::stot(tokens[DISCARD_TICKS], stat.discard_ticks, utils::base::decimal);
+            utils::stot(tokens.at(DISCARD_TICKS), stat.discard_ticks, utils::base::decimal);
         }
         if (tokens.size() >= (FLUSH_IOS + 1))
         {
-            utils::stot(tokens[FLUSH_IOS], stat.flush_ios, utils::base::decimal);
+            utils::stot(tokens.at(FLUSH_IOS), stat.flush_ios, utils::base::decimal);
         }
         if (tokens.size() >= (FLUSH_TICKS + 1))
         {
-            utils::stot(tokens[FLUSH_TICKS], stat.flush_ticks, utils::base::decimal);
+            utils::stot(tokens.at(FLUSH_TICKS), stat.flush_ticks, utils::base::decimal);
         }
     }
     catch (const std::invalid_argument& ex)
