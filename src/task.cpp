@@ -33,6 +33,7 @@
 #include "pfs/parsers/common.hpp"
 #include "pfs/parsers/number.hpp"
 #include "pfs/parsers/smaps.hpp"
+#include "pfs/parsers/syscall.hpp"
 #include "pfs/parsers/task_io.hpp"
 #include "pfs/parsers/task_status.hpp"
 #include "pfs/task.hpp"
@@ -337,6 +338,15 @@ task_status task::get_status(const std::set<std::string>& keys) const
     auto path = _task_root + STATUS_FILE;
 
     return parsers::task_status_parser().parse(path, keys);
+}
+
+syscall task::get_syscall() const
+{
+    static const std::string SYSCALL_FILE("syscall");
+    auto path = _task_root + SYSCALL_FILE;
+
+    auto line = utils::readline(path);
+    return parsers::parse_syscall_line(line);
 }
 
 std::vector<mem_region> task::get_maps() const

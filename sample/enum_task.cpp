@@ -1,7 +1,6 @@
 /*
  *  Copyright 2020-present Daniel Trugman
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
@@ -128,6 +127,11 @@ static void enum_task(const pfs::task& task)
     safe("fds", [&]{
         auto fds = task.get_fds();
         print(fds);
+    });
+
+    safe("syscall", [&]{
+        auto syscall = task.get_syscall();
+        print(syscall);
     });
 }
 

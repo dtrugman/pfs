@@ -771,3 +771,21 @@ inline std::ostream& operator<<(std::ostream& out,
 
     return out;
 }
+
+inline std::ostream& operator<<(std::ostream& out, const pfs::syscall& syscall)
+{
+    out << "syscall[" << syscall.number << "] ";
+
+    out << std::hex;
+
+    for (size_t i = 0; i < syscall.argument_registers.size(); i++)
+    {
+        out << "arg" << i << "[0x" << syscall.argument_registers[i] << "] ";
+    }
+
+    out << "sp[0x" << syscall.stack_pointer << "] ";
+    out << "ip[0x" << syscall.instruction_pointer << "] ";
+
+    out << std::dec;
+    return out;
+}

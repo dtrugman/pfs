@@ -27,9 +27,10 @@
 
 namespace pfs {
 
-constexpr uid_t   INVALID_UID   = (uid_t)-1;
-constexpr pid_t   INVALID_PID   = (pid_t)-1;
-constexpr ino64_t INVALID_INODE = (ino64_t)0;
+constexpr uid_t   INVALID_UID     = (uid_t)-1;
+constexpr pid_t   INVALID_PID     = (pid_t)-1;
+constexpr ino64_t INVALID_INODE   = (ino64_t)0;
+constexpr int     INVALID_SYSCALL = -1;
 
 // Note: We only support values that exist post 2.6.32.
 enum class task_state
@@ -690,6 +691,28 @@ struct block_stat
     unsigned long long discard_ticks;   // total wait time for discard requests [unit: ms]
     unsigned long long flush_ios;       // number of flush I/Os processed [unit: requests]
     unsigned long long flush_ticks;     // total wait time for flush requests [unit: ms]
+};
+
+// Exposes information about the syscall being executed by a task.
+// See:
+// - https://man7.org/linux/man-pages/man5/proc_pid_syscall.5.html
+// - https://elixir.bootlin.com/linux/v6.18/A/ident/proc_pid_syscall
+enum class syscall_state
+{
+    syscall = 0, // Task executing a syscall
+    blocked,     // Task is blocked, but not in a syscall
+    running      // Task is not blocked
+};
+
+constexpr size_t SYSCALL_ARGUMENTS = 6;
+
+struct syscall
+{
+    syscall_state state;
+    unsigned int number;
+    std::array<uint64_t, SYSCALL_ARGUMENTS> argument_registers;
+    uint64_t stack_pointer;
+    uint64_t instruction_pointer;
 };
 
 } // namespace pfs
