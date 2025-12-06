@@ -46,8 +46,8 @@ block_stat parse_block_stat_line(const std::string& line)
         DISCARD_IOS     = 11,
         DISCARD_MERGES  = 12,
         DISCARD_SECTORS = 13,
-        DISCARD_TICKS   = 14,
         MIN_COUNT       = 14,
+        DISCARD_TICKS   = 14,
         FLUSH_IOS       = 15,
         FLUSH_TICKS     = 16,
         COUNT
@@ -79,15 +79,18 @@ block_stat parse_block_stat_line(const std::string& line)
         utils::stot(tokens.at(DISCARD_IOS), stat.discard_ios, utils::base::decimal);
         utils::stot(tokens.at(DISCARD_MERGES), stat.discard_merges, utils::base::decimal);
         utils::stot(tokens.at(DISCARD_SECTORS), stat.discard_sectors, utils::base::decimal);
-        if (tokens.size() >= (DISCARD_TICKS + 1))
+
+        if (tokens.size() > DISCARD_TICKS)
         {
             utils::stot(tokens.at(DISCARD_TICKS), stat.discard_ticks, utils::base::decimal);
         }
-        if (tokens.size() >= (FLUSH_IOS + 1))
+
+        if (tokens.size() > FLUSH_IOS)
         {
             utils::stot(tokens.at(FLUSH_IOS), stat.flush_ios, utils::base::decimal);
         }
-        if (tokens.size() >= (FLUSH_TICKS + 1))
+
+        if (tokens.size() > FLUSH_TICKS)
         {
             utils::stot(tokens.at(FLUSH_TICKS), stat.flush_ticks, utils::base::decimal);
         }
