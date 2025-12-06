@@ -53,7 +53,7 @@ block_stat parse_block_stat_line(const std::string& line)
         COUNT
     };
 
-    block_stat stat;
+    block_stat stat{};
 
     static const char DELIM = ' ';
 
