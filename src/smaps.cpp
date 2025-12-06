@@ -196,30 +196,29 @@ std::vector<mem_map> parse_smaps(const std::string& path)
     }
 
     std::vector<mem_map> smaps;
-    std::optional<mem_map> current;
+    mem_map current;
     std::string line;
     while (std::getline(in, line))
     {
         if (line.find(MEM_REGION_DELIM) != std::string::npos)
         {
             // Memory region line (mapping header)
-            if (current)
+            if (current.region.start_address != 0 && current.region.end_address != 0)
             {
-                smaps.push_back(std::move(*current));
+                smaps.push_back(std::move(current));
             }
 
-            current.emplace();
-            current->region = parse_maps_line(line);
-
+            current.region = parse_maps_line(line);
             continue;
         }
 
-        if (!current)
+        if (current.region.start_address == 0 && current.region.end_address == 0)
         {
             throw parser_error("Corrupted block - Missing header", line);
         }
 
-        auto [key, value] = utils::split_once(line, ':');
+        std::string key, value;
+        std::tie(key, value) = utils::split_once(line, ':');
         if (key.empty())
         {
             throw parser_error("Corrupted line - Missing key", line);
@@ -232,13 +231,13 @@ std::vector<mem_map> parse_smaps(const std::string& path)
         if (iter != parsers.end())
         {
             auto& parser = iter->second;
-            parser(value, *current);
+            parser(value, current);
         }
     }
 
-    if (current)
+    if (current.region.start_address != 0 && current.region.end_address != 0)
     {
-        smaps.push_back(std::move(*current));
+        smaps.push_back(std::move(current));
     }
 
     return smaps;
