@@ -38,6 +38,15 @@ tag() {
     echo "v${major}.${minor}.${patch}"
 }
 
+update_package_xml() {
+    declare -r major="$1"
+    declare -r minor="$2"
+    declare -r patch="$3"
+    declare -r package_xml="./package.xml"
+
+    sed -i "s|<version>[0-9]*\.[0-9]*\.[0-9]*</version>|<version>${major}.${minor}.${patch}</version>|g" "$package_xml"
+}
+
 update_version_file() {
     declare -r major="$1"
     declare -r minor="$2"
@@ -49,7 +58,9 @@ update_version_file() {
     set_version_part "MINOR" "$minor" || return 1
     set_version_part "PATCH" "$patch" || return 1
 
-    git add "$file" || return 1
+    update_package_xml "$major" "$minor" "$patch" || return 1
+
+    git add "$file" "./package.xml" || return 1
     git commit -m "Automatic version bump to $tag" || return 1
 
     return 0
