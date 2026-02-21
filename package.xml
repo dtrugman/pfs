@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>pfs</name>
-  <version>0.13.0</version>
+  <version>0.13.1</version>
   <description>Production grade, very easy to use, procfs parsing library in C++</description>
   <maintainer email="dtrugman@gmail.com">Daniel Trugman</maintainer>
   <license>Apache-2.0</license>
