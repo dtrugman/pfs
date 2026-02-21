@@ -1,28 +1,30 @@
 #!/bin/bash
 
 set_version_part() {
-    declare -r part="$1"
-    declare -r version="$2"
+    local file="$1"
+    local part="$2"
+    local version="$3"
 
-    declare -r define="#define PFS_VER_${part}"
+    local define="#define PFS_VER_${part}"
 
-    sed -i "" "s/^$define [[:digit:]]/$define $version/g" "$file"
+    sed -i "" -E "s/^$define [[:digit:]]+/$define $version/g" "$file"
 }
 
 get_version_part() {
-    declare -r part="$1"
+    local file="$1"
+    local part="$2"
 
     grep "#define PFS_VER_${part}" "$file" | cut -d' ' -f3
 }
 
 tag_exists() {
-    declare -r tag_name="$1"
+    local tag_name="$1"
 
     git tag --list | grep -q "$tag_name"
 }
 
 tag_version() {
-    declare -r tag_name="$1"
+    local tag_name="$1"
 
     git tag "$tag_name" || return 1
     git push origin "$tag_name" || return 1
@@ -31,47 +33,55 @@ tag_version() {
 }
 
 tag() {
-    declare -r major="$1"
-    declare -r minor="$2"
-    declare -r patch="$3"
+    local major="$1"
+    local minor="$2"
+    local patch="$3"
 
     echo "v${major}.${minor}.${patch}"
 }
 
 update_package_xml() {
-    declare -r major="$1"
-    declare -r minor="$2"
-    declare -r patch="$3"
-    declare -r package_xml="./package.xml"
+    local file="$1"
+    local major="$2"
+    local minor="$3"
+    local patch="$4"
 
-    sed -i "s|<version>[0-9]*\.[0-9]*\.[0-9]*</version>|<version>${major}.${minor}.${patch}</version>|g" "$package_xml"
+    local old_version="<version>[0-9]*\.[0-9]*\.[0-9]*</version>"
+    local new_version="<version>${major}.${minor}.${patch}</version>"
+
+    sed -i "" "s|$old_version|$new_version|g" "$file"
 }
 
 update_version_file() {
-    declare -r major="$1"
-    declare -r minor="$2"
-    declare -r patch="$3"
+    local file="$1"
+    local major="$2"
+    local minor="$3"
+    local patch="$4"
 
-    declare -r tag="$(tag "$major" "$minor" "$patch")"
+    set_version_part "$file" "MAJOR" "$major" || return 1
+    set_version_part "$file" "MINOR" "$minor" || return 1
+    set_version_part "$file" "PATCH" "$patch" || return 1
 
-    set_version_part "MAJOR" "$major" || return 1
-    set_version_part "MINOR" "$minor" || return 1
-    set_version_part "PATCH" "$patch" || return 1
+    return 0
+}
 
-    update_package_xml "$major" "$minor" "$patch" || return 1
+commit_bump() {
+    local tag="$1"
+    local files="${@:2}"
 
-    git add "$file" "./package.xml" || return 1
+    git add $files || return 1 # Spreading $files (no double quotes) on purpose
     git commit -m "Automatic version bump to $tag" || return 1
 
     return 0
 }
 
 main() {
-    declare -r file="./include/pfs/version.hpp"
+    local header_file="./include/pfs/version.hpp"
+    local package_xml="./package.xml"
 
-    declare major="$(get_version_part "MAJOR")"
-    declare minor="$(get_version_part "MINOR")"
-    declare patch="$(get_version_part "PATCH")"
+    local major="$(get_version_part "$header_file" "MAJOR")"
+    local minor="$(get_version_part "$header_file" "MINOR")"
+    local patch="$(get_version_part "$header_file" "PATCH")"
 
     case "$1" in
         major)
@@ -92,7 +102,7 @@ main() {
             ;;
     esac
 
-    declare -r tag="$(tag $major $minor $patch)"
+    local tag="$(tag $major $minor $patch)"
     read -p "Will create new tag: $tag, do you want to proceed? (y/n) " answer
     if [[ "$answer" != "y" ]]; then
         echo "Aborting..."
@@ -109,8 +119,18 @@ main() {
         return 1
     fi
 
-    if ! update_version_file "$major" "$minor" "$patch"; then
-        echo "Couldn't update version file, please check for leftovers"
+    if ! update_version_file "$header_file" "$major" "$minor" "$patch"; then
+        echo "Couldn't update $header_file, please check for leftovers"
+        return 1
+    fi
+
+    if ! update_package_xml "$package_xml" "$major" "$minor" "$patch"; then
+        echo "Couldn't update $package_xml, please check for leftovers"
+        return 1
+    fi
+
+    if ! commit_bump "$tag" "$header_file" "$package_xml"; then
+        echo "Couldn't automatically commit"
         return 1
     fi
 
