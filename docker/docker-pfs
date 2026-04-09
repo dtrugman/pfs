@@ -6,6 +6,7 @@ lowercase() {
 
 usage() {
     echo "$0 [build|run] platform"
+    echo "$0 coverage"
     echo ""
     echo "Build and/or run a docker image that can build pfs."
     echo "There is a Dockerfile for each supported platform family."
@@ -15,16 +16,19 @@ usage() {
     echo ""
     echo "  run        run an already built image for a specified platform"
     echo ""
+    echo "  coverage   build and run coverage, output HTML report to ./coverage/"
+    echo ""
 
     return 2
 }
 
 build() {
+    if [[ $# -ne 1 ]]; then usage; return $?; fi
+
     declare -r platform="$(lowercase "$1")"
-
     declare -r tag="$project:$platform"
-
     declare -r file="Dockerfile-$platform"
+
     if [[ ! -f "$file" ]]; then
         echo "Platform probably not supported, cannot find $file"
         return 1
@@ -37,8 +41,9 @@ build() {
 }
 
 run() {
-    declare -r platform="$(lowercase "$1")"
+    if [[ $# -ne 1 ]]; then usage; return $?; fi
 
+    declare -r platform="$(lowercase "$1")"
     declare -r tag="$project:$platform"
 
     docker run --rm --interactive --tty \
@@ -46,22 +51,38 @@ run() {
         "$tag"
 }
 
+coverage() {
+    if [[ $# -ne 0 ]]; then usage; return $?; fi
+
+    declare -r tag="$project:coverage"
+    declare -r file="Dockerfile-coverage"
+
+    docker build \
+        --tag "$tag" \
+        --file "$file" \
+        "$root"
+
+    mkdir -p "$root/coverage"
+
+    docker run --rm \
+        --volume "$root:/$project" \
+        --volume "$root/coverage:/coverage" \
+        "$tag"
+}
+
 main() {
-    if [[ $# -ne 2 ]]; then
-        usage
-        return $?
-    fi
-
-    declare -r action="$1"
-    declare -r platform="$2"
-
     declare -r project="pfs"
     declare -r root="$(git rev-parse --show-toplevel)"
 
+    declare -r action="$1"
+
+    cd "$root/docker"
+
     case "$action" in
-        build) build "$platform";;
-        run) run "$platform";;
-        *) usage; return $?;;
+        build)    build    "${@:2}";;
+        run)      run      "${@:2}";;
+        coverage) coverage "${@:2}";;
+        *)        usage; return $?;;
     esac
 }
 

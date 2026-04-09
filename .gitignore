@@ -42,3 +42,4 @@ pfs-config.cmake
 # Artifacts
 lib/*
 out/*
+coverage/
