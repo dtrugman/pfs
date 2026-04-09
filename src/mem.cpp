@@ -34,9 +34,18 @@ mem::mem(const std::string& path)
     }
 }
 
+mem::mem(mem&& other) noexcept
+    : _path(std::move(other._path)), _fd(other._fd)
+{
+    other._fd = -1;
+}
+
 mem::~mem()
 {
-    close(_fd);
+    if (_fd >= 0)
+    {
+        close(_fd);
+    }
 }
 
 std::vector<uint8_t> mem::read(const mem_region& region)
