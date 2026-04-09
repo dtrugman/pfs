@@ -30,11 +30,11 @@ namespace pfs {
 class mem final
 {
 public:
-    mem(const mem&) = default;
-    mem(mem&&)      = default;
-
+    mem(const mem&)            = delete;
     mem& operator=(const mem&) = delete;
-    mem& operator=(mem&&) = delete;
+    mem& operator=(mem&&)      = delete;
+
+    mem(mem&& other) noexcept;
 
     ~mem();
 
