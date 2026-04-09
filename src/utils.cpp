@@ -283,7 +283,7 @@ void ensure_dir_terminator(std::string& dir_path)
 {
     static const char DIR_SEPARATOR('/');
 
-    if (dir_path.back() != DIR_SEPARATOR)
+    if (dir_path.empty() || dir_path.back() != DIR_SEPARATOR)
     {
         dir_path += DIR_SEPARATOR;
     }
