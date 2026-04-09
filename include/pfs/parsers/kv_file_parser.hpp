@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-#ifndef PFS_PARSERS_FILE_PARSER_HPP
-#define PFS_PARSERS_FILE_PARSER_HPP
+#ifndef PFS_PARSERS_KV_FILE_PARSER_HPP
+#define PFS_PARSERS_KV_FILE_PARSER_HPP
 
 #include <fstream>
 #include <set>
@@ -35,7 +35,7 @@ namespace parsers {
 using remap_function = const std::function<void(std::string&)>;
 
 template <typename Output>
-class file_parser
+class kv_file_parser
 {
 public:
     Output parse(const std::string& path,
@@ -92,8 +92,8 @@ protected:
         std::function<void(const std::string& value, Output& out)>;
     using value_parsers = std::unordered_map<std::string, value_parser>;
 
-    file_parser(const char delim, const value_parsers& parsers,
-                remap_function key_remap = nullptr)
+    kv_file_parser(const char delim, const value_parsers& parsers,
+                   remap_function key_remap = nullptr)
         : _delim(delim), _parsers(parsers), _key_remap(key_remap)
     {}
 
@@ -107,4 +107,4 @@ private:
 } // namespace impl
 } // namespace pfs
 
-#endif // PFS_PARSERS_FILE_PARSER_HPP
+#endif // PFS_PARSERS_KV_FILE_PARSER_HPP

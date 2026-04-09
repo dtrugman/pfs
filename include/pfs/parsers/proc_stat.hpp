@@ -19,17 +19,17 @@
 
 #include <string>
 
-#include "file_parser.hpp"
+#include "kv_file_parser.hpp"
 #include "pfs/types.hpp"
 
 namespace pfs {
 namespace impl {
 namespace parsers {
 
-class proc_stat_parser : public file_parser<proc_stat>
+class proc_stat_parser : public kv_file_parser<proc_stat>
 {
 public:
-    proc_stat_parser() : file_parser<proc_stat>(DELIM, PARSERS, key_remap) {}
+    proc_stat_parser() : kv_file_parser<proc_stat>(DELIM, PARSERS, key_remap) {}
 
 private:
     static void key_remap(std::string& key);
