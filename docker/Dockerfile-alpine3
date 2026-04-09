@@ -7,4 +7,4 @@ RUN apk add --update cmake alpine-sdk linux-headers
 ENV CXX=g++
 ENV CC=gcc
 
-CMD /bin/sh
+CMD ["/bin/sh"]

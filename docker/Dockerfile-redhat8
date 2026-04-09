@@ -8,4 +8,4 @@ RUN yum update && \
 ENV CXX=g++
 ENV CC=gcc
 
-CMD /bin/bash
+CMD ["/bin/bash"]
