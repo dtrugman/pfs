@@ -27,11 +27,15 @@ option (pfs_BUILD_ASAN "Enable address sanitizer" OFF)
 option (pfs_BUILD_SAMPLES "Build samples" ON)
 option (pfs_BUILD_TESTS "Build tests" ON)
 
+# Only apply warning flags when pfs is the top-level project.
+# When consumed via FetchContent/add_subdirectory, the parent owns all flag decisions.
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set (pfs_WARNING_FLAGS -Wall -Wextra -pedantic -Werror)
+endif ()
+
 # ------------------------------------------------------------------------
 # Actual configuration
 # ------------------------------------------------------------------------
-
-add_compile_options (-Wall -Wextra -pedantic -Werror)
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -44,6 +48,7 @@ set (SOURCES ${pfs_ROOT_SOURCES} ${pfs_PARSERS_SOURCES})
 
 add_library (pfs ${pfs_SHARED_OR_STATIC} ${SOURCES})
 target_compile_features(pfs PUBLIC cxx_std_11)
+target_compile_options(pfs PRIVATE ${pfs_WARNING_FLAGS})
 target_include_directories(
     pfs PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -66,6 +71,7 @@ if (pfs_BUILD_SAMPLES)
     aux_source_directory (sample pfs_SAMPLE_SOURCES)
     add_executable (sample ${pfs_SAMPLE_SOURCES})
     target_compile_features(sample PUBLIC cxx_std_11)
+    target_compile_options(sample PRIVATE ${pfs_WARNING_FLAGS})
     target_link_libraries (sample PRIVATE pfs)
 endif()
 
@@ -74,6 +80,7 @@ if (pfs_BUILD_TESTS)
     aux_source_directory (${pfs_UNITTEST_SOURCE_DIR} pfs_UNITTEST_SOURCES)
     add_executable (unittest ${pfs_UNITTEST_SOURCES})
     target_compile_features(unittest PUBLIC cxx_std_11)
+    target_compile_options(unittest PRIVATE ${pfs_WARNING_FLAGS})
     target_link_libraries (unittest PRIVATE pfs)
 endif()
 
