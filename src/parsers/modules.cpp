@@ -83,6 +83,7 @@ module parse_modules_line(const std::string& line)
     static const char FLAG_UNSIGNED('E');
 
     static const std::string NO_DEPENDENCIES("-");
+    static const std::string NO_INSTANCES("-");
 
     auto tokens = utils::split(line);
     if (tokens.size() < MIN_COUNT || tokens.size() > COUNT)
@@ -99,7 +100,14 @@ module parse_modules_line(const std::string& line)
 
         utils::stot(tokens[SIZE], mod.size);
 
-        utils::stot(tokens[INSTANCES], mod.instances);
+        if (tokens[INSTANCES] != NO_INSTANCES)
+        {
+            utils::stot(tokens[INSTANCES], mod.instances);
+        }
+        else
+        {
+            mod.instances = 0;
+        }
 
         if (tokens[DEPENDENCIES] != NO_DEPENDENCIES)
         {
