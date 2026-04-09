@@ -60,7 +60,7 @@ bool task::operator<(const task& rhs) const
 
 bool task::is_kernel_thread(const task_stat& st)
 {
-    static const int ROOT_KERNEL_TASK_ID = 2;
+    static const int ROOT_KERNEL_TASK_ID = 2; // kthreadd, parent of all kernel threads
 
     return st.pid == ROOT_KERNEL_TASK_ID || st.ppid == ROOT_KERNEL_TASK_ID;
 }
