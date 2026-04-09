@@ -16,6 +16,7 @@
 
 #include "pfs/parsers/task_status.hpp"
 #include "pfs/parsers/common.hpp"
+#include "pfs/parsers/number.hpp"
 #include "pfs/parser_error.hpp"
 #include "pfs/utils.hpp"
 
@@ -24,24 +25,6 @@ namespace impl {
 namespace parsers {
 
 namespace {
-
-template <typename T>
-void to_number(const std::string& value, T& out,
-               utils::base base = utils::base::decimal)
-{
-    try
-    {
-        utils::stot(value, out, base);
-    }
-    catch (const std::invalid_argument& ex)
-    {
-        throw parser_error("Corrupted number - Invalid argument", value);
-    }
-    catch (const std::out_of_range& ex)
-    {
-        throw parser_error("Corrupted number - Out of range", value);
-    }
-}
 
 void parse_name(const std::string& value, task_status& out)
 {
