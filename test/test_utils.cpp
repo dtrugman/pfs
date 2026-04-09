@@ -25,6 +25,13 @@ TEST_CASE("Dir termination", "[utils]")
         ensure_dir_terminator(original);
     }
 
+    SECTION("Empty string")
+    {
+        original = "";
+        expected = "/";
+        ensure_dir_terminator(original);
+    }
+
     REQUIRE(original == expected);
 }
 
