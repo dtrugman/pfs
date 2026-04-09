@@ -17,12 +17,14 @@
 #ifndef PFS_TASK_HPP
 #define PFS_TASK_HPP
 
+#include <functional>
 #include <set>
 #include <stddef.h>
 #include <string>
 #include <vector>
 
 #include "fd.hpp"
+#include "filter.hpp"
 #include "mem.hpp"
 #include "net.hpp"
 #include "types.hpp"
@@ -39,6 +41,9 @@ public:
     task& operator=(task&&) = delete;
 
     bool operator<(const task& rhs) const;
+
+public: // Filter types
+    using task_filter = std::function<filter::action(const task&)>;
 
 public: // Static utilities
     static bool is_kernel_thread(const task_stat& st);
@@ -95,7 +100,7 @@ public: // Getters
 
     task get_task(int id) const;
 
-    std::set<task> get_tasks() const;
+    std::set<task> get_tasks(task_filter filter = nullptr) const;
 
     std::vector<id_map> get_uid_map() const;
     std::vector<id_map> get_gid_map() const;

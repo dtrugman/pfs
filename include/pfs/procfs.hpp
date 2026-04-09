@@ -45,7 +45,7 @@ public:
 
 public: // Task API
     task get_task(int task_id = getpid()) const;
-    std::set<task> get_processes() const;
+    std::set<task> get_processes(task::task_filter filter = nullptr) const;
 
 public: // Network API
     net get_net(int task_id = getpid()) const;
