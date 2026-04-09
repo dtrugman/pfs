@@ -473,7 +473,7 @@ task task::get_task(int id) const
     return task(path, id);
 }
 
-std::set<task> task::get_tasks() const
+std::set<task> task::get_tasks(task_filter filter) const
 {
     static const std::string TASKS_DIR("task/");
     auto path = _task_root + TASKS_DIR;
@@ -484,7 +484,11 @@ std::set<task> task::get_tasks() const
     {
         // Important, see README note about collecting information
         // about threads to understand why we pass 'path' as the root dir.
-        threads.emplace(task(path, thread_id));
+        task t(path, thread_id);
+        if (!filter || filter(t) == filter::action::keep)
+        {
+            threads.emplace(std::move(t));
+        }
     }
 
     return threads;

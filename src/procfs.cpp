@@ -71,12 +71,16 @@ task procfs::get_task(int task_id) const
     return task(_root, task_id);
 }
 
-std::set<task> procfs::get_processes() const
+std::set<task> procfs::get_processes(task::task_filter filter) const
 {
     std::set<task> tasks;
     for (auto task_id : utils::enumerate_numeric_files(_root))
     {
-        tasks.emplace(get_task(task_id));
+        auto t = get_task(task_id);
+        if (!filter || filter(t) == filter::action::keep)
+        {
+            tasks.emplace(std::move(t));
+        }
     }
 
     return tasks;
