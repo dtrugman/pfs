@@ -42,7 +42,7 @@ std::vector<net_device> net::get_dev(net_device_filter filter) const
     static const std::string DEV_FILE("dev");
     auto path = _net_root + DEV_FILE;
 
-    static const size_t HEADER_LINES = 2;
+    static const size_t HEADER_LINES = 2; // /proc/net/dev has two header rows: title + column names
 
     std::vector<net_device> output;
     parsers::parse_file_lines(path, std::back_inserter(output),
