@@ -17,17 +17,17 @@
 #ifndef PFS_PARSERS_TASK_STATUS_HPP
 #define PFS_PARSERS_TASK_STATUS_HPP
 
-#include "file_parser.hpp"
+#include "kv_file_parser.hpp"
 #include "pfs/types.hpp"
 
 namespace pfs {
 namespace impl {
 namespace parsers {
 
-class task_status_parser : public file_parser<task_status>
+class task_status_parser : public kv_file_parser<task_status>
 {
 public:
-    task_status_parser() : file_parser<task_status>(DELIM, PARSERS) {}
+    task_status_parser() : kv_file_parser<task_status>(DELIM, PARSERS) {}
 
 private:
     static const char DELIM;

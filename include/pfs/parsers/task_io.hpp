@@ -17,17 +17,17 @@
 #ifndef PFS_PARSERS_TASK_IO_HPP
 #define PFS_PARSERS_TASK_IO_HPP
 
-#include "file_parser.hpp"
+#include "kv_file_parser.hpp"
 #include "pfs/types.hpp"
 
 namespace pfs {
 namespace impl {
 namespace parsers {
 
-class task_io_parser : public file_parser<io_stats>
+class task_io_parser : public kv_file_parser<io_stats>
 {
 public:
-    task_io_parser() : file_parser<io_stats>(DELIM, PARSERS) {}
+    task_io_parser() : kv_file_parser<io_stats>(DELIM, PARSERS) {}
 
 private:
     static value_parsers make_value_parsers();
