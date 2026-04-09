@@ -439,7 +439,7 @@ std::unordered_map<std::string, ino64_t> task::get_ns() const
     static const std::string NS_DIR("ns/");
     auto path = _task_root + NS_DIR;
 
-    int dirfd = open(path.c_str(), O_DIRECTORY);
+    int dirfd = open(path.c_str(), O_DIRECTORY | O_CLOEXEC);
     if (dirfd == -1)
     {
         throw std::system_error(errno, std::system_category(),
