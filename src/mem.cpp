@@ -25,7 +25,7 @@
 namespace pfs {
 
 mem::mem(const std::string& path)
-    : _path(path), _fd(open(path.c_str(), O_RDONLY))
+    : _path(path), _fd(open(path.c_str(), O_RDONLY | O_CLOEXEC))
 {
     if (_fd < 0)
     {

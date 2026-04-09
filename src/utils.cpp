@@ -136,7 +136,7 @@ std::string readlink(const std::string& link, int dirfd)
 std::string readfile(const std::string& file, size_t max_bytes,
                      bool trim_newline)
 {
-    int fd = open(file.c_str(), O_RDONLY);
+    int fd = open(file.c_str(), O_RDONLY | O_CLOEXEC);
     if (fd < 0)
     {
         throw std::system_error(errno, std::system_category(),
