@@ -194,15 +194,20 @@ task_stat task::get_stat() const
     }
 
     // Reassign comm as the text between the outmost pair of parenthesis
-    st.comm = st.comm.substr(1, st.comm.find_last_of(')') - 1);
+    auto close_paren = st.comm.find_last_of(')');
+    if (close_paren == std::string::npos || close_paren == 0)
+    {
+        throw std::runtime_error("Corrupted stat - Malformed comm field");
+    }
+    st.comm = st.comm.substr(1, close_paren - 1);
 
-    // Skip past comm: Parentheses(2) + Actual comm + Space before next token(1)
+    // Skip past comm: closing ')' + space separator before next token
     //     +|----|++
     // ... (<comm>) <next> ...
     //    ^
     // pre-comm
-    static const size_t COMM_WRAP_SIZE = 3;
-    if (fseek(fp, pre_comm + st.comm.size() + COMM_WRAP_SIZE, SEEK_SET) != 0)
+    static const size_t COMM_SUFFIX_SIZE = 2; // ')' + ' '
+    if (fseek(fp, pre_comm + close_paren + COMM_SUFFIX_SIZE, SEEK_SET) != 0)
     {
         throw std::runtime_error("Couldn't seek past comm in stat");
     }

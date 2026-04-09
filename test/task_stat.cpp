@@ -136,4 +136,36 @@ TEST_CASE("Parse task stat", "[task][stat]")
         REQUIRE(stat.env_end == 549025714154);
         REQUIRE(stat.exit_code == 0);
     }
+
+    SECTION("Malformed comm - closing parenthesis at position zero")
+    {
+        // Comm buffer starts with ')' (close_paren == 0), meaning the opening
+        // '(' is absent — this is an equally malformed case.
+        const std::string content{
+            "1 ) S 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 20 0 1 0 0 0 0 "
+            "18446744073709551615 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"};
+        temp_dir test_dir{};
+
+        const std::string root_path{test_dir.get_root()};
+        test_dir.create_file("1/stat", content);
+        REQUIRE_THROWS_WITH(
+            pfs::procfs(root_path).get_task(1).get_stat(),
+            "Corrupted stat - Malformed comm field");
+    }
+
+    SECTION("Malformed comm - missing closing parenthesis")
+    {
+        // Comm field has no closing ')' — find_last_of returns npos,
+        // causing npos-1 to wrap and the seek to land in garbage.
+        const std::string content{
+            "1 (no-close-paren S 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 20 0 1 0 0 0 0 "
+            "18446744073709551615 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"};
+        temp_dir test_dir{};
+
+        const std::string root_path{test_dir.get_root()};
+        test_dir.create_file("1/stat", content);
+        REQUIRE_THROWS_WITH(
+            pfs::procfs(root_path).get_task(1).get_stat(),
+            "Corrupted stat - Malformed comm field");
+    }
 }
