@@ -42,6 +42,22 @@ TEST_CASE("Parse modules", "[procfs][modules]")
         expected.is_unsigned    = false;
     }
 
+    SECTION("Unknown instances count")
+    {
+        size_t offset = 0x0000000000000000;
+
+        line << "shiftfs 28672 - - Live 0x" << offset << " (O)";
+
+        expected.name           = "shiftfs";
+        expected.size           = 28672;
+        expected.instances      = 0;
+        expected.dependencies   = {};
+        expected.module_state   = pfs::module::state::live;
+        expected.offset         = offset;
+        expected.is_out_of_tree = true;
+        expected.is_unsigned    = false;
+    }
+
     SECTION("Unsigned and Out-of-tree")
     {
 #if defined(ARCH_64BIT)
