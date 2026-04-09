@@ -94,7 +94,26 @@ target_include_directories (<your-target> [PUBLIC|PRIVATE] ${pfs_INCLUDE_DIRS})
 
 If you call `procfs().get_task(<id>)` and that task doesn't really exist, the constructor will succeed.
 
-Since tasks can die any time, instead of adding extra validation during construction, which might be confusing, the current design assumes the first call after the tasks died will fail.
+Since tasks can die at any time, the library intentionally does not validate task existence at construction. This applies equally to `task::get_task(<id>)` for threads.
+
+The reason is that any check would still be racy: a task can die between the check and the first getter call. More importantly, adding an eager check would break the common snapshot pattern:
+
+```cpp
+for (const auto& process : pfs.get_processes())
+{
+    try
+    {
+        auto stat = process.get_stat(); // throws std::system_error if process died
+        ...
+    }
+    catch (const std::system_error&)
+    {
+        continue; // process died between enumeration and access, skip it
+    }
+}
+```
+
+`get_processes()` and `get_tasks()` enumerate PIDs and then construct task objects for each. A single process dying mid-iteration would throw and abort the entire enumeration if existence were checked eagerly. The correct pattern is to catch `std::system_error` from individual getters.
 
 ### Collecting thread information
 
