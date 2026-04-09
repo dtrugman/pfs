@@ -50,8 +50,6 @@ static void to_sequence(const std::string& value, proc_stat::sequence<T>& out)
 
     try
     {
-        proc_stat::sequence<T> sequence;
-
         utils::stot(tokens[TOTAL], out.total);
 
         for (size_t i = MIN_COUNT; i < tokens.size(); i++)
