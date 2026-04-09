@@ -1,0 +1,12 @@
+FROM ubuntu:jammy
+
+WORKDIR /pfs
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y cmake g++ build-essential gcovr
+
+CMD ["/bin/sh", "-c", \
+    "cmake -S /pfs -B /tmp/build-cov -Dpfs_BUILD_COVERAGE=ON -Dpfs_BUILD_TESTS=ON && \
+     make -C /tmp/build-cov && \
+     /tmp/build-cov/out/unittest && \
+     gcovr -r /pfs --object-directory /tmp/build-cov --exclude '/pfs/sample/' --exclude '/pfs/test/catch.hpp' --html --html-details -o /coverage/index.html"]
