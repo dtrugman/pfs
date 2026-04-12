@@ -354,7 +354,7 @@ std::pair<ip, uint16_t> parse_address(const std::string& address_str)
     return std::make_pair(addr, port);
 }
 
-void parse_memory_size(const std::string& value, uint64_t& out)
+void parse_memory_size(const std::string& desc, const std::string& value, uint64_t& out)
 {
     enum token
     {
@@ -366,7 +366,7 @@ void parse_memory_size(const std::string& value, uint64_t& out)
     auto tokens = utils::split(value);
     if (tokens.size() != COUNT)
     {
-        throw parser_error("Corrupted memory size - Unexpected tokens count",
+        throw parser_error("Corrupted " + desc + " - Unexpected tokens count",
                            value);
     }
 
@@ -376,11 +376,11 @@ void parse_memory_size(const std::string& value, uint64_t& out)
     }
     catch (const std::invalid_argument& ex)
     {
-        throw parser_error("Corrupted memory size - Invalid argument", value);
+        throw parser_error("Corrupted " + desc + " - Invalid argument", value);
     }
     catch (const std::out_of_range& ex)
     {
-        throw parser_error("Corrupted memory size - Out of range", value);
+        throw parser_error("Corrupted " + desc + " - Out of range", value);
     }
 }
 

@@ -34,112 +34,112 @@ namespace {
 
 void parse_size(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.size);
+    utils::parse_memory_size("size", value, out.size);
 }
 
 void parse_kernel_page_size(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.kernel_page_size);
+    utils::parse_memory_size("kernel_page_size", value, out.kernel_page_size);
 }
 
 void parse_mmu_page_size(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.mmu_page_size);
+    utils::parse_memory_size("mmu_page_size", value, out.mmu_page_size);
 }
 
 void parse_rss(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.rss);
+    utils::parse_memory_size("rss", value, out.rss);
 }
 
 void parse_pss(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.pss);
+    utils::parse_memory_size("pss", value, out.pss);
 }
 
 void parse_pss_dirty(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.pss_dirty);
+    utils::parse_memory_size("pss_dirty", value, out.pss_dirty);
 }
 
 void parse_shared_clean(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.shared_clean);
+    utils::parse_memory_size("shared_clean", value, out.shared_clean);
 }
 
 void parse_shared_dirty(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.shared_dirty);
+    utils::parse_memory_size("shared_dirty", value, out.shared_dirty);
 }
 
 void parse_private_clean(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.private_clean);
+    utils::parse_memory_size("private_clean", value, out.private_clean);
 }
 
 void parse_private_dirty(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.private_dirty);
+    utils::parse_memory_size("private_dirty", value, out.private_dirty);
 }
 
 void parse_referenced(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.referenced);
+    utils::parse_memory_size("referenced", value, out.referenced);
 }
 
 void parse_anonymous(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.anonymous);
+    utils::parse_memory_size("anonymous", value, out.anonymous);
 }
 
 void parse_ksm(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.ksm);
+    utils::parse_memory_size("ksm", value, out.ksm);
 }
 
 void parse_lazy_free(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.lazy_free);
+    utils::parse_memory_size("lazy_free", value, out.lazy_free);
 }
 
 void parse_anon_huge_pages(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.anon_huge_pages);
+    utils::parse_memory_size("anon_huge_pages", value, out.anon_huge_pages);
 }
 
 void parse_shmem_pmd_mapped(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.shmem_pmd_mapped);
+    utils::parse_memory_size("shmem_pmd_mapped", value, out.shmem_pmd_mapped);
 }
 
 void parse_file_pmd_mapped(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.file_pmd_mapped);
+    utils::parse_memory_size("file_pmd_mapped", value, out.file_pmd_mapped);
 }
 
 void parse_shared_hugetlb(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.shared_hugetlb);
+    utils::parse_memory_size("shared_hugetlb", value, out.shared_hugetlb);
 }
 
 void parse_private_hugetlb(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.private_hugetlb);
+    utils::parse_memory_size("private_hugetlb", value, out.private_hugetlb);
 }
 
 void parse_swap(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.swap);
+    utils::parse_memory_size("swap", value, out.swap);
 }
 
 void parse_swap_pss(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.swap_pss);
+    utils::parse_memory_size("swap_pss", value, out.swap_pss);
 }
 
 void parse_locked(const std::string& value, mem_map& out)
 {
-    utils::parse_memory_size(value, out.locked);
+    utils::parse_memory_size("locked", value, out.locked);
 }
 
 void parse_thp_eligible(const std::string& value, mem_map& out)

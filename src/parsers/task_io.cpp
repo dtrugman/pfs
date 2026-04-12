@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-
 #include "pfs/parsers/number.hpp"
 #include "pfs/parsers/task_io.hpp"
 #include "pfs/utils.hpp"
@@ -26,20 +25,24 @@ namespace parsers {
 const char task_io_parser::DELIM = ':';
 
 task_io_parser::value_parsers task_io_parser::make_value_parsers() {
-    auto io_parser = [] (unsigned long io_stats::*member) {
-        return [member] (const std::string& value, io_stats& out) {
-            to_number(value, out.*member);
+    auto make_value_parser = [](const std::string& field,
+                                unsigned long io_stats::*member) {
+
+        auto parser = [field, member](const std::string& value, io_stats& out) {
+            to_number(field, value, utils::base::decimal, out.*member);
         };
+
+        return std::make_pair(field, parser);
     };
 
     return {
-        { "rchar",                 io_parser(&io_stats::rchar) },
-        { "wchar",                 io_parser(&io_stats::wchar) },
-        { "syscr",                 io_parser(&io_stats::syscr) },
-        { "syscw",                 io_parser(&io_stats::syscw) },
-        { "read_bytes",            io_parser(&io_stats::read_bytes) },
-        { "write_bytes",           io_parser(&io_stats::write_bytes) },
-        { "cancelled_write_bytes", io_parser(&io_stats::cancelled_write_bytes) },
+        make_value_parser("rchar",                 &io_stats::rchar),
+        make_value_parser("wchar",                 &io_stats::wchar),
+        make_value_parser("syscr",                 &io_stats::syscr),
+        make_value_parser("syscw",                 &io_stats::syscw),
+        make_value_parser("read_bytes",            &io_stats::read_bytes),
+        make_value_parser("write_bytes",           &io_stats::write_bytes),
+        make_value_parser("cancelled_write_bytes", &io_stats::cancelled_write_bytes),
     };
 }
 

@@ -519,7 +519,7 @@ uint32_t task::get_sessionid() const
 
     auto line = utils::readline(path);
     uint32_t session_id;
-    parsers::to_number(line, session_id);
+    parsers::to_number(SESSION_ID_FILE, line, utils::base::decimal, session_id);
     return session_id;
 }
 
