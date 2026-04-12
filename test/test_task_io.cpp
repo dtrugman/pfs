@@ -68,3 +68,24 @@ TEST_CASE("Parse io", "[task][io]")
     REQUIRE(io.write_bytes == expected.write_bytes);
     REQUIRE(io.cancelled_write_bytes == expected.cancelled_write_bytes);
 }
+
+TEST_CASE("Parse io error messages contain field name", "[task][io][error]")
+{
+    std::string field;
+
+    SECTION("rchar") { field = "rchar"; }
+    SECTION("wchar") { field = "wchar"; }
+    SECTION("syscr") { field = "syscr"; }
+    SECTION("syscw") { field = "syscw"; }
+    SECTION("read_bytes") { field = "read_bytes"; }
+    SECTION("write_bytes") { field = "write_bytes"; }
+    SECTION("cancelled_write_bytes") { field = "cancelled_write_bytes"; }
+
+    std::vector<std::string> content = {field + ": not_a_number"};
+    std::string file = create_temp_file(content);
+    pfs::impl::defer unlink_temp_file([&file] { unlink(file.c_str()); });
+
+    REQUIRE_THROWS_WITH(task_io_parser().parse(file),
+                        Catch::Contains(field));
+
+}

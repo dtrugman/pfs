@@ -33,7 +33,7 @@ void parse_name(const std::string& value, task_status& out)
 
 void parse_umask(const std::string& value, task_status& out)
 {
-    to_number(value, out.umask);
+    to_number("umask", value, utils::base::decimal, out.umask);
 }
 
 void parse_state(const std::string& value, task_status& out)
@@ -56,27 +56,27 @@ void parse_state(const std::string& value, task_status& out)
 
 void parse_tgid(const std::string& value, task_status& out)
 {
-    to_number(value, out.tgid);
+    to_number("tgid", value, utils::base::decimal, out.tgid);
 }
 
 void parse_ngid(const std::string& value, task_status& out)
 {
-    to_number(value, out.ngid);
+    to_number("ngid", value, utils::base::decimal, out.ngid);
 }
 
 void parse_pid(const std::string& value, task_status& out)
 {
-    to_number(value, out.pid);
+    to_number("pid", value, utils::base::decimal, out.pid);
 }
 
 void parse_ppid(const std::string& value, task_status& out)
 {
-    to_number(value, out.ppid);
+    to_number("ppid", value, utils::base::decimal, out.ppid);
 }
 
 void parse_tracer_pid(const std::string& value, task_status& out)
 {
-    to_number(value, out.tracer_pid);
+    to_number("tracer_pid", value, utils::base::decimal, out.tracer_pid);
 }
 
 void to_uid_set(const std::string& value, task_status::uid_set& out)
@@ -132,7 +132,7 @@ void parse_gid(const std::string& value, task_status& out)
 
 void parse_fdsize(const std::string& value, task_status& out)
 {
-    to_number(value, out.fd_size);
+    to_number("fd_size", value, utils::base::decimal, out.fd_size);
 }
 
 void parse_groups(const std::string& value, task_status& out)
@@ -208,89 +208,89 @@ void parse_ns_sid(const std::string& value, task_status& out)
 
 void parse_vm_peak(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_peak);
+    utils::parse_memory_size("vm_peak", value, out.vm_peak);
 }
 
 void parse_vm_size(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_size);
+    utils::parse_memory_size("vm_size", value, out.vm_size);
 }
 
 void parse_vm_lck(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_lck);
+    utils::parse_memory_size("vm_lck", value, out.vm_lck);
 }
 
 void parse_vm_pin(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_pin);
+    utils::parse_memory_size("vm_pin", value, out.vm_pin);
 }
 
 void parse_vm_hwm(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_hwm);
+    utils::parse_memory_size("vm_hwm", value, out.vm_hwm);
 }
 
 void parse_vm_rss(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_rss);
+    utils::parse_memory_size("vm_rss", value, out.vm_rss);
 }
 
 void parse_rss_anon(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.rss_anon);
+    utils::parse_memory_size("rss_anon", value, out.rss_anon);
 }
 
 void parse_rss_file(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.rss_file);
+    utils::parse_memory_size("rss_file", value, out.rss_file);
 }
 
 void parse_rss_shmem(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.rss_shmem);
+    utils::parse_memory_size("rss_shmem", value, out.rss_shmem);
 }
 
 void parse_vm_data(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_data);
+    utils::parse_memory_size("vm_data", value, out.vm_data);
 }
 
 void parse_vm_stk(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_stk);
+    utils::parse_memory_size("vm_stk", value, out.vm_stk);
 }
 
 void parse_vm_exe(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_exe);
+    utils::parse_memory_size("vm_exe", value, out.vm_exe);
 }
 
 void parse_vm_lib(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_lib);
+    utils::parse_memory_size("vm_lib", value, out.vm_lib);
 }
 
 void parse_vm_pte(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_pte);
+    utils::parse_memory_size("vm_pte", value, out.vm_pte);
 }
 
 void parse_vm_swap(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.vm_swap);
+    utils::parse_memory_size("vm_swap", value, out.vm_swap);
 }
 
 void parse_huge_tlb_pages(const std::string& value, task_status& out)
 {
-    utils::parse_memory_size(value, out.huge_tlb_pages);
+    utils::parse_memory_size("huge_tlb_pages", value, out.huge_tlb_pages);
 }
 
-void to_boolean(const std::string& value, bool& out)
+void to_boolean(const std::string& desc, const std::string& value, bool& out)
 {
     if (value.empty())
     {
-        throw parser_error("Corrupted bool - Empty value", value);
+        throw parser_error("Corrupted " + desc + " - Empty value", value);
     }
 
     char c = value[0];
@@ -304,18 +304,18 @@ void to_boolean(const std::string& value, bool& out)
     }
     else
     {
-        throw parser_error("Corrupted bool - Unexpected value", value);
+        throw parser_error("Corrupted " + desc + " - Unexpected value", value);
     }
 }
 
 void parse_core_dumping(const std::string& value, task_status& out)
 {
-    to_boolean(value, out.core_dumping);
+    to_boolean("core_dumping", value, out.core_dumping);
 }
 
 void parse_threads(const std::string& value, task_status& out)
 {
-    to_number(value, out.threads);
+    to_number("threads", value, utils::base::decimal, out.threads);
 }
 
 void parse_sig_q(const std::string& value, task_status& out)
@@ -356,75 +356,75 @@ void parse_sig_q(const std::string& value, task_status& out)
     }
 }
 
-void to_signal_mask(const std::string& value, signal_mask& mask)
+void to_signal_mask(const std::string& desc, const std::string& value, signal_mask& mask)
 {
-    to_number(value, mask.raw, utils::base::hex);
+    to_number(desc, value, utils::base::hex, mask.raw);
 }
 
 void parse_sig_pnd(const std::string& value, task_status& out)
 {
-    to_signal_mask(value, out.sig_pnd);
+    to_signal_mask("sig_pnd", value, out.sig_pnd);
 }
 
 void parse_shd_pnd(const std::string& value, task_status& out)
 {
-    to_signal_mask(value, out.shd_pnd);
+    to_signal_mask("shd_pnd", value, out.shd_pnd);
 }
 
 void parse_sig_blk(const std::string& value, task_status& out)
 {
-    to_signal_mask(value, out.sig_blk);
+    to_signal_mask("sig_blk", value, out.sig_blk);
 }
 
 void parse_sig_ign(const std::string& value, task_status& out)
 {
-    to_signal_mask(value, out.sig_ign);
+    to_signal_mask("sig_ign", value, out.sig_ign);
 }
 
 void parse_sig_cgt(const std::string& value, task_status& out)
 {
-    to_signal_mask(value, out.sig_cgt);
+    to_signal_mask("sig_cgt", value, out.sig_cgt);
 }
 
-void to_capabilities_mask(const std::string& value, capabilities_mask& mask)
+void to_capabilities_mask(const std::string& desc, const std::string& value, capabilities_mask& mask)
 {
-    to_number(value, mask.raw, utils::base::hex);
+    to_number(desc, value, utils::base::hex, mask.raw);
 }
 
 void parse_cap_inh(const std::string& value, task_status& out)
 {
-    to_capabilities_mask(value, out.cap_inh);
+    to_capabilities_mask("cap_inh", value, out.cap_inh);
 }
 
 void parse_cap_prm(const std::string& value, task_status& out)
 {
-    to_capabilities_mask(value, out.cap_prm);
+    to_capabilities_mask("cap_prm", value, out.cap_prm);
 }
 
 void parse_cap_eff(const std::string& value, task_status& out)
 {
-    to_capabilities_mask(value, out.cap_eff);
+    to_capabilities_mask("cap_eff", value, out.cap_eff);
 }
 
 void parse_cap_bnd(const std::string& value, task_status& out)
 {
-    to_capabilities_mask(value, out.cap_bnd);
+    to_capabilities_mask("cap_bnd", value, out.cap_bnd);
 }
 
 void parse_cap_amb(const std::string& value, task_status& out)
 {
-    to_capabilities_mask(value, out.cap_amb);
+    to_capabilities_mask("cap_amb", value, out.cap_amb);
 }
 
 void parse_no_new_privs(const std::string& value, task_status& out)
 {
-    to_boolean(value, out.no_new_privs);
+    to_boolean("no_new_privs", value, out.no_new_privs);
 }
 
 void parse_seccomp(const std::string& value, task_status& out)
 {
     unsigned numeric;
-    to_number(value, numeric);
+    to_number("seccomp", value, utils::base::decimal, numeric);
 
     task_status::seccomp mode = static_cast<task_status::seccomp>(numeric);
     if (mode < task_status::seccomp::disabled ||
@@ -438,12 +438,12 @@ void parse_seccomp(const std::string& value, task_status& out)
 
 void parse_voluntary_ctx_switches(const std::string& value, task_status& out)
 {
-    to_number(value, out.voluntary_ctxt_switches);
+    to_number("voluntary_ctxt_switches", value, utils::base::decimal, out.voluntary_ctxt_switches);
 }
 
 void parse_nonvoluntary_ctx_switches(const std::string& value, task_status& out)
 {
-    to_number(value, out.nonvoluntary_ctxt_switches);
+    to_number("nonvoluntary_ctxt_switches", value, utils::base::decimal, out.nonvoluntary_ctxt_switches);
 }
 
 } // anonymous namespace

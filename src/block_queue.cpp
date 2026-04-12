@@ -49,7 +49,7 @@ bool block_queue::get_rotational() const
     auto value = utils::readline(path);
 
     int number;
-    parsers::to_number(value, number, utils::base::decimal);
+    parsers::to_number(SIZE_FILE, value, utils::base::decimal, number);
     return number != 0;
 }
 

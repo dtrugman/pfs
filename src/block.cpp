@@ -61,7 +61,7 @@ size_t block::get_size() const
 
     size_t size;
     auto line = utils::readline(path);
-    parsers::to_number(line, size);
+    parsers::to_number(SIZE_FILE, line, utils::base::decimal, size);
     return size;
 }
 

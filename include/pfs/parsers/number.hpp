@@ -27,8 +27,8 @@ namespace impl {
 namespace parsers {
 
 template <typename T>
-static void to_number(const std::string& value, T& out,
-                      utils::base base = utils::base::decimal)
+static void to_number(const std::string& desc, const std::string& value,
+                      utils::base base, T& out)
 {
     try
     {
@@ -36,11 +36,11 @@ static void to_number(const std::string& value, T& out,
     }
     catch (const std::invalid_argument& ex)
     {
-        throw parser_error("Corrupted number - Invalid argument", value);
+        throw parser_error("Corrupted " + desc + " - Invalid argument", value);
     }
     catch (const std::out_of_range& ex)
     {
-        throw parser_error("Corrupted number - Out of range", value);
+        throw parser_error("Corrupted " + desc + " - Out of range", value);
     }
 }
 
