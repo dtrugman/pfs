@@ -27,10 +27,17 @@
 
 namespace pfs {
 
-constexpr uid_t   INVALID_UID     = (uid_t)-1;
-constexpr pid_t   INVALID_PID     = (pid_t)-1;
-constexpr ino64_t INVALID_INODE   = (ino64_t)0;
-constexpr int     INVALID_SYSCALL = -1;
+#if __cplusplus >= 201703L
+inline constexpr uid_t   INVALID_UID     = (uid_t)-1;
+inline constexpr pid_t   INVALID_PID     = (pid_t)-1;
+inline constexpr ino64_t INVALID_INODE   = (ino64_t)0;
+inline constexpr int     INVALID_SYSCALL = -1;
+#else
+#define INVALID_UID (uid_t)-1
+#define INVALID_PID (pid_t)-1
+#define INVALID_INODE (ino64_t)0
+#define INVALID_SYSCALL -1
+#endif
 
 // Note: We only support values that exist post 2.6.32.
 enum class task_state
