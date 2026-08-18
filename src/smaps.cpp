@@ -16,7 +16,6 @@
 
 #include <fstream>
 #include <functional>
-#include <optional>
 #include <string>
 #include <unordered_map>
 
