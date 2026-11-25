@@ -80,6 +80,8 @@ if (pfs_BUILD_TESTS)
     aux_source_directory (${pfs_UNITTEST_SOURCE_DIR} pfs_UNITTEST_SOURCES)
     add_executable (unittest ${pfs_UNITTEST_SOURCES})
     target_compile_features(unittest PUBLIC cxx_std_11)
+    # clang 22 reports Catch2's __COUNTER__ as a C2y extension, an error under -pedantic -Werror
+    target_compile_definitions(unittest PRIVATE CATCH_CONFIG_NO_COUNTER)
     target_compile_options(unittest PRIVATE ${pfs_WARNING_FLAGS})
     target_link_libraries (unittest PRIVATE pfs)
 endif()
